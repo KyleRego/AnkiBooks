@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,7 +33,7 @@ builder.Services.AddCors(options =>
         policy => policy.WithOrigins(
             [
                 builder.Configuration["BackendUrl"] ?? "http://localhost:5229",
-                builder.Configuration["FrontendUrl"] ?? "http://localhost:5023/"
+                builder.Configuration["FrontendUrl"] ?? "http://localhost:5023"
             ]
         ).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
     );
@@ -41,7 +42,6 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
-
 
 WebApplication app = builder.Build();
 
@@ -73,7 +73,29 @@ app.MapPost("/logout", async (
     return Results.Unauthorized();
 }).WithOpenApi().RequireAuthorization();
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
+
+app.MapGet("/roles", (ClaimsPrincipal user) =>
+{
+    if (user.Identity != null && user.Identity.IsAuthenticated)
+    {
+        var identity = (ClaimsIdentity)user.Identity;
+        var roles = identity.FindAll(identity.RoleClaimType)
+            .Select(c => 
+                new
+                {
+                    c.Issuer, 
+                    c.OriginalIssuer, 
+                    c.Type, 
+                    c.Value, 
+                    c.ValueType
+                });
+
+        return TypedResults.Json(roles);
+    }
+
+    return Results.Unauthorized();
+}).WithOpenApi().RequireAuthorization();
 
 var summaries = new[]
 {
