@@ -10,7 +10,11 @@ namespace Client.Identity;
 /// <summary>
 /// Handles state for cookie-based auth.
 /// </summary>
-public class CookieAuthenticationStateProvider : AuthenticationStateProvider, IAccountManagement
+/// <remarks>
+/// Create a new instance of the auth provider.
+/// </remarks>
+/// <param name="httpClientFactory">Factory to retrieve auth client.</param>
+public class CookieAuthenticationStateProvider(IHttpClientFactory httpClientFactory) : AuthenticationStateProvider, IAccountManagement
 {
     /// <summary>
     /// Map the JavaScript-formatted properties to C#-formatted classes.
@@ -24,7 +28,7 @@ public class CookieAuthenticationStateProvider : AuthenticationStateProvider, IA
     /// <summary>
     /// Special auth client.
     /// </summary>
-    private readonly HttpClient _httpClient;
+    private readonly HttpClient _httpClient = httpClientFactory.CreateClient("Auth");
 
     /// <summary>
     /// Authentication state.
@@ -36,13 +40,6 @@ public class CookieAuthenticationStateProvider : AuthenticationStateProvider, IA
     /// </summary>
     private readonly ClaimsPrincipal Unauthenticated =
         new(new ClaimsIdentity());
-
-    /// <summary>
-    /// Create a new instance of the auth provider.
-    /// </summary>
-    /// <param name="httpClientFactory">Factory to retrieve auth client.</param>
-    public CookieAuthenticationStateProvider(IHttpClientFactory httpClientFactory)
-        => _httpClient = httpClientFactory.CreateClient("Auth");
 
     /// <summary>
     /// Register a new user.
@@ -57,7 +54,7 @@ public class CookieAuthenticationStateProvider : AuthenticationStateProvider, IA
 
         try
         {
-            var result = await _httpClient.PostAsJsonAsync(
+            HttpResponseMessage result = await _httpClient.PostAsJsonAsync(
                 "register", new
                 {
                     email,
@@ -69,12 +66,12 @@ public class CookieAuthenticationStateProvider : AuthenticationStateProvider, IA
                 return new FormResult { Succeeded = true };
             }
 
-            var details = await result.Content.ReadAsStringAsync();
-            var problemDetails = JsonDocument.Parse(details);
-            var errors = new List<string>();
-            var errorList = problemDetails.RootElement.GetProperty("errors");
+            string details = await result.Content.ReadAsStringAsync();
+            JsonDocument problemDetails = JsonDocument.Parse(details);
+            List<string> errors = [];
+            JsonElement errorList = problemDetails.RootElement.GetProperty("errors");
 
-            foreach (var errorEntry in errorList.EnumerateObject())
+            foreach (JsonProperty errorEntry in errorList.EnumerateObject())
             {
                 if (errorEntry.Value.ValueKind == JsonValueKind.String)
                 {
@@ -114,7 +111,7 @@ public class CookieAuthenticationStateProvider : AuthenticationStateProvider, IA
     {
         try
         {
-            var result = await _httpClient.PostAsJsonAsync(
+            HttpResponseMessage result = await _httpClient.PostAsJsonAsync(
                 "login?useCookies=true", new
                 {
                     email,
@@ -141,7 +138,7 @@ public class CookieAuthenticationStateProvider : AuthenticationStateProvider, IA
     /// Get authentication state.
     /// </summary>
     /// <remarks>
-    /// Called by Blazor anytime and authentication-based decision needs to be made, then cached
+    /// Called by Blazor when an authentication-based decision needs to be made, and cached
     /// until the changed state notification is raised.
     /// </remarks>
     /// <returns>The authentication state asynchronous request.</returns>
@@ -149,50 +146,42 @@ public class CookieAuthenticationStateProvider : AuthenticationStateProvider, IA
     {
         _authenticated = false;
 
-        var user = Unauthenticated;
+        ClaimsPrincipal user = Unauthenticated;
 
         try
         {
             // the user info endpoint is secured, so if the user isn't logged in this will fail
-            var userResponse = await _httpClient.GetAsync("manage/info");
+            // TODO: Is this necessary to implement like this as it causes console messages
+            HttpResponseMessage userResponse = await _httpClient.GetAsync("manage/info");
 
             // throw if user info wasn't retrieved
             userResponse.EnsureSuccessStatusCode();
 
             // user is authenticated,so let's build their authenticated identity
-            var userJson = await userResponse.Content.ReadAsStringAsync();
-            var userInfo = JsonSerializer.Deserialize<UserInfo>(userJson, jsonSerializerOptions);
+            string userJson = await userResponse.Content.ReadAsStringAsync();
+            UserInfo? userInfo = JsonSerializer.Deserialize<UserInfo>(userJson, jsonSerializerOptions);
 
             if (userInfo != null)
             {
                 // in our system name and email are the same
-                var claims = new List<Claim>
-                    {
+                List<Claim> claims =
+                    [
                         new(ClaimTypes.Name, userInfo.Email),
-                        new(ClaimTypes.Email, userInfo.Email)
-                    };
-
-                // add any additional claims
-                claims.AddRange(
-                    userInfo.Claims.Where(c => c.Key != ClaimTypes.Name && c.Key != ClaimTypes.Email)
-                        .Select(c => new Claim(c.Key, c.Value)));
+                        new(ClaimTypes.Email, userInfo.Email),
+                        // add any additional claims
+                        .. userInfo.Claims.Where(c => c.Key != ClaimTypes.Name && c.Key != ClaimTypes.Email)
+                            .Select(c => new Claim(c.Key, c.Value)),
+                    ];
 
                 // tap the roles endpoint for the user's roles
-                var rolesResponse = await _httpClient.GetAsync("roles");
-
-                // throw if request fails
+                HttpResponseMessage rolesResponse = await _httpClient.GetAsync("roles");
                 rolesResponse.EnsureSuccessStatusCode();
+                string rolesJson = await rolesResponse.Content.ReadAsStringAsync();
+                RoleClaim[]? roles = JsonSerializer.Deserialize<RoleClaim[]>(rolesJson, jsonSerializerOptions);
 
-                // read the response into a string
-                var rolesJson = await rolesResponse.Content.ReadAsStringAsync();
-
-                // deserialize the roles string into an array
-                var roles = JsonSerializer.Deserialize<RoleClaim[]>(rolesJson, jsonSerializerOptions);
-
-                // if there are roles, add them to the claims collection
                 if (roles?.Length > 0)
                 {
-                    foreach (var role in roles)
+                    foreach (RoleClaim role in roles)
                     {
                         if (!string.IsNullOrEmpty(role.Type) && !string.IsNullOrEmpty(role.Value))
                         {
@@ -202,21 +191,20 @@ public class CookieAuthenticationStateProvider : AuthenticationStateProvider, IA
                 }
 
                 // set the principal
-                var id = new ClaimsIdentity(claims, nameof(CookieAuthenticationStateProvider));
+                ClaimsIdentity id = new(claims, nameof(CookieAuthenticationStateProvider));
                 user = new ClaimsPrincipal(id);
                 _authenticated = true;
             }
         }
         catch { }
 
-        // return the state
         return new AuthenticationState(user);
     }
 
     public async Task LogoutAsync()
     {
         const string Empty = "{}";
-        var emptyContent = new StringContent(Empty, Encoding.UTF8, "application/json");
+        StringContent emptyContent = new(Empty, Encoding.UTF8, "application/json");
         await _httpClient.PostAsync("logout", emptyContent);
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
