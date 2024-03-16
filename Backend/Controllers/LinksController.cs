@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Backend.Database.Models;
+using AnkiBooks.Backend.Database.Models;
+using AnkiBooks.Models;
 
-namespace Backend.Controllers
+namespace AnkiBooks.Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

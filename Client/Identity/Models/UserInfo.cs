@@ -1,4 +1,4 @@
-namespace Client.Identity.Models;
+namespace AnkiBooks.Client.Identity.Models;
 
 /// <summary>
 /// User info from identity endpoint to establish claims.

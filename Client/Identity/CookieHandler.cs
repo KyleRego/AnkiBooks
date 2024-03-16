@@ -1,7 +1,7 @@
 
 using Microsoft.AspNetCore.Components.WebAssembly.Http;
 
-namespace Client.Identity;
+namespace AnkiBooks.Client.Identity;
 
 /// <summary>
 /// Handler to ensure cookie credentials are automatically sent over with each request.

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Backend.Database.Models;
+namespace AnkiBooks.Models;
 
 public class Link
 {

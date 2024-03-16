@@ -1,6 +1,6 @@
-using Client.Identity.Models;
+using AnkiBooks.Client.Identity.Models;
 
-namespace Client.Identity;
+namespace AnkiBooks.Client.Identity;
 
 /// <summary>
 /// Account management services.

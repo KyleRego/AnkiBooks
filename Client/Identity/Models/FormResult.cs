@@ -1,4 +1,4 @@
-namespace Client.Identity.Models;
+namespace AnkiBooks.Client.Identity.Models;
 
 /// <summary>
 /// Response for login and registration.

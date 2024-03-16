@@ -2,10 +2,10 @@ using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text.Json;
 using Microsoft.AspNetCore.Components.Authorization;
-using Client.Identity.Models;
+using AnkiBooks.Client.Identity.Models;
 using System.Text;
 
-namespace Client.Identity;
+namespace AnkiBooks.Client.Identity;
 
 /// <summary>
 /// Handles state for cookie-based auth.
@@ -14,7 +14,8 @@ namespace Client.Identity;
 /// Create a new instance of the auth provider.
 /// </remarks>
 /// <param name="httpClientFactory">Factory to retrieve auth client.</param>
-public class CookieAuthenticationStateProvider(IHttpClientFactory httpClientFactory) : AuthenticationStateProvider, IAccountManagement
+public class CookieAuthenticationStateProvider(IHttpClientFactory httpClientFactory)
+                : AuthenticationStateProvider, IAccountManagement
 {
     /// <summary>
     /// Map the JavaScript-formatted properties to C#-formatted classes.
