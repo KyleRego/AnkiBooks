@@ -2,3 +2,4 @@
 **/bin/
 **/.mono/
 .fake
+Models/design_time.db

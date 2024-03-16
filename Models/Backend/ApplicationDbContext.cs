@@ -5,7 +5,7 @@ using AnkiBooks.Models;
 // See https://learn.microsoft.com/en-us/aspnet/core/security/authentication/customize-identity-model?view=aspnetcore-8.0
 using AnkiBooks.Models.Identity;
 
-namespace AnkiBooks.Backend;
+namespace AnkiBooks.Models.Backend;
 
 public class ApplicationDbContext
     : IdentityDbContext<

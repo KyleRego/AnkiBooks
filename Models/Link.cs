@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace AnkiBooks.Models;
 
 public class Link

@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using AnkiBooks.Backend;
+using AnkiBooks.Models.Backend;
 using AnkiBooks.Models.Identity;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
