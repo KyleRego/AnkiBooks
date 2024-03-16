@@ -1,7 +1,8 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using AnkiBooks.Backend.Database.Models;
+using AnkiBooks.Backend;
+using AnkiBooks.Models.Identity;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -24,8 +25,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseInMemoryDatabase("AppDb")
 );
 
-builder.Services.AddIdentityCore<IdentityUser>()
-    .AddRoles<IdentityRole>()
+builder.Services.AddIdentityCore<ApplicationUser>()
+    .AddRoles<ApplicationRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddApiEndpoints();
 
@@ -55,7 +56,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapIdentityApi<IdentityUser>();
+app.MapIdentityApi<ApplicationUser>();
 
 app.UseCors("wasm_client");
 
@@ -65,7 +66,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapPost("/logout", async (
-                        SignInManager<IdentityUser> signInManager,
+                        SignInManager<ApplicationUser> signInManager,
                         [Microsoft.AspNetCore.Mvc.FromBody] object empty
                     ) =>
 {

@@ -1,9 +1,11 @@
 using System.Net.Http.Json;
 using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Components.Authorization;
 using AnkiBooks.Client.Identity.Models;
-using System.Text;
+using AnkiBooks.Models.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace AnkiBooks.Client.Identity;
 
@@ -147,59 +149,51 @@ public class CookieAuthenticationStateProvider(IHttpClientFactory httpClientFact
     {
         _authenticated = false;
 
-        ClaimsPrincipal user = Unauthenticated;
+        ClaimsPrincipal userPrincipal = Unauthenticated;
 
         try
         {
             // the user info endpoint is secured, so if the user isn't logged in this will fail
             // TODO: Is this necessary to implement like this as it causes console messages
             HttpResponseMessage userResponse = await _httpClient.GetAsync("manage/info");
-
-            // throw if user info wasn't retrieved
             userResponse.EnsureSuccessStatusCode();
 
-            // user is authenticated,so let's build their authenticated identity
             string userJson = await userResponse.Content.ReadAsStringAsync();
-            UserInfo? userInfo = JsonSerializer.Deserialize<UserInfo>(userJson, jsonSerializerOptions);
+            ApplicationUser? userInfo = JsonSerializer.Deserialize<ApplicationUser>(userJson, jsonSerializerOptions);
 
-            if (userInfo != null)
+            if (userInfo != null && !string.IsNullOrWhiteSpace(userInfo.Email))
             {
-                // in our system name and email are the same
                 List<Claim> claims =
                     [
                         new(ClaimTypes.Name, userInfo.Email),
-                        new(ClaimTypes.Email, userInfo.Email),
-                        // add any additional claims
-                        .. userInfo.Claims.Where(c => c.Key != ClaimTypes.Name && c.Key != ClaimTypes.Email)
-                            .Select(c => new Claim(c.Key, c.Value)),
+                        new(ClaimTypes.Email, userInfo.Email)
                     ];
 
-                // tap the roles endpoint for the user's roles
                 HttpResponseMessage rolesResponse = await _httpClient.GetAsync("roles");
                 rolesResponse.EnsureSuccessStatusCode();
+
                 string rolesJson = await rolesResponse.Content.ReadAsStringAsync();
-                RoleClaim[]? roles = JsonSerializer.Deserialize<RoleClaim[]>(rolesJson, jsonSerializerOptions);
+                ApplicationRoleClaim[]? roles = JsonSerializer.Deserialize<ApplicationRoleClaim[]>(rolesJson, jsonSerializerOptions);
 
                 if (roles?.Length > 0)
                 {
-                    foreach (RoleClaim role in roles)
+                    foreach (ApplicationRoleClaim role in roles)
                     {
-                        if (!string.IsNullOrEmpty(role.Type) && !string.IsNullOrEmpty(role.Value))
+                        if (!string.IsNullOrEmpty(role.ClaimType) && !string.IsNullOrEmpty(role.ClaimValue))
                         {
-                            claims.Add(new Claim(role.Type, role.Value, role.ValueType, role.Issuer, role.OriginalIssuer));
+                            claims.Add(new Claim(role.ClaimType, role.ClaimValue));
                         }
                     }
                 }
 
-                // set the principal
                 ClaimsIdentity id = new(claims, nameof(CookieAuthenticationStateProvider));
-                user = new ClaimsPrincipal(id);
+                userPrincipal = new ClaimsPrincipal(id);
                 _authenticated = true;
             }
         }
         catch { }
 
-        return new AuthenticationState(user);
+        return new AuthenticationState(userPrincipal);
     }
 
     public async Task LogoutAsync()
@@ -214,14 +208,5 @@ public class CookieAuthenticationStateProvider(IHttpClientFactory httpClientFact
     {
         await GetAuthenticationStateAsync();
         return _authenticated;
-    }
-
-    public class RoleClaim
-    {
-        public string? Issuer { get; set; }
-        public string? OriginalIssuer { get; set; }
-        public string? Type { get; set; }
-        public string? Value { get; set; }
-        public string? ValueType { get; set; }
     }
 }
