@@ -3,30 +3,47 @@
 @inject ILogger<LinkForm> Logger
 @inject HttpClient Http
 
-<EditForm Model="Model" OnValidSubmit="Submit" FormName="AddLinkForm">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <label>
-        URL:
-        <InputText @bind-Value="Model!.URL" />
-    </label>
-    <button type="submit">Submit</button>
-</EditForm>
+<div>
+    <EditForm Model="Link" OnValidSubmit="SubmitForm" FormName="AddLinkForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="d-flex flex-row justify-content-around align-items-center">
+            <label for="URL">Enter a source URL:</label>    
+            <InputText @bind-Value="Link!.URL" class="flex-grow-1 m-2" id="URL" />
+
+            <button class="btn btn-primary" type="submit">Add URL</button>
+        </div>
+    </EditForm>
+
+    @if (urlAlreadyWasAdded)
+    {
+        <p>
+            @lastAddedUrl was successfully added.
+        </p>
+    }
+</div>
 
 @code {
     // TODO: Do not hard code the backend origin
     private const string endpoint = "http://localhost:5229/api/Links";
+    private bool urlAlreadyWasAdded = false;
+    private string? lastAddedUrl;
 
     [SupplyParameterFromForm]
-    public Link? Model { get; set; }
+    public Link? Link { get; set; }
 
-    protected override void OnInitialized() => Model ??= new Link();
+    protected override void OnInitialized() => Link ??= new Link();
 
-    private async Task Submit()
+    private async Task SubmitForm()
     {
-        Logger.LogInformation("Submit button clicked Url was = {URL}", Model?.URL);
-        ArgumentNullException.ThrowIfNull(Model?.URL);
-        Link linkData = new Link { URL = Model.URL, IsComplete = false };
+        ArgumentNullException.ThrowIfNull(Link?.URL);
+
+        Link linkData = new Link { URL = Link.URL, IsComplete = false };
         HttpResponseMessage response = await Http.PostAsJsonAsync(endpoint, linkData);
+
+        response.EnsureSuccessStatusCode();
+
+        urlAlreadyWasAdded = true;
+        lastAddedUrl = Link.URL;
     }
 }

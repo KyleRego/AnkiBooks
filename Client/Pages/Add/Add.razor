@@ -2,4 +2,15 @@
 
 <PageTitle>Add</PageTitle>
 
-<LinkForm />
+<AuthorizeView>
+    <Authorized>
+        <LinkForm />
+    </Authorized>
+
+    <NotAuthorized>
+        <p>
+            You must be logged in to use this part of the app :)
+        </p>
+    </NotAuthorized>
+</AuthorizeView>
+
