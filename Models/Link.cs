@@ -1,5 +1,6 @@
 namespace AnkiBooks.Models;
 
+// TODO: Make Link a type of element
 public class Link
 {
     [Key]
