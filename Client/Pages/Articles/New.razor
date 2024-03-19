@@ -1,9 +1,20 @@
 @using AnkiBooks.Models;
 @inject HttpClient Http
+@inject NavigationManager Navigation
+@inject ILogger<New> Logger
+
+<Button Color="ButtonColor.Primary"
+        @onclick="OnShowModalClick">
+    New article
+</Button>
 
 <Modal @ref="modal" Title="New article" IsVerticallyCentered="true">
     <BodyTemplate>
-        <EditForm Model="Article" OnValidSubmit="SubmitForm" FormName="NewArticle">
+        <EditForm Model="Article"
+                OnValidSubmit="SubmitForm"
+                OnInvalidSubmit="LogInvalidSubmit"
+                FormName="NewArticle"
+        >
         <DataAnnotationsValidator />
         <ValidationSummary />
 
@@ -14,7 +25,7 @@
             </div>
 
             <div>
-                <Button Color="ButtonColor.Primary">Create article</Button>
+                <Button Color="ButtonColor.Primary" Type="ButtonType.Submit">Create</Button>
             </div>
         </div>
 
@@ -22,19 +33,16 @@
     </BodyTemplate>
 </Modal>
 
-<Button Color="ButtonColor.Primary" @onclick="OnShowModalClick">New article</Button>
-
 @code {
-    private Modal? modal;
-
+    private Modal modal = new();
     private async Task OnShowModalClick()
     {
-        await modal?.ShowAsync();
+        await modal.ShowAsync();
     }
 
     private async Task OnHideModalClick()
     {
-        await modal?.HideAsync();
+        await modal.HideAsync();
     }
 
     [SupplyParameterFromForm]
@@ -42,11 +50,25 @@
 
     protected override void OnInitialized()
     {
-        Article ??= new("New article");
+        Article ??= new("");
     }
 
-    private void SubmitForm()
+    private const string endpoint = "http://localhost:5229/api/Articles";
+    private async Task SubmitForm()
     {
+        ArgumentNullException.ThrowIfNull(Article);
+        ArgumentNullException.ThrowIfNull(Article.Title);
 
+        Logger.LogDebug("hello world");
+
+        HttpResponseMessage response = await Http.PostAsJsonAsync(endpoint, Article);
+        response.EnsureSuccessStatusCode();
+
+        Navigation.NavigateTo("counter");
+    }
+
+    private void LogInvalidSubmit()
+    {
+        Logger.LogInformation("it was invalid");
     }
 }

@@ -1,10 +1,44 @@
 @page "/articles"
-@using AnkiBooks.Models;
+@using AnkiBooks.Models
+@inject IConfiguration Config
+@inject HttpClient Http
 
 <PageTitle>Articles</PageTitle>
 
 <div class="d-flex justify-content-between align-items-center">
-    <h1>Articles</h1>
+    <h1 class="my-0">Articles</h1>
 
     <New />
 </div>
+
+@if (articles == null)
+{
+    <p>Loading articles...</p>
+}
+else
+{
+    <ul>
+        @foreach(Article article in articles)
+        {
+            <li>
+                @article.Title
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    string? serviceEndpoint;
+    private Article[]? articles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        serviceEndpoint = $"{Config.GetValue<string>("BackendUrl")}/api/Articles";
+        await GetArticles();
+    }
+
+    private async Task GetArticles()
+    {
+        articles = await Http.GetFromJsonAsync<Article[]>(serviceEndpoint);
+    }
+}

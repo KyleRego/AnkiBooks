@@ -8,7 +8,6 @@ public class Article(string title) : PrimaryKeyIdBase
     [Required]
     public bool Public { get; set; } = false;
 
-    [Required]
     public string? BookId { get; set; }
     public Book? Book { get; set; }
 
