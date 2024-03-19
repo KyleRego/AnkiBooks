@@ -1,21 +1,16 @@
 using AnkiBooks.Models.Identity;
-using AnkiBooks.Models.Interfaces;
 
 namespace AnkiBooks.Models;
 
-public class Concept : IPublishable
+public class Concept : PrimaryKeyIdBase
 {
-    public string Id { get; set; } = Guid.NewGuid().ToString();
-
     [Required]
     public ICollection<ConceptName> Names { get; set; } = [];
 
     [Required]
     public bool Public { get; set; } = false;
 
-    public ICollection<Element> Elements { get; } = [];
-
-    public ICollection<Note> Notes { get; } = [];
+    public ICollection<ArticleElement> Elements { get; } = [];
 
     [Required]
     public string? ApplicationUserId { get; set; }

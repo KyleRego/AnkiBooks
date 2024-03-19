@@ -1,13 +1,9 @@
 using AnkiBooks.Models.Identity;
-using AnkiBooks.Models.Interfaces;
 
 namespace AnkiBooks.Models;
 
-public class Book(string title) : IPublishable
+public class Book(string title) : PrimaryKeyIdBase
 {
-    [Key]
-    public string Id { get; set; } = Guid.NewGuid().ToString();
-
     [Required]
     public string Title { get; set; } = title;
 
