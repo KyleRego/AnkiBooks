@@ -19,6 +19,16 @@ public class ApplicationDbContext
 
     }
 
+    public DbSet<Link> Links { get; set; } = null!;
+
+    public DbSet<Article> Articles { get; set; } = null!;
+    public DbSet<ArticleElement> ArticleElements { get; set; } = null!;
+    public DbSet<BasicNote> BasicNotes { get; set; } = null!;
+    public DbSet<Book> Books { get; set; } = null!;
+    public DbSet<ClozeNote> ClozeNotes { get; set; } = null!;
+    public DbSet<Concept> Concepts { get; set; } = null!;
+    public DbSet<Heading> Headings { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -65,6 +75,4 @@ public class ApplicationDbContext
                 .IsRequired();
         });
     }
-
-    public DbSet<Link> Links { get; set; } = null!;
 }

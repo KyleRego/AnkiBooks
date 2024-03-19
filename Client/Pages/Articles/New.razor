@@ -1,0 +1,45 @@
+@using AnkiBooks.Models;
+@inject HttpClient Http
+
+<button type="button" @onclick="ShowDialog">
+    New article
+</button>
+
+<div class="@dialogDisplayClass">
+    <EditForm Model="Article" OnValidSubmit="SubmitForm" FormName="NewArticle">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div>
+            <label>Title:</label>
+            <InputText @bind-Value="Article!.Title" />
+        </div>
+
+        <div>
+            <button type="submit">Submit</button>
+        </div>
+        
+    </EditForm>
+</div>
+
+@code {
+    private string dialogDisplayClass = "d-none";
+
+    private void ShowDialog()
+    {
+        dialogDisplayClass = "";
+    }
+
+    [SupplyParameterFromForm]
+    private Article? Article { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Article ??= new("New article");
+    }
+
+    private void SubmitForm()
+    {
+
+    }
+}
