@@ -1,33 +1,40 @@
 @using AnkiBooks.Models;
 @inject HttpClient Http
 
-<button type="button" @onclick="ShowDialog">
-    New article
-</button>
-
-<div class="@dialogDisplayClass">
-    <EditForm Model="Article" OnValidSubmit="SubmitForm" FormName="NewArticle">
+<Modal @ref="modal" Title="New article" IsVerticallyCentered="true">
+    <BodyTemplate>
+        <EditForm Model="Article" OnValidSubmit="SubmitForm" FormName="NewArticle">
         <DataAnnotationsValidator />
         <ValidationSummary />
 
-        <div>
-            <label>Title:</label>
-            <InputText @bind-Value="Article!.Title" />
+        <div class="d-flex justify-content-around align-items-center p-2">
+            <div>
+                <label>Title:</label>
+                <InputText @bind-Value="Article!.Title" />
+            </div>
+
+            <div>
+                <Button Color="ButtonColor.Primary">Create article</Button>
+            </div>
         </div>
 
-        <div>
-            <button type="submit">Submit</button>
-        </div>
-        
     </EditForm>
-</div>
+    </BodyTemplate>
+</Modal>
+
+<Button Color="ButtonColor.Primary" @onclick="OnShowModalClick">New article</Button>
 
 @code {
-    private string dialogDisplayClass = "d-none";
+    private Modal? modal;
 
-    private void ShowDialog()
+    private async Task OnShowModalClick()
     {
-        dialogDisplayClass = "";
+        await modal?.ShowAsync();
+    }
+
+    private async Task OnHideModalClick()
+    {
+        await modal?.HideAsync();
     }
 
     [SupplyParameterFromForm]
