@@ -25,4 +25,6 @@ builder.Services.AddHttpClient(
     opt => opt.BaseAddress = new Uri(builder.Configuration["BackendUrl"] ?? "http://localhost:5229"))
     .AddHttpMessageHandler<CookieHandler>();
 
+builder.Services.AddBlazorBootstrap();
+
 await builder.Build().RunAsync();
