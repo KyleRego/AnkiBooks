@@ -2,6 +2,7 @@
 @using AnkiBooks.Models
 @inject IConfiguration Config
 @inject HttpClient Http
+@inject ILogger<Index> Logger
 
 <PageTitle>Articles</PageTitle>
 
@@ -21,7 +22,9 @@ else
         @foreach(Article article in articles)
         {
             <li>
-                @article.Title
+                <a href="articles/@article.Id">
+                    @article.Title
+                </a>
             </li>
         }
     </ul>

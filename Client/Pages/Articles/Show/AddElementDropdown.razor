@@ -1,0 +1,51 @@
+<Dropdown Split="true" class="@dropDownCssClass">
+    <DropdownActionButton Color="ButtonColor.Primary">Add</DropdownActionButton>
+    <DropdownToggleButton Color="ButtonColor.Primary" />
+    <DropdownMenu>
+        <DropdownItem Type="ButtonType.Button" @onclick="InsertNewHeadingForm">Heading</DropdownItem>
+        <DropdownItem Type="ButtonType.Button">Paragraph</DropdownItem>
+        <DropdownItem Type="ButtonType.Button">Quote</DropdownItem>
+    </DropdownMenu>
+</Dropdown>
+
+@if (dropDownItemWasSelected)
+{
+    @switch (dropDownItemSelected)
+    {
+        case DropDownSelection.Heading:
+            <NewHeading />
+            <AddElementDropdown />
+            break;
+
+        default:
+            break;
+
+    }
+}
+
+@code {
+    enum DropDownSelection
+    {
+        None,
+        Heading,
+        Paragraph,
+        Quote
+    }
+    private string dropDownCssClass = "";
+
+    private bool dropDownItemWasSelected = false;
+
+    private DropDownSelection dropDownItemSelected = DropDownSelection.None;
+
+    private void InsertNewHeadingForm()
+    {
+        dropDownItemSelected = DropDownSelection.Heading;
+        ReplaceDropdown();
+    }
+
+    private void ReplaceDropdown()
+    {
+        dropDownCssClass = "d-none";
+        dropDownItemWasSelected = true;
+    }
+}

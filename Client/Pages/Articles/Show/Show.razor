@@ -1,0 +1,39 @@
+@page "/articles/{id}"
+@using AnkiBooks.Models
+@inject IConfiguration Config
+@inject HttpClient Http
+@inject ILogger<Show> Logger
+
+@if (article == null)
+{
+    <PageTitle>Loading article...</PageTitle>
+
+    <p>Loading article...</p>
+}
+else
+{
+    <PageTitle>@article.Title</PageTitle>
+
+    <AddElementDropdown />
+}
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+
+    string? serviceEndpoint;
+    private Article? article;
+    protected override async Task OnInitializedAsync()
+    {
+        ArgumentNullException.ThrowIfNull(Id);
+
+        serviceEndpoint = $"{Config.GetValue<string>("BackendUrl")}/api/Articles/{Id}";
+        Logger.LogInformation(serviceEndpoint);
+        await GetArticle();
+    }
+
+    private async Task GetArticle()
+    {
+        article = await Http.GetFromJsonAsync<Article>(serviceEndpoint);
+    }
+}
