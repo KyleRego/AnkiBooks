@@ -15,19 +15,15 @@
                 OnInvalidSubmit="LogInvalidSubmit"
                 FormName="NewArticle"
         >
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+            <DataAnnotationsValidator />
+            <ValidationSummary />
 
-        <div class="d-flex justify-content-around align-items-center p-2">
-            <div>
-                <label>Title:</label>
-                <InputText @bind-Value="Article!.Title" />
+            <div class="mb-3">
+                <label class="form-label" for="article-title">Title:</label>
+                <InputText @bind-Value="Article!.Title" id="article-title" class="form-control" />
             </div>
 
-            <div>
-                <Button Color="ButtonColor.Primary" Type="ButtonType.Submit">Create</Button>
-            </div>
-        </div>
+            <Button Color="ButtonColor.Primary" Type="ButtonType.Submit">Create</Button>
 
         </EditForm>
     </BodyTemplate>
