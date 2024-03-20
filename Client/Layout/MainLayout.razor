@@ -7,11 +7,12 @@
         <div class="bb-top-row px-4 d-flex justify-content-between">
             <AuthorizeView>
                 <Authorized>
-                    Logged in as @context.User.Identity?.Name. <a href="logout"><span class="bi bi-door-closed-fill" aria-hidden="true" style="vertical-align:middle"></span> Logout</a>
+                    <span>Logged in as @context.User.Identity?.Name.</span>
+                    <a href="logout"><Icon Name="IconName.DoorClosedFill" /> Logout</a>
                 </Authorized>
                 <NotAuthorized>
-                    <a href="login"><span class="bi bi-door-open" aria-hidden="true" style="vertical-align:middle"></span> Login</a>
-                    <a href="register"><span class="bi bi-pencil-square" aria-hidden="true" style="vertical-align:middle"></span> Register</a>
+                    <a href="login"><Icon Name="IconName.DoorOpenFill" /> Login</a>
+                    <a href="register"><Icon Name="IconName.PencilSquare" /> Register</a>
                 </NotAuthorized>
             </AuthorizeView>
         </div>
