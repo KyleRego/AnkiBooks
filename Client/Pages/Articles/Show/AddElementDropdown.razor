@@ -1,3 +1,6 @@
+@using AnkiBooks.Models;
+@using AnkiBooks.Models.Enums
+
 <Dropdown Split="true" class="@dropDownCssClass">
     <DropdownActionButton Color="ButtonColor.Primary">Add</DropdownActionButton>
     <DropdownToggleButton Color="ButtonColor.Primary" />
@@ -5,6 +8,7 @@
         <DropdownItem Type="ButtonType.Button" @onclick="InsertNewHeadingForm">Heading</DropdownItem>
         <DropdownItem Type="ButtonType.Button">Paragraph</DropdownItem>
         <DropdownItem Type="ButtonType.Button">Quote</DropdownItem>
+        <DropdownItem Type="ButtonType.Button" @onclick="InsertNewBasicNoteForm">Basic Note</DropdownItem>
     </DropdownMenu>
 </Dropdown>
 
@@ -12,8 +16,13 @@
 {
     @switch (dropDownItemSelected)
     {
-        case DropDownSelection.Heading:
+        case ElementType.Heading:
             <NewHeading />
+            <AddElementDropdown />
+            break;
+
+        case ElementType.BasicNote:
+            <NewBasicNote Article="@Article" />
             <AddElementDropdown />
             break;
 
@@ -24,22 +33,24 @@
 }
 
 @code {
-    enum DropDownSelection
-    {
-        None,
-        Heading,
-        Paragraph,
-        Quote
-    }
+    [Parameter]
+    public Article? Article { get; set; }
+
     private string dropDownCssClass = "";
 
     private bool dropDownItemWasSelected = false;
 
-    private DropDownSelection dropDownItemSelected = DropDownSelection.None;
+    private ElementType? dropDownItemSelected = null;
 
     private void InsertNewHeadingForm()
     {
-        dropDownItemSelected = DropDownSelection.Heading;
+        dropDownItemSelected = ElementType.Heading;
+        ReplaceDropdown();
+    }
+
+    private void InsertNewBasicNoteForm()
+    {
+        dropDownItemSelected = ElementType.BasicNote;
         ReplaceDropdown();
     }
 

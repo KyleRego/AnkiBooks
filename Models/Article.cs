@@ -8,8 +8,8 @@ public class Article(string title) : PrimaryKeyIdBase
     [Required]
     public bool Public { get; set; } = false;
 
-    public string? BookId { get; set; }
-    public Book? Book { get; set; }
+    public string? ParentArticleId { get; set; }
+    public Article? ParentArticle { get; set; }
 
-    public ICollection<ArticleElement> Elements { get; } = [];
+    public ICollection<ArticleElement>? Elements { get; }
 }

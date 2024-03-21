@@ -24,7 +24,6 @@ public class ApplicationDbContext
     public DbSet<Article> Articles { get; set; } = null!;
     public DbSet<ArticleElement> ArticleElements { get; set; } = null!;
     public DbSet<BasicNote> BasicNotes { get; set; } = null!;
-    public DbSet<Book> Books { get; set; } = null!;
     public DbSet<ClozeNote> ClozeNotes { get; set; } = null!;
     public DbSet<Concept> Concepts { get; set; } = null!;
     public DbSet<Heading> Headings { get; set; } = null!;

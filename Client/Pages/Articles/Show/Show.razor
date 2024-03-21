@@ -13,8 +13,22 @@
 else
 {
     <PageTitle>@article.Title</PageTitle>
+    <p>hello world</p>
 
-    <AddElementDropdown />
+    @* @foreach(BasicNote basicNote in article.BasicNotes)
+    {
+        <Card Style="width:18rem;">
+            <CardBody>
+                basicNote.Front
+            </CardBody>
+
+            <CardBody>
+                basicNote.Back
+            </CardBody>
+        </Card>
+    } *@
+
+    <AddElementDropdown Article="@article" />
 }
 
 @code {

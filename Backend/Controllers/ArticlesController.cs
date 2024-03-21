@@ -27,6 +27,10 @@ public class ArticlesController(ApplicationDbContext context) : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Article>> GetArticle(string id)
     {
+        // Article? article = await _context.Articles
+        //                                 .Include(a => a.Elements)
+        //                                 .FirstOrDefaultAsync(a => a.Id == id);
+
         var article = await _context.Articles.FindAsync(id);
 
         if (article == null)
