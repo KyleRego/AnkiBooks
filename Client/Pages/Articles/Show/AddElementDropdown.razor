@@ -24,8 +24,8 @@
             break;
 
         case ElementType.BasicNote:
-            <NewBasicNote Article="@Article" />
-            <AddElementDropdown Article="@Article" />
+            <NewBasicNote @bind-Article:get="Article" @bind-Article:set="ArticleChanged" />
+            <AddElementDropdown @bind-Article:get="Article" @bind-Article:set="ArticleChanged" />
             break;
 
         default:
@@ -36,7 +36,10 @@
 
 @code {
     [Parameter]
-    public Article? Article { get; set; }
+    public Article Article { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<Article> ArticleChanged { get; set; }
 
     private string dropDownCssClass = "";
 

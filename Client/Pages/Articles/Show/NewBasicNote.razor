@@ -39,6 +39,16 @@
 
     [Parameter]
     public Article Article { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<Article> ArticleChanged { get; set; }
+
+    private async Task AddBasicNoteToArticle(BasicNote basicNote)
+    {
+        Article.BasicNotes.Add(basicNote);
+        await ArticleChanged.InvokeAsync(Article);
+    }
+
     // TODO: Do not hard code the backend origin
     private const string endpoint = "http://localhost:5229/api/BasicNotes";
 
@@ -71,7 +81,7 @@
         BasicNote? basicNote = JsonSerializer.Deserialize<BasicNote>(responseBody, jsonOptions);
         ArgumentNullException.ThrowIfNull(basicNote);
 
-        Article.BasicNotes.Add(basicNote);
+        await AddBasicNoteToArticle(basicNote);
         hideThisComponent = true;
     }
 }
