@@ -12,7 +12,8 @@ namespace AnkiBooks.Backend.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ArticlesController(ApplicationDbContext context) : ControllerBase
+public class ArticlesController(ApplicationDbContext context,
+                                ILogger<ArticlesController> logger) : ControllerBase
 {
     private readonly ApplicationDbContext _context = context;
 
@@ -93,6 +94,7 @@ public class ArticlesController(ApplicationDbContext context) : ControllerBase
                 throw;
             }
         }
+        logger.LogInformation($"Article {article.Title} with id {article.Id} was created");
 
         return CreatedAtAction("GetArticle", new { id = article.Id }, article);
     }

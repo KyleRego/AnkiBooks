@@ -1,6 +1,8 @@
-@using AnkiBooks.Models;
+@using System.Text.Json
+@using AnkiBooks.Models
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@inject IConfiguration Config
 @inject ILogger<New> Logger
 
 <Button Color="ButtonColor.Primary"
@@ -30,7 +32,15 @@
 </Modal>
 
 @code {
+    string? serviceEndpoint;
     private Modal modal = new();
+
+    protected override void OnInitialized()
+    {
+        Article ??= new("");
+        serviceEndpoint = $"{Config.GetValue<string>("BackendUrl")}/api/Articles";
+    }
+
     private async Task OnShowModalClick()
     {
         await modal.ShowAsync();
@@ -44,23 +54,23 @@
     [SupplyParameterFromForm]
     private Article? Article { get; set; }
 
-    protected override void OnInitialized()
-    {
-        Article ??= new("");
-    }
-
-    private const string endpoint = "http://localhost:5229/api/Articles";
     private async Task SubmitForm()
     {
         ArgumentNullException.ThrowIfNull(Article);
         ArgumentNullException.ThrowIfNull(Article.Title);
 
-        Logger.LogDebug("hello world");
-
-        HttpResponseMessage response = await Http.PostAsJsonAsync(endpoint, Article);
+        HttpResponseMessage response = await Http.PostAsJsonAsync(serviceEndpoint, Article);
         response.EnsureSuccessStatusCode();
 
-        Navigation.NavigateTo("counter");
+        string responseBody = await response.Content.ReadAsStringAsync();
+        JsonSerializerOptions jsonOptions = new()
+        {
+            PropertyNameCaseInsensitive = true
+        };
+        Article? article = JsonSerializer.Deserialize<Article>(responseBody, jsonOptions);
+        ArgumentNullException.ThrowIfNull(article);
+
+        Navigation.NavigateTo($"articles/{article.Id}");
     }
 
     private void LogInvalidSubmit()
