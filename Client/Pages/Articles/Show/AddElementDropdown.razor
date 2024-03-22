@@ -18,12 +18,12 @@
     {
         case ElementType.Heading:
             <NewHeading />
-            <AddElementDropdown />
+            <AddElementDropdown Article="@Article"/>
             break;
 
         case ElementType.BasicNote:
             <NewBasicNote Article="@Article" />
-            <AddElementDropdown />
+            <AddElementDropdown Article="@Article" />
             break;
 
         default:

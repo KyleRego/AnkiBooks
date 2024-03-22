@@ -32,7 +32,7 @@
     [SupplyParameterFromForm]
     public BasicNote? BasicNote { get; set; }
 
-    protected override void OnInitialized() => BasicNote ??= new() { ArticleId = Article!.Id };
+    protected override void OnInitialized() => BasicNote ??= new() { ArticleId = Article.Id };
 
     private async Task SubmitForm()
     {
