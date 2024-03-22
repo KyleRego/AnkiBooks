@@ -1,10 +1,9 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using AnkiBooks.Models.Identity;
 using AnkiBooks.Backend.Database;
-using System.Security.Cryptography.Xml;
-using System.Text.Json.Serialization;
+using AnkiBooks.Models.Identity;
+using AnkiBooks.Backend.Middleware;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -20,11 +19,6 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddAuthorizationBuilder();
-
-// builder.Services.AddControllers().AddJsonOptions(options =>
-// {
-//     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-// });
 
 builder.Services.AddControllers();
 
@@ -130,6 +124,11 @@ app.MapGet("/weatherforecast", () =>
 .WithName("GetWeatherForecast")
 .WithOpenApi()
 .RequireAuthorization();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSeedDevUserMiddleware();
+}
 
 app.Run();
 
