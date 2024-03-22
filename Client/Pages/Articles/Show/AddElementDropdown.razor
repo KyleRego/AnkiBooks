@@ -1,16 +1,18 @@
 @using AnkiBooks.Models
 @using AnkiBooks.Models.Enums
 
-<Dropdown Split="true" class="@dropDownCssClass">
-    <DropdownActionButton Color="ButtonColor.Primary">Add</DropdownActionButton>
-    <DropdownToggleButton Color="ButtonColor.Primary" />
-    <DropdownMenu>
-        <DropdownItem Type="ButtonType.Button" @onclick="InsertNewHeadingForm">Heading</DropdownItem>
-        <DropdownItem Type="ButtonType.Button">Paragraph</DropdownItem>
-        <DropdownItem Type="ButtonType.Button">Quote</DropdownItem>
-        <DropdownItem Type="ButtonType.Button" @onclick="InsertNewBasicNoteForm">Basic Note</DropdownItem>
-    </DropdownMenu>
-</Dropdown>
+<div class="p-4">
+    <Dropdown Split="true" class="@dropDownCssClass">
+        <DropdownActionButton Color="ButtonColor.Primary">Add</DropdownActionButton>
+        <DropdownToggleButton Color="ButtonColor.Primary" />
+        <DropdownMenu>
+            <DropdownItem Type="ButtonType.Button" @onclick="InsertNewHeadingForm">Heading</DropdownItem>
+            <DropdownItem Type="ButtonType.Button">Paragraph</DropdownItem>
+            <DropdownItem Type="ButtonType.Button">Quote</DropdownItem>
+            <DropdownItem Type="ButtonType.Button" @onclick="InsertNewBasicNoteForm">Basic Note</DropdownItem>
+        </DropdownMenu>
+    </Dropdown>
+</div>
 
 @if (dropDownItemWasSelected)
 {

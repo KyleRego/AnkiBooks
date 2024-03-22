@@ -1,31 +1,44 @@
 @using System.ComponentModel.DataAnnotations
+@using System.Text.Json
 @using AnkiBooks.Models;
 @inject ILogger<NewBasicNote> Logger
 @inject HttpClient Http
 
-<div>
-    <EditForm Model="BasicNote" OnValidSubmit="SubmitForm" FormName="AddLinkForm">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <div>
-            <label for="Front">Front:</label>    
-            <InputText @bind-Value="BasicNote!.Front" id="Front" />
-        </div>
+@if (hideThisComponent != true)
+{
+<div class="p-4">
+    <Card Style="width:18rem;">
+        <CardHeader>
+            New Basic Note
+        </CardHeader>
+        <CardBody>
+            <EditForm Model="BasicNote" OnValidSubmit="SubmitForm" FormName="AddLinkForm">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="mb-2">
+                    <label for="Front" class="mb-1">Front:</label>    
+                    <InputTextArea @bind-Value="BasicNote!.Front" id="Front" class="form-control" />
+                </div>
 
-        <div>
-            <label for="Back">Back:</label>
-            <InputText @bind-Value="BasicNote.Back" id="Back" />
-        </div>
+                <div class="mb-3">
+                    <label for="Back" class="mb-1">Back:</label>
+                    <InputTextArea @bind-Value="BasicNote.Back" id="Back" class="form-control" />
+                </div>
 
-        <div>
-            <button class="btn btn-primary" type="submit">Create</button>
-        </div>
-    </EditForm>
+                <div>
+                    <Button Color="ButtonColor.Primary" Type="ButtonType.Submit">Create</Button>
+                </div>
+            </EditForm>
+        </CardBody>
+    </Card>
 </div>
+}
 
 @code {
+    private bool hideThisComponent = false;
+
     [Parameter]
-    public Article? Article { get; set; }
+    public Article Article { get; set; } = null!;
     // TODO: Do not hard code the backend origin
     private const string endpoint = "http://localhost:5229/api/BasicNotes";
 
@@ -48,7 +61,17 @@
                                 ArticleId = BasicNote.ArticleId
                             };
         HttpResponseMessage response = await Http.PostAsJsonAsync(endpoint, data);
-
         response.EnsureSuccessStatusCode();
+
+        string responseBody = await response.Content.ReadAsStringAsync();
+        JsonSerializerOptions jsonOptions = new()
+        {
+            PropertyNameCaseInsensitive = true
+        };
+        BasicNote? basicNote = JsonSerializer.Deserialize<BasicNote>(responseBody, jsonOptions);
+        ArgumentNullException.ThrowIfNull(basicNote);
+
+        Article.BasicNotes.Add(basicNote);
+        hideThisComponent = true;
     }
 }
