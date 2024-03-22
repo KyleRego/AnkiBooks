@@ -11,5 +11,7 @@ public class Article(string title) : PrimaryKeyIdBase
     public string? ParentArticleId { get; set; }
     public Article? ParentArticle { get; set; }
 
-    public ICollection<ArticleElement>? Elements { get; }
+    // public ICollection<ArticleElement> Elements { get; set; } = [];
+
+    public ICollection<BasicNote> BasicNotes { get; set; } = [];
 }

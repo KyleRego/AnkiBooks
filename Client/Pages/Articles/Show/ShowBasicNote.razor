@@ -1,0 +1,16 @@
+@using AnkiBooks.Models
+
+<Card Style="width:18rem;">
+    <CardBody>
+        @BasicNote.Front
+    </CardBody>
+
+    <CardBody>
+        @BasicNote.Back
+    </CardBody>
+</Card>
+
+@code {
+    [Parameter]
+    public BasicNote? BasicNote { get; set; }
+}
