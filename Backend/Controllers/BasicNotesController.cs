@@ -73,9 +73,16 @@ namespace Backend.Controllers
         [HttpPost]
         public async Task<ActionResult<BasicNote>> PostBasicNote(BasicNote basicNote)
         {
-            _context.BasicNotes.Add(basicNote);
             try
             {
+                Article article = await _context.Articles.Include(a => a.BasicNotes).FirstAsync(a => a.Id == basicNote.ArticleId);
+                List<BasicNote> basicNotesToShift = article.BasicNotes.Where(bn => bn.OrdinalPosition >= basicNote.OrdinalPosition).ToList();
+                foreach (BasicNote bnToShift in basicNotesToShift)
+                {
+                    bnToShift.OrdinalPosition += 1;
+                }
+                article.BasicNotes.Add(basicNote);
+                 
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
