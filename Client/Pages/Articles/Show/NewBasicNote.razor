@@ -6,7 +6,7 @@
 
 @if (hideThisComponent != true)
 {
-<div class="p-4">
+<div class="p-2">
     <Card Style="width:18rem;">
         <CardHeader>
             New Basic Note
@@ -43,6 +43,9 @@
     [Parameter]
     public EventCallback<Article> ArticleChanged { get; set; }
 
+    [Parameter]
+    public int OrdinalPosition { get; set; }
+
     private async Task AddBasicNoteToArticle(BasicNote basicNote)
     {
         Article.BasicNotes.Add(basicNote);
@@ -55,7 +58,14 @@
     [SupplyParameterFromForm]
     public BasicNote? BasicNote { get; set; }
 
-    protected override void OnInitialized() => BasicNote ??= new() { ArticleId = Article.Id };
+    protected override void OnInitialized()
+    {
+        BasicNote = new()
+        {
+            ArticleId = Article.Id,
+            OrdinalPosition = OrdinalPosition
+        };
+    }
 
     private async Task SubmitForm()
     {

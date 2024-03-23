@@ -1,12 +1,11 @@
 @using AnkiBooks.Models
 @using AnkiBooks.Models.Enums
 
-<div class="p-4">
+<div class="p-2">
     <Dropdown Split="true" class="@dropDownCssClass">
         <DropdownActionButton Color="ButtonColor.Primary">Add</DropdownActionButton>
         <DropdownToggleButton Color="ButtonColor.Primary" />
         <DropdownMenu>
-            <DropdownItem Type="ButtonType.Button" @onclick="InsertNewHeadingForm">Heading</DropdownItem>
             <DropdownItem Type="ButtonType.Button">Paragraph</DropdownItem>
             <DropdownItem Type="ButtonType.Button">Quote</DropdownItem>
             <DropdownItem Type="ButtonType.Button" @onclick="InsertNewBasicNoteForm">Basic Note</DropdownItem>
@@ -18,14 +17,14 @@
 {
     @switch (dropDownItemSelected)
     {
-        case ElementType.Heading:
-            <NewHeading />
-            <AddElementDropdown Article="@Article"/>
-            break;
-
         case ElementType.BasicNote:
-            <NewBasicNote @bind-Article:get="Article" @bind-Article:set="ArticleChanged" />
-            <AddElementDropdown @bind-Article:get="Article" @bind-Article:set="ArticleChanged" />
+            @* <AddElementDropdown @bind-Article:get="Article"
+                                @bind-Article:set="ArticleChanged"
+                                OrdinalPosition="@OrdinalPosition" /> *@
+
+            <NewBasicNote @bind-Article:get="Article"
+                        @bind-Article:set="ArticleChanged"
+                        OrdinalPosition="@OrdinalPosition" />
             break;
 
         default:
@@ -41,17 +40,14 @@
     [Parameter]
     public EventCallback<Article> ArticleChanged { get; set; }
 
+    [Parameter]
+    public int OrdinalPosition { get; set; }
+
     private string dropDownCssClass = "";
 
     private bool dropDownItemWasSelected = false;
 
     private ElementType? dropDownItemSelected = null;
-
-    private void InsertNewHeadingForm()
-    {
-        dropDownItemSelected = ElementType.Heading;
-        ReplaceDropdown();
-    }
 
     private void InsertNewBasicNoteForm()
     {

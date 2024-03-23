@@ -13,15 +13,16 @@
 }
 else
 {
- 
     <PageTitle>@article.Title</PageTitle>
 
-    @foreach(BasicNote basicNote in article.BasicNotes)
+    @for(int ordinalPosition = 0; ordinalPosition < article.BasicNotes.Count; ordinalPosition++)
     {
-        <ShowBasicNote BasicNote="@basicNote" />   
+        <AddElementDropdown @bind-Article="article" OrdinalPosition="@ordinalPosition" />
+
+        <ShowBasicNote BasicNote="@article.BasicNotes.ElementAt(ordinalPosition)" />
     }
 
-    <AddElementDropdown @bind-Article="article" />
+    <AddElementDropdown @bind-Article="article" OrdinalPosition="@article.BasicNotes.Count" />
 }
 
 @code {
