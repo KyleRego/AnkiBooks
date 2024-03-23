@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using AnkiBooks.Backend.Database;
+using AnkiBooks.Backend.DbContext;
 using AnkiBooks.Models;
 
 namespace AnkiBooks.Backend.Controllers

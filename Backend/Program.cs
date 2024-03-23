@@ -1,9 +1,8 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using AnkiBooks.Backend.Database;
+using AnkiBooks.Backend.DbContext;
 using AnkiBooks.Models.Identity;
-using AnkiBooks.Backend.Middleware;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +22,7 @@ builder.Services.AddAuthorizationBuilder();
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseInMemoryDatabase("AppDb")
+    options => options.UseSqlite(builder.Configuration.GetConnectionString("Database"))
 );
 
 builder.Services.AddIdentityCore<ApplicationUser>()
@@ -50,9 +49,38 @@ builder.Services.AddSwaggerGen();
 
 WebApplication app = builder.Build();
 
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    ApplicationDbContext context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    context.Database.EnsureCreated();
+
+    string testUserEmail = "test@example.com";
+    string testUserPassword = "Asdf333!";
+    ApplicationUser? testUser = context.Users.FirstOrDefault(u => u.Email == testUserEmail);
+
+    if (testUser == null)
+    {
+        PasswordHasher<ApplicationUser> passwordHasher = new();
+
+        testUser = new()
+        {
+            Email = testUserEmail,
+            NormalizedEmail = testUserEmail.ToUpper(),
+            UserName = testUserEmail,
+            NormalizedUserName = testUserEmail.ToUpper()
+        };
+
+        string hash = passwordHasher.HashPassword(testUser, testUserPassword);
+
+        testUser.PasswordHash = hash;
+
+        context.Users.Add(testUser);
+        context.SaveChanges();
+    }
+}
+
 if (app.Environment.IsDevelopment())
 {
-    // TODO: Seed database here if not already set up?
     app.UseSwagger();
     app.UseSwaggerUI();
 }
@@ -124,11 +152,6 @@ app.MapGet("/weatherforecast", () =>
 .WithName("GetWeatherForecast")
 .WithOpenApi()
 .RequireAuthorization();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSeedDevUserMiddleware();
-}
 
 app.Run();
 

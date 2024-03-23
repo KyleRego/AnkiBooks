@@ -1,7 +1,9 @@
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace AnkiBooks.Models;
 
+[Index(nameof(ArticleId), nameof(OrdinalPosition), IsUnique=true)]
 public abstract class ArticleElement : PrimaryKeyIdBase
 {
     [Required]

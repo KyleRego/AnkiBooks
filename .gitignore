@@ -3,3 +3,4 @@
 **/.mono/
 .fake
 Backend/design_time.db
+Backend/development.db

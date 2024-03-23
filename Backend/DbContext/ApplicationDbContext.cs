@@ -5,20 +5,14 @@ using AnkiBooks.Models;
 // See https://learn.microsoft.com/en-us/aspnet/core/security/authentication/customize-identity-model?view=aspnetcore-8.0
 using AnkiBooks.Models.Identity;
 
-namespace AnkiBooks.Backend.Database;
+namespace AnkiBooks.Backend.DbContext;
 
-public class ApplicationDbContext
-    : IdentityDbContext<
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : IdentityDbContext<
         ApplicationUser, ApplicationRole, string,
         ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin,
-        ApplicationRoleClaim, ApplicationUserToken>
+        ApplicationRoleClaim, ApplicationUserToken>(options)
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
-    {
-
-    }
-
     public DbSet<Link> Links { get; set; } = null!;
 
     public DbSet<Article> Articles { get; set; } = null!;
