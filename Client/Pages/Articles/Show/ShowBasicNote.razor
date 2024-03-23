@@ -1,9 +1,12 @@
 @using AnkiBooks.Models
 
-<div class="p-4">
+<div class="px-4 pb-3">
     <Card Style="width:18rem;">
         <CardHeader>
-            Basic Note
+            <div class="d-flex justify-content-between">
+                <span>Basic Note</span>
+                <span>Edit</span>
+            </div>
         </CardHeader>
         <CardBody class="border-bottom">
             @BasicNote.Front
