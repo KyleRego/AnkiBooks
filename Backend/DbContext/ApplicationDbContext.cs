@@ -26,6 +26,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     {
         base.OnModelCreating(builder);
 
+        builder
+            .Entity<ArticleElement>()
+            .ToTable(b => b.HasCheckConstraint(
+                "CK_ArticleElementOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0"
+            ));
+
         builder.Entity<ApplicationUser>(b =>
         {
             // Each User can have many UserClaims

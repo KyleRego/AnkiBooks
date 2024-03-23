@@ -66,7 +66,10 @@ namespace Backend.Migrations
                     b.HasIndex("ArticleId", "OrdinalPosition")
                         .IsUnique();
 
-                    b.ToTable("ArticleElements");
+                    b.ToTable("ArticleElements", t =>
+                        {
+                            t.HasCheckConstraint("CK_ArticleElementOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0");
+                        });
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("ArticleElement");
 
@@ -343,6 +346,11 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.ToTable(t =>
+                        {
+                            t.HasCheckConstraint("CK_ArticleElementOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0");
+                        });
+
                     b.HasDiscriminator().HasValue("BasicNote");
                 });
 
@@ -353,6 +361,11 @@ namespace Backend.Migrations
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.ToTable(t =>
+                        {
+                            t.HasCheckConstraint("CK_ArticleElementOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0");
+                        });
 
                     b.HasDiscriminator().HasValue("ClozeNote");
                 });
@@ -367,6 +380,11 @@ namespace Backend.Migrations
 
                     b.Property<int>("Type")
                         .HasColumnType("INTEGER");
+
+                    b.ToTable(t =>
+                        {
+                            t.HasCheckConstraint("CK_ArticleElementOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0");
+                        });
 
                     b.HasDiscriminator().HasValue("Heading");
                 });
