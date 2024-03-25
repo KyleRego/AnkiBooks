@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using WebApp.Components.Account.Pages;
-using WebApp.Components.Account.Pages.Manage;
-using WebApp.Data;
+using AnkiBooks.WebApp.Components.Account.Pages;
+using AnkiBooks.WebApp.Components.Account.Pages.Manage;
+using AnkiBooks.WebApp.Data;
+using AnkiBooks.Models.Identity;
 
 namespace Microsoft.AspNetCore.Routing;
 

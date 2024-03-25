@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Identity;
-using WebApp.Data;
+using AnkiBooks.WebApp.Data;
+using AnkiBooks.Models.Identity;
 
-namespace WebApp.Components.Account;
+namespace AnkiBooks.WebApp.Components.Account;
 
 internal sealed class IdentityUserAccessor(UserManager<ApplicationUser> userManager, IdentityRedirectManager redirectManager)
 {

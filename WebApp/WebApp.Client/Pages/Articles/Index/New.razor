@@ -1,0 +1,82 @@
+@using System.Text.Json
+@using AnkiBooks.Models
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject IConfiguration Config
+@inject ILogger<New> Logger
+
+@rendermode InteractiveWebAssembly
+
+<Button Color="ButtonColor.Primary"
+        @onclick="OnShowModalClick">
+    New article
+</Button>
+
+<Modal @ref="modal" Title="New article" IsVerticallyCentered="true">
+    <BodyTemplate>
+        <EditForm Model="Article"
+                OnValidSubmit="SubmitForm"
+                OnInvalidSubmit="LogInvalidSubmit"
+                FormName="NewArticle"
+        >
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3">
+                <label class="form-label" for="article-title">Title:</label>
+                <InputText @bind-Value="Article!.Title" id="article-title" class="form-control" />
+            </div>
+
+            <Button Color="ButtonColor.Primary" Type="ButtonType.Submit">Create</Button>
+
+        </EditForm>
+    </BodyTemplate>
+</Modal>
+
+@code {
+    string? serviceEndpoint;
+    private Modal modal = new();
+
+    protected override void OnInitialized()
+    {
+        Article ??= new("");
+        serviceEndpoint = $"{Config.GetValue<string>("Url")}/api/Articles";
+    }
+
+    private async Task OnShowModalClick()
+    {
+        await modal.ShowAsync();
+    }
+
+    private async Task OnHideModalClick()
+    {
+        await modal.HideAsync();
+    }
+
+    [SupplyParameterFromForm]
+    private Article? Article { get; set; }
+
+    private async Task SubmitForm()
+    {
+        ArgumentNullException.ThrowIfNull(Article);
+        ArgumentNullException.ThrowIfNull(Article.Title);
+
+        HttpResponseMessage response = await Http.PostAsJsonAsync(serviceEndpoint, Article);
+        response.EnsureSuccessStatusCode();
+
+        string responseBody = await response.Content.ReadAsStringAsync();
+        JsonSerializerOptions jsonOptions = new()
+        {
+            PropertyNameCaseInsensitive = true
+        };
+        Article? article = JsonSerializer.Deserialize<Article>(responseBody, jsonOptions);
+        ArgumentNullException.ThrowIfNull(article);
+
+        Navigation.NavigateTo($"articles/{article.Id}");
+    }
+
+    private void LogInvalidSubmit()
+    {
+        Logger.LogInformation("it was invalid");
+    }
+}

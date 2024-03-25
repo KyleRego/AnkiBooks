@@ -5,9 +5,10 @@ using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using WebApp.Client;
+using AnkiBooks.WebApp.Client;
+using AnkiBooks.Models.Identity;
 
-namespace WebApp.Components.Account;
+namespace AnkiBooks.WebApp.Components.Account;
 
 // This is a server-side AuthenticationStateProvider that uses PersistentComponentState to flow the
 // authentication state to the client which is then fixed for the lifetime of the WebAssembly application.

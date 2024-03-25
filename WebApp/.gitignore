@@ -1,0 +1,12 @@
+**/obj/
+**/bin/
+**/.mono/
+.fake
+
+WebApp/design_time.db
+WebApp/design_time.db-shm
+WebApp/design_time.db-wal
+
+WebApp/development.db
+WebApp/development.db-shm
+WebApp/development.db-wal

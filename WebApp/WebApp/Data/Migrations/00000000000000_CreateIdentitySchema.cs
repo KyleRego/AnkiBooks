@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace WebApp.Migrations
+namespace AnkiBooks.WebApp.Migrations
 {
     /// <inheritdoc />
     public partial class CreateIdentitySchema : Migration

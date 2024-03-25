@@ -1,0 +1,56 @@
+@page "/articles"
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using AnkiBooks.Models
+@inject IConfiguration Config
+@inject HttpClient Http
+@inject ILogger<Index> Logger
+
+@rendermode InteractiveWebAssembly
+
+<PageTitle>Articles</PageTitle>
+
+<div class="d-flex justify-content-between align-items-center">
+    <h1 class="my-0">Articles</h1>
+
+    <New />
+</div>
+
+@if (articles == null)
+{
+    <p>Loading articles...</p>
+}
+else
+{
+    <ul>
+        @foreach(Article article in articles)
+        {
+            <li>
+                <a href="articles/@article.Id">
+                    @article.Title
+                </a>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    string? serviceEndpoint;
+    private Article[]? articles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        serviceEndpoint = $"{Config.GetValue<string>("Url")}/api/Articles";
+        Logger.LogInformation(serviceEndpoint);
+        await GetArticles();
+    }
+
+    private async Task GetArticles()
+    {
+        JsonSerializerOptions options = new()
+        {
+            ReferenceHandler = ReferenceHandler.Preserve
+        };
+        articles = await Http.GetFromJsonAsync<Article[]>(serviceEndpoint);
+    }
+}

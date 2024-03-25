@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using WebApp.Data;
+using AnkiBooks.WebApp.Data;
+using AnkiBooks.Models.Identity;
 
-namespace WebApp.Components.Account;
+namespace AnkiBooks.WebApp.Components.Account;
 
 // Remove the "else if (EmailSender is IdentityNoOpEmailSender)" block from RegisterConfirmation.razor after updating with a real implementation.
 internal sealed class IdentityNoOpEmailSender : IEmailSender<ApplicationUser>

@@ -1,0 +1,50 @@
+@page "/articles/{id}"
+@using System.Text.Json
+@using AnkiBooks.Models
+@inject IConfiguration Config
+@inject HttpClient Http
+@inject ILogger<Show> Logger
+
+@rendermode InteractiveWebAssembly
+
+@if (article == null)
+{
+    <PageTitle>Loading article...</PageTitle>
+
+    <p>Loading article...</p>
+}
+else
+{
+    <PageTitle>@article.Title</PageTitle>
+
+    @for(int ordinalPosition = 0; ordinalPosition < article.BasicNotes.Count; ordinalPosition++)
+    {
+        <AddElementDropdown @bind-Article="article" OrdinalPosition="@ordinalPosition" />
+
+        <ShowBasicNote BasicNote="@article.BasicNotes.ElementAt(ordinalPosition)" />
+    }
+
+    <AddElementDropdown @bind-Article="article" OrdinalPosition="@article.BasicNotes.Count" />
+}
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+
+    string? serviceEndpoint;
+    private Article? article;
+    protected override async Task OnInitializedAsync()
+    {
+        ArgumentNullException.ThrowIfNull(Id);
+
+        serviceEndpoint = $"{Config.GetValue<string>("Url")}/api/Articles/{Id}";
+
+        await GetArticle();
+    }
+
+    private async Task GetArticle()
+    {
+        article = await Http.GetFromJsonAsync<Article>(serviceEndpoint);
+        ArgumentNullException.ThrowIfNull(article);
+    }
+}

@@ -1,7 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Components;
+using AnkiBooks.Models.Identity;
 
-namespace WebApp.Components.Account;
+namespace AnkiBooks.WebApp.Components.Account;
 
 internal sealed class IdentityRedirectManager(NavigationManager navigationManager)
 {

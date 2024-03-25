@@ -1,14 +1,24 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using WebApp.Client.Pages;
-using WebApp.Components;
-using WebApp.Components.Account;
-using WebApp.Data;
+using AnkiBooks.WebApp.Client.Pages;
+using AnkiBooks.WebApp.Components;
+using AnkiBooks.WebApp.Components.Account;
+using AnkiBooks.WebApp.Data;
+using AnkiBooks.Models.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// This needs to be registered here because of prerendering on the server
+builder.Services.AddScoped(sp =>
+    new HttpClient
+    {
+        BaseAddress = new Uri(builder.Configuration["Url"]!)
+    });
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
@@ -27,9 +37,12 @@ builder.Services.AddAuthentication(options =>
     })
     .AddIdentityCookies();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
+builder.Services.AddControllers();
+
+builder.Services.AddDbContext<ApplicationDbContext>(
+    options => options.UseSqlite(builder.Configuration.GetConnectionString("Database"))
+);
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -41,11 +54,43 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 
 var app = builder.Build();
 
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    ApplicationDbContext context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    context.Database.EnsureCreated();
+
+    string testUserEmail = "test@example.com";
+    string testUserPassword = "Asdf333!";
+    ApplicationUser? testUser = context.Users.FirstOrDefault(u => u.Email == testUserEmail);
+
+    if (testUser == null)
+    {
+        PasswordHasher<ApplicationUser> passwordHasher = new();
+
+        testUser = new()
+        {
+            Email = testUserEmail,
+            NormalizedEmail = testUserEmail.ToUpper(),
+            UserName = testUserEmail,
+            NormalizedUserName = testUserEmail.ToUpper()
+        };
+
+        string hash = passwordHasher.HashPassword(testUser, testUserPassword);
+
+        testUser.PasswordHash = hash;
+
+        context.Users.Add(testUser);
+        context.SaveChanges();
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
     app.UseMigrationsEndPoint();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 else
 {
@@ -61,9 +106,11 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(WebApp.Client._Imports).Assembly);
+    .AddAdditionalAssemblies(typeof(AnkiBooks.WebApp.Client._Imports).Assembly);
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
+
+app.MapControllers();
 
 app.Run();
