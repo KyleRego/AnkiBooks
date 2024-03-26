@@ -7,30 +7,28 @@
 @if (hideThisComponent != true)
 {
 <div class="p-2">
-    <Card Style="width:18rem;">
-        <CardHeader>
-            New Basic Note
-        </CardHeader>
-        <CardBody>
-            <EditForm Model="BasicNote" OnValidSubmit="SubmitForm" FormName="AddLinkForm">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-                <div class="mb-2">
-                    <label for="Front" class="mb-1">Front:</label>    
-                    <InputTextArea @bind-Value="BasicNote!.Front" id="Front" class="form-control" />
-                </div>
+    <div>
+        New Basic Note
+    </div>
+    <div>
+        <EditForm Model="BasicNote" OnValidSubmit="SubmitForm" FormName="AddLinkForm">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="mb-2">
+                <label for="Front" class="mb-1">Front:</label>    
+                <InputTextArea @bind-Value="BasicNote!.Front" id="Front" class="form-control" />
+            </div>
 
-                <div class="mb-3">
-                    <label for="Back" class="mb-1">Back:</label>
-                    <InputTextArea @bind-Value="BasicNote.Back" id="Back" class="form-control" />
-                </div>
+            <div class="mb-3">
+                <label for="Back" class="mb-1">Back:</label>
+                <InputTextArea @bind-Value="BasicNote.Back" id="Back" class="form-control" />
+            </div>
 
-                <div>
-                    <Button Color="ButtonColor.Primary" Type="ButtonType.Submit">Create</Button>
-                </div>
-            </EditForm>
-        </CardBody>
-    </Card>
+            <div>
+                <RadzenButton Text="Create" />
+            </div>
+        </EditForm>
+    </div>
 </div>
 }
 

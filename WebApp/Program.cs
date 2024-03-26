@@ -6,23 +6,23 @@ using AnkiBooks.WebApp.Components;
 using AnkiBooks.WebApp.Components.Account;
 using AnkiBooks.WebApp.Data;
 using AnkiBooks.Models.Identity;
+using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// This needs to be registered here because of prerendering on the server
+// HttpClient needs to be registered here because of prerendering on the server
 builder.Services.AddScoped(sp =>
     new HttpClient
     {
         BaseAddress = new Uri(builder.Configuration["Url"]!)
     });
+builder.Services.AddScoped<DialogService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
-
-builder.Services.AddBlazorBootstrap();
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();

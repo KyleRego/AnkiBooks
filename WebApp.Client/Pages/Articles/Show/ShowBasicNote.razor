@@ -1,25 +1,25 @@
 @using AnkiBooks.Models
 
 <div class="p-2">
-    <Card Style="width:18rem;">
-        <CardHeader>
+    
+        <div>
             <div class="d-flex justify-content-between">
                 <span>Basic Note</span>
                 <span>Edit</span>
                 <span>@BasicNote.OrdinalPosition</span>
             </div>
-        </CardHeader>
-        <CardBody class="border-bottom">
+        </div>
+        <div class="border-bottom">
             @BasicNote.Front
-        </CardBody>
+        </div>
 
-        <CardBody>
+        <div>
             @BasicNote.Back
-        </CardBody>
-        <CardFooter>
+        </div>
+        <div>
             @BasicNote.OrdinalPosition
-        </CardFooter>
-    </Card>
+        </div>
+
 </div>
 
 @code {

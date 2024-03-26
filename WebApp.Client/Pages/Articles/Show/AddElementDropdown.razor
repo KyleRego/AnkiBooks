@@ -2,15 +2,7 @@
 @using AnkiBooks.Models.Enums
 
 <div class="p-2">
-    <Dropdown Split="true" class="@dropDownCssClass">
-        <DropdownActionButton Color="ButtonColor.Primary">Add</DropdownActionButton>
-        <DropdownToggleButton Color="ButtonColor.Primary" />
-        <DropdownMenu>
-            <DropdownItem Type="ButtonType.Button">Paragraph</DropdownItem>
-            <DropdownItem Type="ButtonType.Button">Quote</DropdownItem>
-            <DropdownItem Type="ButtonType.Button" @onclick="InsertNewBasicNoteForm">Basic Note</DropdownItem>
-        </DropdownMenu>
-    </Dropdown>
+    <button @onclick="InsertNewBasicNoteForm">Basic Note</button>
 </div>
 
 @if (dropDownItemWasSelected)
