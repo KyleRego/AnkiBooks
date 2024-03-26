@@ -16,7 +16,7 @@ builder.Services.AddScoped(sp =>
     {
         BaseAddress = new Uri(builder.Configuration["Url"]!)
     });
-builder.Services.AddScoped<DialogService>();
+builder.Services.AddRadzenComponents();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
