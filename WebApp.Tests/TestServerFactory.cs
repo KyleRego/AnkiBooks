@@ -1,10 +1,10 @@
 using System.Data.Common;
-using AnkiBooks.Backend.DbContext;
+using AnkiBooks.WebApp.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace AnkiBooks.Backend.Tests;
+namespace AnkiBooks.WebApp.Tests;
 
 public class TestServerFactory<TProgram>
     : WebApplicationFactory<TProgram> where TProgram : class

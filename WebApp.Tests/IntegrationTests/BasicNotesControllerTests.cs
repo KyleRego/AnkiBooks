@@ -1,10 +1,10 @@
 using System.Net;
 using System.Net.Http.Json;
-using AnkiBooks.Backend.DbContext;
+using AnkiBooks.WebApp.Data;
 using AnkiBooks.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace AnkiBooks.Backend.Tests.IntegrationTests;
+namespace AnkiBooks.WebApp.Tests.IntegrationTests;
 
 public class BasicNotesControllerTests : IClassFixture<TestServerFactory<Program>>
 {
