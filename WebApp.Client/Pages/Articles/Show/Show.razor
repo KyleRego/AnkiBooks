@@ -4,6 +4,8 @@
 @inject IConfiguration Config
 @inject HttpClient Http
 @inject ILogger<Show> Logger
+@implements IDisposable
+@inject PersistentComponentState ApplicationState
 
 @rendermode InteractiveWebAssembly
 
@@ -33,18 +35,40 @@ else
 
     string? serviceEndpoint;
     private Article? article;
+    private PersistingComponentStateSubscription persistingSubscription;
+
     protected override async Task OnInitializedAsync()
     {
         ArgumentNullException.ThrowIfNull(Id);
 
+        persistingSubscription =
+            ApplicationState.RegisterOnPersisting(PersistData);
+
         serviceEndpoint = $"{Config.GetValue<string>("Url")}/api/Articles/{Id}";
 
-        await GetArticle();
+        if (!ApplicationState.TryTakeFromJson<Article>(nameof(article), out var restored))
+        {
+            article = await GetArticle();
+        }
+        else
+        {
+            article = restored;
+        }
+    }
+    private Task PersistData()
+    {
+        ApplicationState.PersistAsJson(nameof(article), article);
+
+        return Task.CompletedTask;
     }
 
-    private async Task GetArticle()
+    void IDisposable.Dispose()
     {
-        article = await Http.GetFromJsonAsync<Article>(serviceEndpoint);
-        ArgumentNullException.ThrowIfNull(article);
+        persistingSubscription.Dispose();
+    }
+
+    private async Task<Article?> GetArticle()
+    {
+        return await Http.GetFromJsonAsync<Article>(serviceEndpoint);
     }
 }
