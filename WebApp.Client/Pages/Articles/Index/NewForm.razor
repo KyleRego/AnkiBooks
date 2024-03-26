@@ -17,8 +17,8 @@
         <ValidationSummary />
 
         <div class="mb-3">
-            <label class="form-label" for="article-title">Title:</label>
-            <InputText @bind-Value="Article!.Title" id="article-title" class="form-control" />
+            <RadzenText for="article-title">Title:</RadzenText>
+            <RadzenTextBox @bind-Value="Article!.Title" id="article-title" class="w-100" />
         </div>
 
         <RadzenButton Text="Create" Type="ButtonType.Submit" />

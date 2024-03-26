@@ -2,7 +2,11 @@
 @using AnkiBooks.Models.Enums
 
 <div class="p-2">
-    <button @onclick="InsertNewBasicNoteForm">Basic Note</button>
+    <RadzenSplitButton Click=@(args => OnButtonClick(args)) Text="SplitButton">
+        <ChildContent>
+            <RadzenSplitButtonItem Text="New basic note" Value="1" />
+        </ChildContent>
+    </RadzenSplitButton>
 </div>
 
 @if (dropDownItemWasSelected)
@@ -41,15 +45,24 @@
 
     private ElementType? dropDownItemSelected = null;
 
-    private void InsertNewBasicNoteForm()
+    private void OnButtonClick(RadzenSplitButtonItem item)
     {
-        dropDownItemSelected = ElementType.BasicNote;
-        ReplaceDropdown();
-    }
+        void ReplaceDropdown()
+        {
+            dropDownCssClass = "d-none";
+            dropDownItemWasSelected = true;
+        }
 
-    private void ReplaceDropdown()
-    {
-        dropDownCssClass = "d-none";
-        dropDownItemWasSelected = true;
+        switch (item.Value)
+        {
+            case "1":
+                dropDownItemSelected = ElementType.BasicNote;
+                break;
+
+            default:
+                break;
+        }
+
+        ReplaceDropdown();
     }
 }
