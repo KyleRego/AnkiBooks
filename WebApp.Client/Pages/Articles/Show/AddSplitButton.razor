@@ -1,10 +1,16 @@
 @using AnkiBooks.Models
 @using AnkiBooks.Models.Enums
 
-<div class="p-2">
-    <RadzenSplitButton Click=@(args => OnButtonClick(args)) Text="SplitButton">
+<div class="d-flex justify-content-center @dropDownCssClass">
+    <RadzenSplitButton  Click=@(args => OnButtonClick(args))
+                        Text="Add"
+                        Variant="Variant.Outlined"
+                        Size="ButtonSize.Small">
         <ChildContent>
-            <RadzenSplitButtonItem Text="New basic note" Value="1" />
+            <RadzenSplitButtonItem Text="Basic note" Value="1" />
+            <RadzenSplitButtonItem Text="Cloze note" Value="2" />
+            <RadzenSplitButtonItem Text="Picture note" Value="3" />
+            <RadzenSplitButtonItem Text="Table note" Value="4" />
         </ChildContent>
     </RadzenSplitButton>
 </div>
@@ -14,10 +20,6 @@
     @switch (dropDownItemSelected)
     {
         case ElementType.BasicNote:
-            @* <AddElementDropdown @bind-Article:get="Article"
-                                @bind-Article:set="ArticleChanged"
-                                OrdinalPosition="@OrdinalPosition" /> *@
-
             <NewBasicNote @bind-Article:get="Article"
                         @bind-Article:set="ArticleChanged"
                         OrdinalPosition="@OrdinalPosition" />
@@ -57,12 +59,11 @@
         {
             case "1":
                 dropDownItemSelected = ElementType.BasicNote;
+                ReplaceDropdown();
                 break;
 
             default:
                 break;
         }
-
-        ReplaceDropdown();
     }
 }

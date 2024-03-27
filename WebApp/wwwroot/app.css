@@ -1,9 +1,22 @@
 :root {
     --ankibooks-background-color: #171717;
-    --ankibooks-text-color: #e6e6e6;
+    --ankibooks-input-background-color: rgb(255, 255, 255);
+    --ankibooks-text-color: #ececec;
     --ankibooks-border-color: #404040;
     --ankibooks-hyperlink-color: #75b6e7;
     --ankibooks-hyperlink-hover-color: #278cda;
+}
+
+:root {
+    --rz-primary: var(--ankibooks-hyperlink-color);
+    --rz-on-primary: black;
+    --rz-dropdown-open-background-color: var(--ankibooks-background-color);
+    --rz-dropdown-item-hover-background-color: var(--ankibooks-background-color);
+    --rz-dropdown-item-hover-color: var(--ankibooks-hyperlink-hover-color);
+    --rz-dropdown-panel-border: 1px solid var(--ankibooks-border-color);
+    --rz-input-background-color:  var(--ankibooks-input-background-color);
+    
+    --rz-card-padding: 0.75rem;
 }
 
 body {

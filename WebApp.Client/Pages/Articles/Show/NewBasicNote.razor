@@ -6,30 +6,23 @@
 
 @if (hideThisComponent != true)
 {
-<div class="p-2">
-    <div>
-        New Basic Note
+    <div class="d-flex justify-content-center">
+        <RadzenCard Variant="Variant.Outlined" Style="min-width: 32rem">
+            <EditForm Model="BasicNote" OnValidSubmit="SubmitForm" FormName="AddLinkForm">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <RadzenStack Gap="10">
+                    <RadzenTextArea @bind-Value="BasicNote!.Front" id="Front" class="form-control" />
+                    
+                    <RadzenTextArea @bind-Value="BasicNote.Back" id="Back" class="form-control" />
+            
+                    <div class="d-flex justify-content-center">
+                        <RadzenButton type="submit" Text="Create" Variant="Variant.Outlined" Size="ButtonSize.Small" />
+                    </div>
+                </RadzenStack>
+            </EditForm>
+        </RadzenCard>
     </div>
-    <div>
-        <EditForm Model="BasicNote" OnValidSubmit="SubmitForm" FormName="AddLinkForm">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-            <div class="mb-2">
-                <label for="Front" class="mb-1">Front:</label>    
-                <InputTextArea @bind-Value="BasicNote!.Front" id="Front" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label for="Back" class="mb-1">Back:</label>
-                <InputTextArea @bind-Value="BasicNote.Back" id="Back" class="form-control" />
-            </div>
-
-            <div>
-                <RadzenButton Text="Create" />
-            </div>
-        </EditForm>
-    </div>
-</div>
 }
 
 @code {
@@ -59,10 +52,10 @@
     protected override void OnInitialized()
     {
         BasicNote = new()
-        {
-            ArticleId = Article.Id,
-            OrdinalPosition = OrdinalPosition
-        };
+            {
+                ArticleId = Article.Id,
+                OrdinalPosition = OrdinalPosition
+            };
     }
 
     private async Task SubmitForm()
@@ -73,19 +66,19 @@
         ArgumentNullException.ThrowIfNull(BasicNote.ArticleId);
 
         BasicNote data = new BasicNote
-                            {
-                                Front = BasicNote.Front,
-                                Back = BasicNote.Back,
-                                ArticleId = BasicNote.ArticleId
-                            };
+            {
+                Front = BasicNote.Front,
+                Back = BasicNote.Back,
+                ArticleId = BasicNote.ArticleId
+            };
         HttpResponseMessage response = await Http.PostAsJsonAsync(endpoint, data);
         response.EnsureSuccessStatusCode();
 
         string responseBody = await response.Content.ReadAsStringAsync();
         JsonSerializerOptions jsonOptions = new()
-        {
-            PropertyNameCaseInsensitive = true
-        };
+            {
+                PropertyNameCaseInsensitive = true
+            };
         BasicNote? basicNote = JsonSerializer.Deserialize<BasicNote>(responseBody, jsonOptions);
         ArgumentNullException.ThrowIfNull(basicNote);
 
