@@ -1,0 +1,13 @@
+.site-header {
+    border-block-end: 1px solid var(--ankibooks-border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 3.375rem;
+    padding-inline: 36px;
+    font-size: 24px;
+}
+
+.site-header a {
+    font-size: 16px;
+}
