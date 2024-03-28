@@ -10,22 +10,34 @@
 @inject PersistentComponentState ApplicationState
 
 <RadzenSplitter Orientation="Orientation.Horizontal" class="flex-grow-1">
-    <RadzenSplitterPane Size="20%" Min="30px" Max="70%">
-        <div class="p-4">
-            <ul>
-                <li><a href="articles">Articles</a></li>
-            @if (articles == null)
-            {
-                <li>Loading articles...</li>
-            }
-            else
-            {
-                @foreach(Article article in articles)
-                {
-                    <li><a href="articles/@article.Id">@article.Title</a></li>
-                }
-            }
-            </ul>
+    <RadzenSplitterPane Size="15rem">
+        <div class="py-4 px-2">
+            <RadzenTree>
+                <RadzenTreeItem>
+                    <Template>
+                        <NavLink href="articles" Match="NavLinkMatch.All" class="text-break">Articles</NavLink>
+                    </Template>
+                    <ChildContent>
+                        @if (articles == null)
+                        {
+                            <RadzenTreeItem Text="Loading articles..." />
+                        }
+                        else
+                        {
+                            @foreach(Article article in articles)
+                            {
+                                string hrefValue = $"articles/{article.Id}";
+
+                                <RadzenTreeItem>
+                                    <Template>
+                                        <NavLink href="@hrefValue" class="text-break">@article.Title</NavLink>
+                                    </Template>
+                                </RadzenTreeItem>
+                            }
+                        }
+                    </ChildContent>
+                </RadzenTreeItem>
+            </RadzenTree>
         </div>
     </RadzenSplitterPane>
     <RadzenSplitterPane>

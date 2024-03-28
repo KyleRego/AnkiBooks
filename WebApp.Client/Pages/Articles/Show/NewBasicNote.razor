@@ -6,8 +6,8 @@
 
 @if (hideThisComponent != true)
 {
-    <div class="d-flex justify-content-center">
-        <RadzenCard Variant="Variant.Outlined" Style="min-width: 32rem">
+    <div class="d-flex justify-content-center my-2">
+        <RadzenCard Variant="Variant.Outlined" Style="width: 32rem">
             <EditForm Model="BasicNote" OnValidSubmit="SubmitForm" FormName="AddLinkForm">
                 <DataAnnotationsValidator />
                 <ValidationSummary />

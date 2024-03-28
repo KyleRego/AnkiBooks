@@ -9,7 +9,9 @@
 
 :root {
     --rz-primary: var(--ankibooks-hyperlink-color);
+    --rz-primary-lighter: var(--ankibooks-hyperlink-hover-color);
     --rz-on-primary: black;
+    --rz-on-primary-lighter: black;
     --rz-card-border: 1px solid var(--ankibooks-border-color);
     --rz-dropdown-open-background-color: var(--ankibooks-background-color);
     --rz-dropdown-item-hover-background-color: var(--ankibooks-background-color);
@@ -25,6 +27,12 @@
     --rz-input-border: 1px solid var(--ankibooks-hyperlink-color);
     --rz-input-value-color: var(--ankibooks-text-color);
     --rz-input-background-color: var(--ankibooks-background-color);
+
+    --rz-tree-node-padding: 0;
+    --rz-tree-node-hover-color: transparent;
+    --rz-tree-node-hover-background-color: transparent;
+    --rz-tree-node-selected-color: transparent;
+    --rz-tree-node-selected-background-color: transparent;
 }
 
 body {
@@ -34,6 +42,11 @@ body {
 a {
     color: var(--ankibooks-hyperlink-color);
     text-decoration: none;
+}
+
+/* TODO: Something else than this */
+a.active {
+    color: white;
 }
 
 a:hover {
