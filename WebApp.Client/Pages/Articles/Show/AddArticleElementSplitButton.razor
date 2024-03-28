@@ -7,8 +7,8 @@
                         Variant="Variant.Outlined"
                         Size="ButtonSize.Small">
         <ChildContent>
-            <RadzenSplitButtonItem Text="Basic note" Value="1" />
-            <RadzenSplitButtonItem Text="Cloze note" Value="2" />
+            <RadzenSplitButtonItem Text="Basic note" Value="@(ElementType.BasicNote.ToString())" />
+            <RadzenSplitButtonItem Text="Cloze note" Value="@(ElementType.ClozeNote.ToString())" />
             <RadzenSplitButtonItem Text="Picture note" Value="3" />
             <RadzenSplitButtonItem Text="Table note" Value="4" />
         </ChildContent>
@@ -20,11 +20,15 @@
     @switch (dropDownItemSelected)
     {
         case ElementType.BasicNote:
-            <NewBasicNote @bind-Article:get="Article"
-                        @bind-Article:set="ArticleChanged"
-                        OrdinalPosition="@OrdinalPosition" />
+            <NewBasicNote   @bind-Article:get="Article"
+                            @bind-Article:set="ArticleChanged"
+                            OrdinalPosition="@OrdinalPosition" />
             break;
-
+        case ElementType.ClozeNote:
+            <NewClozeNote   @bind-Article:get="Article"
+                            @bind-Article:set="ArticleChanged"
+                            OrdinalPosition="@OrdinalPosition" />
+            break;
         default:
             break;
 
@@ -55,15 +59,7 @@
             dropDownItemWasSelected = true;
         }
 
-        switch (item.Value)
-        {
-            case "1":
-                dropDownItemSelected = ElementType.BasicNote;
-                ReplaceDropdown();
-                break;
-
-            default:
-                break;
-        }
+        dropDownItemSelected = (ElementType)Enum.Parse(typeof(ElementType), item.Value);
+        ReplaceDropdown();
     }
 }

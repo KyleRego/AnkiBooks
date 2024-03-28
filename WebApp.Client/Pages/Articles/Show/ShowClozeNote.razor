@@ -1,0 +1,20 @@
+@using AnkiBooks.Models
+
+<div class="d-flex justify-content-center my-2">
+    <RadzenCard Variant="Variant.Outlined" Style="width: 32rem">
+        <div class="d-flex justify-content-around">
+            <span>Cloze Note</span>
+            <span>Edit</span>
+            <span>@ClozeNote.OrdinalPosition</span>
+        </div>
+
+        <div class="border-bottom text-center pb-2 my-2">
+            @ClozeNote.Text
+        </div>
+    </RadzenCard>
+</div>
+
+@code {
+    [Parameter]
+    public ClozeNote ClozeNote { get; set; } = null!;
+}

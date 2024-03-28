@@ -8,14 +8,9 @@ namespace AnkiBooks.WebApp.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class BasicNotesController : ControllerBase
+public class BasicNotesController(ApplicationDbContext context) : ControllerBase
 {
-    private readonly ApplicationDbContext _context;
-
-    public BasicNotesController(ApplicationDbContext context)
-    {
-        _context = context;
-    }
+    private readonly ApplicationDbContext _context = context;
 
     // GET: api/BasicNotes
     [HttpGet]
@@ -76,14 +71,23 @@ public class BasicNotesController : ControllerBase
     {
         try
         {
-            Article article = await _context.Articles.Include(a => a.BasicNotes).FirstAsync(a => a.Id == basicNote.ArticleId);
+            Article article = await _context.Articles
+                .Include(a => a.BasicNotes)
+                .Include(a => a.ClozeNotes)
+                .FirstAsync(a => a.Id == basicNote.ArticleId);
+
             List<BasicNote> basicNotesToShift = article.BasicNotes.Where(bn => bn.OrdinalPosition >= basicNote.OrdinalPosition).ToList();
+            List<ClozeNote> clozeNotesToShift = article.ClozeNotes.Where(cn => cn.OrdinalPosition >= basicNote.OrdinalPosition).ToList();
             foreach (BasicNote bnToShift in basicNotesToShift)
             {
                 bnToShift.OrdinalPosition += 1;
             }
+            foreach (ClozeNote cnToShift in clozeNotesToShift)
+            {
+                cnToShift.OrdinalPosition += 1;
+            }
             article.BasicNotes.Add(basicNote);
-                
+      
             await _context.SaveChangesAsync();
         }
         catch (DbUpdateException)

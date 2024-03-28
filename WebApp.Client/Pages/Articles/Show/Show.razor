@@ -2,6 +2,8 @@
 @layout ArticlesSidebar
 @using System.Text.Json
 @using AnkiBooks.Models
+@using AnkiBooks.Models.Services
+@using AnkiBooks.Models.Interfaces
 @inject IConfiguration Config
 @inject HttpClient Http
 @inject ILogger<Show> Logger
@@ -20,14 +22,25 @@ else
 {
     <PageTitle>@article.Title</PageTitle>
 
-    @for(int ordinalPosition = 0; ordinalPosition < article.BasicNotes.Count; ordinalPosition++)
+    @foreach(IArticleElement articleElement in articleElements)
     {
-        <AddSplitButton @bind-Article="article" OrdinalPosition="@ordinalPosition" />
+        <AddArticleElementSplitButton @bind-Article="article" OrdinalPosition="@(articleElement.OrdinalPosition)" />
 
-        <ShowBasicNote BasicNote="@article.BasicNotes.ElementAt(ordinalPosition)" />
+        if (articleElement is BasicNote)
+        {
+            BasicNote bn = (BasicNote)articleElement;
+
+            <ShowBasicNote BasicNote="@bn" />
+        }
+        else if (articleElement is ClozeNote)
+        {
+            ClozeNote cn = (ClozeNote)articleElement;
+
+            <ShowClozeNote ClozeNote="@cn" />
+        }
     }
 
-    <AddSplitButton @bind-Article="article" OrdinalPosition="@article.BasicNotes.Count" />
+    <AddArticleElementSplitButton @bind-Article="article" OrdinalPosition="@articleElements.Count" />
 }
 
 @code {
@@ -36,14 +49,14 @@ else
 
     string? serviceEndpoint;
     private Article? article;
+    private IList<IArticleElement> articleElements = [];
     private PersistingComponentStateSubscription persistingSubscription;
 
     protected override async Task OnParametersSetAsync()
     {
         ArgumentNullException.ThrowIfNull(Id);
 
-        persistingSubscription =
-            ApplicationState.RegisterOnPersisting(PersistData);
+        persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
 
         serviceEndpoint = $"{Config.GetValue<string>("Url")}/api/Articles/{Id}";
 
@@ -55,6 +68,8 @@ else
         {
             article = restored;
         }
+
+        articleElements = ArticleElementMerger.ElementsOrdered(article.BasicNotes, article.ClozeNotes);
     }
     private Task PersistData()
     {

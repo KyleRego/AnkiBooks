@@ -8,13 +8,11 @@
 {
     <div class="d-flex justify-content-center my-2">
         <RadzenCard Variant="Variant.Outlined" Style="width: 32rem">
-            <EditForm Model="BasicNote" OnValidSubmit="SubmitForm">
+            <EditForm Model="ClozeNote" OnValidSubmit="SubmitForm">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
                 <RadzenStack Gap="10">
-                    <RadzenTextArea @bind-Value="BasicNote!.Front" id="Front" />
-                    
-                    <RadzenTextArea @bind-Value="BasicNote.Back" id="Back" />
+                    <RadzenTextArea @bind-Value="ClozeNote!.Text" id="Text" />
             
                     <div class="d-flex justify-content-center">
                         <RadzenButton type="submit" Text="Create" Variant="Variant.Outlined" Size="ButtonSize.Small" />
@@ -37,40 +35,38 @@
     [Parameter]
     public int OrdinalPosition { get; set; }
 
-    private async Task AddBasicNoteToArticle(BasicNote basicNote)
+    private async Task AddClozeNoteToArticle(ClozeNote clozeNote)
     {
-        Article.BasicNotes.Add(basicNote);
+        Article.ClozeNotes.Add(clozeNote);
         await ArticleChanged.InvokeAsync(Article);
     }
 
     // TODO: Do not hard code the backend origin
-    private const string endpoint = "http://localhost:5247/api/BasicNotes";
+    private const string endpoint = "http://localhost:5247/api/ClozeNotes";
 
     [SupplyParameterFromForm]
-    public BasicNote? BasicNote { get; set; }
+    public ClozeNote? ClozeNote { get; set; }
 
     protected override void OnInitialized()
     {
-        BasicNote = new()
-            {
-                ArticleId = Article.Id,
-                OrdinalPosition = OrdinalPosition
-            };
+        ClozeNote = new()
+        {
+            ArticleId = Article.Id,
+            OrdinalPosition = OrdinalPosition
+        };
     }
 
     private async Task SubmitForm()
     {
-        ArgumentNullException.ThrowIfNull(BasicNote);
-        ArgumentNullException.ThrowIfNull(BasicNote.Front);
-        ArgumentNullException.ThrowIfNull(BasicNote.Back);
-        ArgumentNullException.ThrowIfNull(BasicNote.ArticleId);
+        ArgumentNullException.ThrowIfNull(ClozeNote);
+        ArgumentNullException.ThrowIfNull(ClozeNote.Text);
+        ArgumentNullException.ThrowIfNull(ClozeNote.ArticleId);
 
-        BasicNote data = new BasicNote
+        ClozeNote data = new ClozeNote
             {
-                Front = BasicNote.Front,
-                Back = BasicNote.Back,
-                ArticleId = BasicNote.ArticleId,
-                OrdinalPosition = BasicNote.OrdinalPosition
+                Text = ClozeNote.Text,
+                ArticleId = ClozeNote.ArticleId,
+                OrdinalPosition = ClozeNote.OrdinalPosition
             };
         HttpResponseMessage response = await Http.PostAsJsonAsync(endpoint, data);
         response.EnsureSuccessStatusCode();
@@ -80,10 +76,10 @@
             {
                 PropertyNameCaseInsensitive = true
             };
-        BasicNote? basicNote = JsonSerializer.Deserialize<BasicNote>(responseBody, jsonOptions);
-        ArgumentNullException.ThrowIfNull(basicNote);
+        ClozeNote? clozeNote = JsonSerializer.Deserialize<ClozeNote>(responseBody, jsonOptions);
+        ArgumentNullException.ThrowIfNull(clozeNote);
 
-        await AddBasicNoteToArticle(basicNote);
+        await AddClozeNoteToArticle(clozeNote);
         hideThisComponent = true;
     }
 }

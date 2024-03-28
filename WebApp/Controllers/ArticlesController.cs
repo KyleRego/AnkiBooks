@@ -30,7 +30,8 @@ public class ArticlesController(ApplicationDbContext context,
     public async Task<ActionResult<Article>> GetArticle(string id)
     {
         Article? article = await _context.Articles
-                                        .Include(a => a.BasicNotes)
+                                        .Include(a => a.BasicNotes.OrderBy(bn => bn.OrdinalPosition))
+                                        .Include(a => a.ClozeNotes.OrderBy(cn => cn.OrdinalPosition))
                                         .FirstOrDefaultAsync(a => a.Id == id);
 
         if (article == null)
