@@ -12,9 +12,9 @@
                 <DataAnnotationsValidator />
                 <ValidationSummary />
                 <RadzenStack Gap="10">
-                    <RadzenTextArea @bind-Value="BasicNote!.Front" id="Front" class="form-control" />
+                    <RadzenTextArea @bind-Value="BasicNote!.Front" id="Front" />
                     
-                    <RadzenTextArea @bind-Value="BasicNote.Back" id="Back" class="form-control" />
+                    <RadzenTextArea @bind-Value="BasicNote.Back" id="Back" />
             
                     <div class="d-flex justify-content-center">
                         <RadzenButton type="submit" Text="Create" Variant="Variant.Outlined" Size="ButtonSize.Small" />

@@ -10,13 +10,21 @@
 :root {
     --rz-primary: var(--ankibooks-hyperlink-color);
     --rz-on-primary: black;
+    --rz-card-border: 1px solid var(--ankibooks-border-color);
     --rz-dropdown-open-background-color: var(--ankibooks-background-color);
     --rz-dropdown-item-hover-background-color: var(--ankibooks-background-color);
     --rz-dropdown-item-hover-color: var(--ankibooks-hyperlink-hover-color);
     --rz-dropdown-panel-border: 1px solid var(--ankibooks-border-color);
     --rz-input-background-color:  var(--ankibooks-input-background-color);
-    
-    --rz-card-padding: 0.75rem;
+    --rz-dialog-background-color: var(--ankibooks-background-color);
+    --rz-dialog-title-background-color: var(--ankibooks-background-color);
+    --rz-dialog-title-color: var(--ankibooks-text-color);
+    --rz-dialog-title-border: 1px solid var(--ankibooks-border-color);
+    --rz-dialog-title-font-weight: 600;
+    --rz-text-body1-color: var(--ankibooks-text-color);
+    --rz-input-border: 1px solid var(--ankibooks-hyperlink-color);
+    --rz-input-value-color: var(--ankibooks-text-color);
+    --rz-input-background-color: var(--ankibooks-background-color);
 }
 
 body {

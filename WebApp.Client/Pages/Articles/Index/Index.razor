@@ -1,83 +1,9 @@
-@page "/"
-@layout WebApp.Client.Layout.MainLayout
-@using System.Text.Json
-@using System.Text.Json.Serialization
-@using AnkiBooks.Models
-@inject IConfiguration Config
-@inject HttpClient Http
+@page "/articles"
+@layout ArticlesSidebar
 @inject ILogger<Index> Logger
-@implements IDisposable
-@inject PersistentComponentState ApplicationState
 
 @rendermode InteractiveWebAssembly
 
 <PageTitle>Articles</PageTitle>
 
-<div class="d-flex justify-content-between align-items-center">
-    <h1 class="my-0">Articles</h1>
-
-    <New />
-</div>
-
-@if (articles == null)
-{
-    <p>Loading articles...</p>
-}
-else
-{
-    <ul>
-        @foreach(Article article in articles)
-        {
-            <li>
-                <a href="articles/@article.Id">
-                    @article.Title
-                </a>
-            </li>
-        }
-    </ul>
-}
-
-@code {
-    string? serviceEndpoint;
-    private Article[]? articles;
-    private PersistingComponentStateSubscription persistingSubscription;
-
-    protected override async Task OnInitializedAsync()
-    {
-        persistingSubscription =
-            ApplicationState.RegisterOnPersisting(PersistData);
-
-        serviceEndpoint = $"{Config.GetValue<string>("Url")}/api/Articles";
-
-        if (!ApplicationState.TryTakeFromJson<Article[]>(nameof(articles), out var restored))
-        {
-            articles = await GetArticles();
-        }
-        else
-        {
-            articles = restored;
-        }
-    }
-
-    private Task PersistData()
-    {
-        ApplicationState.PersistAsJson(nameof(articles), articles);
-
-        return Task.CompletedTask;
-    }
-
-    void IDisposable.Dispose()
-    {
-        persistingSubscription.Dispose();
-    }
-
-    private async Task<Article[]?> GetArticles()
-    {
-        JsonSerializerOptions options = new()
-        {
-            ReferenceHandler = ReferenceHandler.Preserve
-        };
-
-        return await Http.GetFromJsonAsync<Article[]>(serviceEndpoint);
-    }
-}
+<New />

@@ -1,10 +1,31 @@
 @inherits LayoutComponentBase
 @layout MainLayout
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using AnkiBooks.Models
+@inject IConfiguration Config
+@inject HttpClient Http
+@inject ILogger<Index> Logger
+@implements IDisposable
+@inject PersistentComponentState ApplicationState
 
 <RadzenSplitter Orientation="Orientation.Horizontal" class="flex-grow-1">
     <RadzenSplitterPane Size="20%" Min="30px" Max="70%">
         <div class="p-4">
-            hello world
+            <ul>
+                <li><a href="articles">Articles</a></li>
+            @if (articles == null)
+            {
+                <li>Loading articles...</li>
+            }
+            else
+            {
+                @foreach(Article article in articles)
+                {
+                    <li><a href="articles/@article.Id">@article.Title</a></li>
+                }
+            }
+            </ul>
         </div>
     </RadzenSplitterPane>
     <RadzenSplitterPane>
@@ -14,3 +35,47 @@
     </RadzenSplitterPane>
 
 </RadzenSplitter>
+
+@code {
+    string? serviceEndpoint;
+    private Article[]? articles;
+    private PersistingComponentStateSubscription persistingSubscription;
+
+    protected override async Task OnInitializedAsync()
+    {
+        persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
+
+        serviceEndpoint = $"{Config.GetValue<string>("Url")}/api/Articles";
+
+        if (!ApplicationState.TryTakeFromJson<Article[]>(nameof(articles), out var restored))
+        {
+            articles = await GetArticles();
+        }
+        else
+        {
+            articles = restored;
+        }
+    }
+
+    private Task PersistData()
+    {
+        ApplicationState.PersistAsJson(nameof(articles), articles);
+
+        return Task.CompletedTask;
+    }
+
+    void IDisposable.Dispose()
+    {
+        persistingSubscription.Dispose();
+    }
+
+    private async Task<Article[]?> GetArticles()
+    {
+        JsonSerializerOptions options = new()
+        {
+            ReferenceHandler = ReferenceHandler.Preserve
+        };
+
+        return await Http.GetFromJsonAsync<Article[]>(serviceEndpoint);
+    }
+}
