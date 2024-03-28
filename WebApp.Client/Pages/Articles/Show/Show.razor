@@ -38,7 +38,7 @@ else
     private Article? article;
     private PersistingComponentStateSubscription persistingSubscription;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         ArgumentNullException.ThrowIfNull(Id);
 
