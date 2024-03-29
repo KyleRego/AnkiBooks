@@ -5,30 +5,25 @@
 @inject ILogger<NewBasicNote> Logger
 @inject HttpClient Http
 
-@if (hideThisComponent != true)
-{
-    <div class="d-flex justify-content-center my-2">
-        <RadzenCard Variant="Variant.Outlined" Style="width: 32rem">
-            <EditForm Model="BasicNote" OnValidSubmit="SubmitForm">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-                <RadzenStack Gap="10">
-                    <RadzenTextArea @bind-Value="BasicNote!.Front" id="Front" />
-                    
-                    <RadzenTextArea @bind-Value="BasicNote.Back" id="Back" />
-            
-                    <div class="d-flex justify-content-center">
-                        <RadzenButton type="submit" Text="Create" Variant="Variant.Outlined" Size="ButtonSize.Small" />
-                    </div>
-                </RadzenStack>
-            </EditForm>
-        </RadzenCard>
-    </div>
-}
+<div class="d-flex justify-content-center my-2">
+    <RadzenCard Variant="Variant.Outlined" Style="width: 32rem">
+        <EditForm Model="BasicNote" OnValidSubmit="SubmitForm">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <RadzenStack Gap="10">
+                <RadzenTextArea @bind-Value="BasicNote!.Front" id="Front" />
+                
+                <RadzenTextArea @bind-Value="BasicNote.Back" id="Back" />
+        
+                <div class="d-flex justify-content-center">
+                    <RadzenButton type="submit" Text="Create" Variant="Variant.Outlined" Size="ButtonSize.Small" />
+                </div>
+            </RadzenStack>
+        </EditForm>
+    </RadzenCard>
+</div>
 
 @code {
-    private bool hideThisComponent = false;
-
     [Parameter]
     public string ArticleId { get; set; } = null!;
 
@@ -40,6 +35,12 @@
 
     [Parameter]
     public EventCallback<OrderedElementsContainer> OrderedElementsContainerChanged { get; set; }
+
+    [Parameter]
+    public bool HideSplitButtonAndShowForm { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> HideSplitButtonAndShowFormChanged { get; set; }
 
     // TODO: Do not hard code the backend origin
     private const string endpoint = "http://localhost:5247/api/BasicNotes";
@@ -86,12 +87,13 @@
         ArgumentNullException.ThrowIfNull(basicNote);
 
         await AddToElements(basicNote);
-        hideThisComponent = true;
     }
 
     private async Task AddToElements(BasicNote basicNote)
     {
         OrderedElementsContainer.Add(basicNote);
         await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
+        HideSplitButtonAndShowForm = false;
+        await HideSplitButtonAndShowFormChanged.InvokeAsync(HideSplitButtonAndShowForm);
     }
 }

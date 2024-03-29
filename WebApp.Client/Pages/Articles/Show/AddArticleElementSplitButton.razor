@@ -2,33 +2,37 @@
 @using AnkiBooks.ApplicationCore.Enums
 @using AnkiBooks.ApplicationCore.Interfaces
 
-<div class="d-flex justify-content-center @dropDownCssClass">
-    <RadzenSplitButton  Click=@(args => OnButtonClick(args))
-                        Text="Add"
-                        Variant="Variant.Outlined"
-                        Size="ButtonSize.Small">
-        <ChildContent>
-            <RadzenSplitButtonItem Text="Basic note" Value="@(ElementType.BasicNote.ToString())" />
-            <RadzenSplitButtonItem Text="Cloze note" Value="@(ElementType.ClozeNote.ToString())" />
-            <RadzenSplitButtonItem Text="Picture note" Value="3" />
-            <RadzenSplitButtonItem Text="Table note" Value="4" />
-        </ChildContent>
-    </RadzenSplitButton>
-</div>
-
-@if (dropDownItemWasSelected)
+@if (hideSplitButtonAndShowForm == false)
+{
+    <div class="d-flex justify-content-center @dropDownCssClass">
+        <RadzenSplitButton  Click=@(args => OnButtonClick(args))
+                            Text="Add"
+                            Variant="Variant.Outlined"
+                            Size="ButtonSize.Small">
+            <ChildContent>
+                <RadzenSplitButtonItem Text="Basic note" Value="@(ElementType.BasicNote.ToString())" />
+                <RadzenSplitButtonItem Text="Cloze note" Value="@(ElementType.ClozeNote.ToString())" />
+                <RadzenSplitButtonItem Text="Picture note" Value="3" />
+                <RadzenSplitButtonItem Text="Table note" Value="4" />
+            </ChildContent>
+        </RadzenSplitButton>
+    </div>
+}
+else
 {
     @switch (dropDownItemSelected)
     {
         case ElementType.BasicNote:
             <NewBasicNote   @bind-OrderedElementsContainer:get="OrderedElementsContainer"
                             @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
+                            @bind-HideSplitButtonAndShowForm="hideSplitButtonAndShowForm"
                             ArticleId="@ArticleId"
                             PairedElement="@PairedElement" />
             break;
         case ElementType.ClozeNote:
             <NewClozeNote   @bind-OrderedElementsContainer:get="OrderedElementsContainer"
                             @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
+                            @bind-HideSplitButtonAndShowForm="hideSplitButtonAndShowForm"
                             ArticleId="@ArticleId"
                             PairedElement="@PairedElement" />
             break;
@@ -54,7 +58,7 @@
 
     private string dropDownCssClass = "";
 
-    private bool dropDownItemWasSelected = false;
+    private bool hideSplitButtonAndShowForm = false;
 
     private ElementType? dropDownItemSelected = null;
 
@@ -62,8 +66,7 @@
     {
         void ReplaceDropdown()
         {
-            dropDownCssClass = "d-none";
-            dropDownItemWasSelected = true;
+            hideSplitButtonAndShowForm = true;
         }
 
         dropDownItemSelected = (ElementType)Enum.Parse(typeof(ElementType), item.Value);
