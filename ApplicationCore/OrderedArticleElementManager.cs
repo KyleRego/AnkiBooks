@@ -8,28 +8,22 @@ namespace AnkiBooks.ApplicationCore;
 /// The article passed to the constructor must have its article element properties sorted
 /// already for the combining of those into a single ordered list to work with the algorithm
 /// </summary>
-public class ArticleElementManager
+public class OrderedArticleElementsManager
 {
     private readonly Article _article;
     public List<IArticleElement> OrderedElements { get; }
 
-    public ArticleElementManager(Article article)
+    public OrderedArticleElementsManager(Article article)
     {
         _article = article;
-        OrderedElements = SetupOrderedElements();
+        OrderedElements = InitializeOrderedElements();
     }
 
-    private List<IArticleElement> SetupOrderedElements()
+    private List<IArticleElement> InitializeOrderedElements()
     {
-        return OrderedArticleElementsMerger.ElementsOrdered(_article.BasicNotes, _article.ClozeNotes);
-    }
-}
+        List<BasicNote> orderedBasicNotes = _article.BasicNotes;
+        List<ClozeNote> orderedClozeNotes = _article.ClozeNotes;
 
-public class OrderedArticleElementsMerger
-{
-    public static List<IArticleElement> ElementsOrdered(List<BasicNote> orderedBasicNotes, List<ClozeNote> orderedClozeNotes)
-    {
-        // Consider checking that the input is ordered, throw an error if not
         if (orderedBasicNotes.Count == 0)
         {
             return orderedClozeNotes.Cast<IArticleElement>().ToList();

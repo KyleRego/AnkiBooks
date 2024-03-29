@@ -70,7 +70,7 @@ else
         }
 
         ArgumentNullException.ThrowIfNull(article);
-        articleElements = new ArticleElementManager(article).OrderedElements;
+        articleElements = new OrderedArticleElementsManager(article).OrderedElements;
     }
 
     private Task PersistData()
