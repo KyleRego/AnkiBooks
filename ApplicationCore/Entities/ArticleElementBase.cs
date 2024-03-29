@@ -15,4 +15,6 @@ public abstract class ArticleElementBase : EntityBase, IArticleElement
 
     [Required]
     public int OrdinalPosition { get; set; }
+
+    public ICollection<Concept> Concepts { get; } = [];
 }

@@ -3,6 +3,7 @@ using AnkiBooks.ApplicationCore.Interfaces;
 
 namespace AnkiBooks.ApplicationCore.Entities;
 
+// TODO: Add aggregates folder, refactor this
 public class Concept : EntityBase
 {
     [Required]
