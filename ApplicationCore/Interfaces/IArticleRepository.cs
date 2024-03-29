@@ -1,3 +1,5 @@
+using AnkiBooks.ApplicationCore.Entities;
+
 namespace AnkiBooks.ApplicationCore.Interfaces;
 
 public interface IArticleRepository

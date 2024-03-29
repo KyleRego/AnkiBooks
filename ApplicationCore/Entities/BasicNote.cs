@@ -1,6 +1,6 @@
-namespace AnkiBooks.ApplicationCore;
+namespace AnkiBooks.ApplicationCore.Entities;
 
-public class BasicNote : ArticleElement, IHasConcepts
+public class BasicNote : ArticleElementBase, IHasConcepts
 {
     [Required]
     public string? Front { get; set; }

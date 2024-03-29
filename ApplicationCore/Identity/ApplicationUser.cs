@@ -1,3 +1,4 @@
+using AnkiBooks.ApplicationCore.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace AnkiBooks.ApplicationCore.Identity;

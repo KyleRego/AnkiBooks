@@ -1,8 +1,9 @@
 using AnkiBooks.ApplicationCore.Identity;
+using AnkiBooks.ApplicationCore.Interfaces;
 
-namespace AnkiBooks.ApplicationCore;
+namespace AnkiBooks.ApplicationCore.Entities;
 
-public class Concept : PrimaryKeyIdBase
+public class Concept : EntityBase
 {
     [Required]
     public ICollection<ConceptName> Names { get; set; } = [];
@@ -10,7 +11,7 @@ public class Concept : PrimaryKeyIdBase
     [Required]
     public bool Public { get; set; } = false;
 
-    public ICollection<ArticleElement> Elements { get; } = [];
+    public ICollection<IArticleElement> Elements { get; } = [];
 
     [Required]
     public string? ApplicationUserId { get; set; }

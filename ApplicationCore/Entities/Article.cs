@@ -1,6 +1,6 @@
-namespace AnkiBooks.ApplicationCore;
+namespace AnkiBooks.ApplicationCore.Entities;
 
-public class Article(string title) : PrimaryKeyIdBase
+public class Article(string title) : EntityBase
 {
     [Required]
     public string Title { get; set; } = title;

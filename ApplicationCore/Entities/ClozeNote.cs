@@ -1,6 +1,6 @@
-namespace AnkiBooks.ApplicationCore;
+namespace AnkiBooks.ApplicationCore.Entities;
 
-public class ClozeNote : ArticleElement, IHasConcepts
+public class ClozeNote : ArticleElementBase, IHasConcepts
 {
     [Required]
     public string? Text { get; set; }

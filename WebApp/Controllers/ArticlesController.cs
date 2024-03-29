@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using AnkiBooks.ApplicationCore;
 using AnkiBooks.ApplicationCore.Interfaces;
+using AnkiBooks.ApplicationCore.Entities;
 
 namespace AnkiBooks.WebApp.Controllers;
 

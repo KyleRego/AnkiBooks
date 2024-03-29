@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using AnkiBooks.Infrastructure.Data;
 using AnkiBooks.ApplicationCore;
 using Microsoft.AspNetCore.Mvc.Testing;
+using AnkiBooks.ApplicationCore.Entities;
 
 namespace AnkiBooks.WebApp.Tests.IntegrationTests;
 

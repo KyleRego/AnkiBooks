@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using AnkiBooks.ApplicationCore;
 // See https://learn.microsoft.com/en-us/aspnet/core/security/authentication/customize-identity-model?view=aspnetcore-8.0
 using AnkiBooks.ApplicationCore.Identity;
+using AnkiBooks.ApplicationCore.Entities;
 
 namespace AnkiBooks.Infrastructure.Data;
 
@@ -16,7 +17,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Link> Links { get; set; } = null!;
 
     public DbSet<Article> Articles { get; set; } = null!;
-    public DbSet<ArticleElement> ArticleElements { get; set; } = null!;
+    public DbSet<ArticleElementBase> ArticleElements { get; set; } = null!;
     public DbSet<BasicNote> BasicNotes { get; set; } = null!;
     public DbSet<ClozeNote> ClozeNotes { get; set; } = null!;
     public DbSet<Concept> Concepts { get; set; } = null!;
@@ -27,7 +28,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         base.OnModelCreating(builder);
 
         builder
-            .Entity<ArticleElement>()
+            .Entity<ArticleElementBase>()
             .ToTable(b => b.HasCheckConstraint(
                 "CK_ArticleElementOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0"
             ));

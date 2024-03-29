@@ -1,9 +1,9 @@
+using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.ApplicationCore.Interfaces;
 
-namespace AnkiBooks.ApplicationCore.Services;
+namespace AnkiBooks.ApplicationCore;
 
-// This is not really a service in .NET if not using DI?
-// TODO: Maybe change the name or add it to the service collection
+// TODO: refactor
 public class ArticleElementMerger
 {
     public static List<IArticleElement> ElementsOrdered(List<BasicNote> orderedBasicNotes, List<ClozeNote> orderedClozeNotes)

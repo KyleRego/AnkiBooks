@@ -1,4 +1,4 @@
-namespace AnkiBooks.ApplicationCore;
+namespace AnkiBooks.ApplicationCore.Entities;
 
 // TODO: Make Link a type of element
 public class Link

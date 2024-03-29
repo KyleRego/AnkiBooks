@@ -1,4 +1,4 @@
-using AnkiBooks.ApplicationCore;
+using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.ApplicationCore.Interfaces;
 using AnkiBooks.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
