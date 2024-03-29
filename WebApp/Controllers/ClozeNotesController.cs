@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using AnkiBooks.Models;
-using AnkiBooks.WebApp.Data;
+using AnkiBooks.ApplicationCore;
+using AnkiBooks.Infrastructure.Data;
 
 namespace AnkiBooks.WebApp.Controllers;
 

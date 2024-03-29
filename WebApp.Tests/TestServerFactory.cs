@@ -1,5 +1,5 @@
 using System.Data.Common;
-using AnkiBooks.WebApp.Data;
+using AnkiBooks.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;

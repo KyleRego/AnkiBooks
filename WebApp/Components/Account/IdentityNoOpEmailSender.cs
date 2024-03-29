@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using AnkiBooks.WebApp.Data;
-using AnkiBooks.Models.Identity;
+using AnkiBooks.Infrastructure.Data;
+using AnkiBooks.ApplicationCore.Identity;
 
 namespace AnkiBooks.WebApp.Components.Account;
 

@@ -1,38 +1,29 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using AnkiBooks.WebApp.Data;
-using AnkiBooks.Models;
-using AnkiBooks.Models.Identity;
+using AnkiBooks.ApplicationCore;
+using AnkiBooks.ApplicationCore.Interfaces;
 
 namespace AnkiBooks.WebApp.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ArticlesController(ApplicationDbContext context,
-                                ILogger<ArticlesController> logger) : ControllerBase
+public class ArticlesController(IArticleRepository articleRepository) : ControllerBase
 {
-    private readonly ApplicationDbContext _context = context;
+    private readonly IArticleRepository _articleRepository = articleRepository;
 
     // GET: api/Articles
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Article>>> GetArticles()
+    public async IAsyncEnumerable<IEnumerable<Article>> GetArticles()
     {
-        return await _context.Articles.ToListAsync();
+        List<Article> articles = await _articleRepository.GetArticlesAsync();
+        yield return articles;
     }
 
     // GET: api/Articles/5
     [HttpGet("{id}")]
     public async Task<ActionResult<Article>> GetArticle(string id)
     {
-        Article? article = await _context.Articles
-                                        .Include(a => a.BasicNotes.OrderBy(bn => bn.OrdinalPosition))
-                                        .Include(a => a.ClozeNotes.OrderBy(cn => cn.OrdinalPosition))
-                                        .FirstOrDefaultAsync(a => a.Id == id);
+        Article? article = await _articleRepository.GetArticleWithOrderedElementsAsync(id);
 
         if (article == null)
         {
@@ -52,15 +43,13 @@ public class ArticlesController(ApplicationDbContext context,
             return BadRequest();
         }
 
-        _context.Entry(article).State = EntityState.Modified;
-
         try
         {
-            await _context.SaveChangesAsync();
+            await _articleRepository.UpdateArticleAsync(article);
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!ArticleExists(id))
+            if (!await ArticleExists(id))
             {
                 return NotFound();
             }
@@ -78,14 +67,13 @@ public class ArticlesController(ApplicationDbContext context,
     [HttpPost]
     public async Task<ActionResult<Article>> PostArticle(Article article)
     {
-        _context.Articles.Add(article);
         try
         {
-            await _context.SaveChangesAsync();
+            await _articleRepository.InsertArticleAsync(article);
         }
         catch (DbUpdateException)
         {
-            if (ArticleExists(article.Id))
+            if (await ArticleExists(article.Id))
             {
                 return Conflict();
             }
@@ -94,7 +82,6 @@ public class ArticlesController(ApplicationDbContext context,
                 throw;
             }
         }
-        logger.LogInformation($"Article {article.Title} with id {article.Id} was created");
 
         return CreatedAtAction("GetArticle", new { id = article.Id }, article);
     }
@@ -103,20 +90,20 @@ public class ArticlesController(ApplicationDbContext context,
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteArticle(string id)
     {
-        var article = await _context.Articles.FindAsync(id);
+        var article = await _articleRepository.GetArticleAsync(id);
+
         if (article == null)
         {
             return NotFound();
         }
 
-        _context.Articles.Remove(article);
-        await _context.SaveChangesAsync();
+        await _articleRepository.DeleteArticleAsync(article);
 
         return NoContent();
     }
 
-    private bool ArticleExists(string id)
+    private async Task<bool> ArticleExists(string id)
     {
-        return _context.Articles.Any(e => e.Id == id);
+        return await _articleRepository.ArticleExists(id);
     }
 }

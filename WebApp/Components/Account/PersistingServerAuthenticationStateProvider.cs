@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using AnkiBooks.WebApp.Client;
-using AnkiBooks.Models.Identity;
+using AnkiBooks.ApplicationCore.Identity;
 
 namespace AnkiBooks.WebApp.Components.Account;
 

@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using AnkiBooks.WebApp.Components.Account.Pages;
 using AnkiBooks.WebApp.Components.Account.Pages.Manage;
-using AnkiBooks.WebApp.Data;
-using AnkiBooks.Models.Identity;
+using AnkiBooks.Infrastructure.Data;
+using AnkiBooks.ApplicationCore.Identity;
 
 namespace Microsoft.AspNetCore.Routing;
 

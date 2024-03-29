@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using AnkiBooks.WebApp.Components;
 using AnkiBooks.WebApp.Components.Account;
-using AnkiBooks.WebApp.Data;
-using AnkiBooks.Models.Identity;
+using AnkiBooks.Infrastructure.Data;
+using AnkiBooks.ApplicationCore.Identity;
 using Radzen;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);

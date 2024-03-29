@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Components;
-using AnkiBooks.Models.Identity;
+using AnkiBooks.ApplicationCore.Identity;
 
 namespace AnkiBooks.WebApp.Components.Account;
 
