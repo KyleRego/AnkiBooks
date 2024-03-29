@@ -38,6 +38,23 @@
                     </ChildContent>
                 </RadzenTreeItem>
             </RadzenTree>
+            @if (articles == null)
+            {
+                <p>Loading articles</p>
+            }
+            else
+            {
+                <ul>
+                @foreach(Article article in articles)
+                {
+                    string hrefValue = $"articles/{article.Id}";
+
+                    <li>
+                        <NavLink href="@hrefValue" class="text-break">@article.Title</NavLink>
+                    </li>
+                }
+                </ul>
+            }
         </div>
     </RadzenSplitterPane>
     <RadzenSplitterPane>

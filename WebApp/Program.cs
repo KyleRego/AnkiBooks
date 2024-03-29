@@ -6,6 +6,8 @@ using AnkiBooks.WebApp.Components.Account;
 using AnkiBooks.Infrastructure.Data;
 using AnkiBooks.ApplicationCore.Identity;
 using Radzen;
+using AnkiBooks.ApplicationCore.Interfaces;
+using AnkiBooks.Infrastructure.Repository;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +38,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlite(builder.Configuration.GetConnectionString("Database"))
 );
+builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

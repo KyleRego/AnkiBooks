@@ -13,10 +13,10 @@ public class ArticlesController(IArticleRepository articleRepository) : Controll
 
     // GET: api/Articles
     [HttpGet]
-    public async IAsyncEnumerable<IEnumerable<Article>> GetArticles()
+    public async Task<ActionResult<List<Article>>> GetArticles()
     {
         List<Article> articles = await _articleRepository.GetArticlesAsync();
-        yield return articles;
+        return articles;
     }
 
     // GET: api/Articles/5

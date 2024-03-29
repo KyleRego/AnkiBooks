@@ -17,7 +17,7 @@ public class ArticleElementMergerTests
             new() { Text="b", OrdinalPosition=1 }
         ];
 
-        IList<IArticleElement> result = ArticleElementMerger.ElementsOrdered(basicNotes, clozeNotes);
+        IList<IArticleElement> result = OrderedArticleElementsMerger.ElementsOrdered(basicNotes, clozeNotes);
 
         Assert.True(CountIsCorrectAndElementsAreOrdered(result, 2));
     }
@@ -37,7 +37,7 @@ public class ArticleElementMergerTests
             new() { Text="b", OrdinalPosition=2 }
         ];
 
-        IList<IArticleElement> result = ArticleElementMerger.ElementsOrdered(basicNotes, clozeNotes);
+        IList<IArticleElement> result = OrderedArticleElementsMerger.ElementsOrdered(basicNotes, clozeNotes);
 
         Assert.True(CountIsCorrectAndElementsAreOrdered(result, 5));
     }

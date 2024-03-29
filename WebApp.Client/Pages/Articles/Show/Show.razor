@@ -69,8 +69,10 @@ else
             article = restored;
         }
 
-        articleElements = ArticleElementMerger.ElementsOrdered(article.BasicNotes, article.ClozeNotes);
+        ArgumentNullException.ThrowIfNull(article);
+        articleElements = new ArticleElementManager(article).OrderedElements;
     }
+
     private Task PersistData()
     {
         ApplicationState.PersistAsJson(nameof(article), article);

@@ -3,8 +3,29 @@ using AnkiBooks.ApplicationCore.Interfaces;
 
 namespace AnkiBooks.ApplicationCore;
 
-// TODO: refactor
-public class ArticleElementMerger
+/// <summary>
+/// Wraps an article and a list of the article's polymorphic (IArticleElement) elements
+/// The article passed to the constructor must have its article element properties sorted
+/// already for the combining of those into a single ordered list to work with the algorithm
+/// </summary>
+public class ArticleElementManager
+{
+    private readonly Article _article;
+    public List<IArticleElement> OrderedElements { get; }
+
+    public ArticleElementManager(Article article)
+    {
+        _article = article;
+        OrderedElements = SetupOrderedElements();
+    }
+
+    private List<IArticleElement> SetupOrderedElements()
+    {
+        return OrderedArticleElementsMerger.ElementsOrdered(_article.BasicNotes, _article.ClozeNotes);
+    }
+}
+
+public class OrderedArticleElementsMerger
 {
     public static List<IArticleElement> ElementsOrdered(List<BasicNote> orderedBasicNotes, List<ClozeNote> orderedClozeNotes)
     {
