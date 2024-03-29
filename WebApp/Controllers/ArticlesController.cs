@@ -13,7 +13,7 @@ public class ArticlesController(IArticleRepository articleRepository) : Controll
 
     // GET: api/Articles
     [HttpGet]
-    public async Task<ActionResult<List<Article>>> GetArticles()
+    public async Task<ActionResult<IEnumerable<Article>>> GetArticles()
     {
         List<Article> articles = await _articleRepository.GetArticlesAsync();
         return articles;
@@ -90,7 +90,7 @@ public class ArticlesController(IArticleRepository articleRepository) : Controll
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteArticle(string id)
     {
-        var article = await _articleRepository.GetArticleAsync(id);
+        Article? article = await _articleRepository.GetArticleAsync(id);
 
         if (article == null)
         {

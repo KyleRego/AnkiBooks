@@ -39,6 +39,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlite(builder.Configuration.GetConnectionString("Database"))
 );
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
+builder.Services.AddScoped<IBasicNoteRepository, BasicNoteRepository>();
+builder.Services.AddScoped<IClozeNoteRepository, ClozeNoteRepository>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

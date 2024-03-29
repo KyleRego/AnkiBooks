@@ -1,28 +1,28 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using AnkiBooks.Infrastructure.Data;
 using AnkiBooks.ApplicationCore.Entities;
+using AnkiBooks.ApplicationCore.Interfaces;
 
 namespace AnkiBooks.WebApp.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ClozeNotesController(ApplicationDbContext context) : ControllerBase
+public class ClozeNotesController(IClozeNoteRepository clozeNoteRepository) : ControllerBase
 {
-    private readonly ApplicationDbContext _context = context;
+    private readonly IClozeNoteRepository _clozeNoteRepository = clozeNoteRepository;
 
     // GET: api/ClozeNotes
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ClozeNote>>> GetClozeNotes()
     {
-        return await _context.ClozeNotes.ToListAsync();
+        return await _clozeNoteRepository.GetClozeNotesAsync();
     }
 
     // GET: api/ClozeNotes/5
     [HttpGet("{id}")]
     public async Task<ActionResult<ClozeNote>> GetClozeNote(string id)
     {
-        var clozeNote = await _context.ClozeNotes.FindAsync(id);
+        ClozeNote? clozeNote = await _clozeNoteRepository.GetClozeNoteAsync(id);
 
         if (clozeNote == null)
         {
@@ -42,15 +42,13 @@ public class ClozeNotesController(ApplicationDbContext context) : ControllerBase
             return BadRequest();
         }
 
-        _context.Entry(clozeNote).State = EntityState.Modified;
-
         try
         {
-            await _context.SaveChangesAsync();
+            await _clozeNoteRepository.UpdateClozeNoteAsync(clozeNote);
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!ClozeNoteExists(id))
+            if (!await ClozeNoteExists(id))
             {
                 return NotFound();
             }
@@ -70,29 +68,11 @@ public class ClozeNotesController(ApplicationDbContext context) : ControllerBase
     {
         try
         {
-            // TODO: Must be a better way to do this, also code is duplicated in basic notes version of this action 
-            Article article = await _context.Articles
-                .Include(a => a.BasicNotes)
-                .Include(a => a.ClozeNotes)
-                .FirstAsync(a => a.Id == clozeNote.ArticleId);
-
-            List<BasicNote> basicNotesToShift = article.BasicNotes.Where(bn => bn.OrdinalPosition >= clozeNote.OrdinalPosition).ToList();
-            List<ClozeNote> clozeNotesToShift = article.ClozeNotes.Where(cn => cn.OrdinalPosition >= clozeNote.OrdinalPosition).ToList();
-            foreach (BasicNote bnToShift in basicNotesToShift)
-            {
-                bnToShift.OrdinalPosition += 1;
-            }
-            foreach (ClozeNote cnToShift in clozeNotesToShift)
-            {
-                cnToShift.OrdinalPosition += 1;
-            }
-            article.ClozeNotes.Add(clozeNote);
-
-            await _context.SaveChangesAsync();
+            await _clozeNoteRepository.InsertClozeNoteAsync(clozeNote);
         }
         catch (DbUpdateException)
         {
-            if (ClozeNoteExists(clozeNote.Id))
+            if (await ClozeNoteExists(clozeNote.Id))
             {
                 return Conflict();
             }
@@ -109,20 +89,19 @@ public class ClozeNotesController(ApplicationDbContext context) : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteClozeNote(string id)
     {
-        var clozeNote = await _context.ClozeNotes.FindAsync(id);
+        ClozeNote? clozeNote = await _clozeNoteRepository.GetClozeNoteAsync(id);
         if (clozeNote == null)
         {
             return NotFound();
         }
 
-        _context.ClozeNotes.Remove(clozeNote);
-        await _context.SaveChangesAsync();
+        await _clozeNoteRepository.DeleteClozeNoteAsync(clozeNote);
 
         return NoContent();
     }
 
-    private bool ClozeNoteExists(string id)
+    private async Task<bool> ClozeNoteExists(string id)
     {
-        return _context.ClozeNotes.Any(e => e.Id == id);
+        return await _clozeNoteRepository.ClozeNoteExists(id);
     }
 }
