@@ -3,9 +3,9 @@ using AnkiBooks.ApplicationCore;
 using AnkiBooks.ApplicationCore.Interfaces;
 using Microsoft.EntityFrameworkCore.Query;
 
-namespace AnkiBooks.ApplicationCore.Tests;
+namespace AnkiBooks.ApplicationCore.Tests.OrderedElementsContainerTests;
 
-public class ArticleElementManagerTests
+public class ConstructorTests : Base
 {
     [Fact]
     public void TestConstructorWithOnlyClozeNotes()
@@ -20,7 +20,7 @@ public class ArticleElementManagerTests
             ]
         };
 
-        OrderedArticleElementsManager manager = new(article);
+        OrderedElementsContainer manager = new(article.BasicNotes, article.ClozeNotes);
         
         Assert.True(NumberOfElementsIsCorrect(manager, 2));
         Assert.True(ElementsAreCorrectlyOrdered(manager));
@@ -44,34 +44,9 @@ public class ArticleElementManagerTests
             ]
         };
 
-        OrderedArticleElementsManager manager = new(article);
+        OrderedElementsContainer manager = new(article.BasicNotes, article.ClozeNotes);
 
         Assert.True(NumberOfElementsIsCorrect(manager, 5));
         Assert.True(ElementsAreCorrectlyOrdered(manager));
-    }
-
-    private static bool NumberOfElementsIsCorrect(OrderedArticleElementsManager manager, int expectedCount)
-    {
-        if (manager.OrderedElements.Count != expectedCount)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    private static bool ElementsAreCorrectlyOrdered(OrderedArticleElementsManager manager)
-    {
-        List<IArticleElement> elements = manager.OrderedElements;
-
-        for (int i = 0; i < elements.Count; i++)
-        {
-            if (i != elements[i].OrdinalPosition)
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

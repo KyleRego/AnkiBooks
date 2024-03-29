@@ -1,5 +1,6 @@
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Enums
+@using AnkiBooks.ApplicationCore.Interfaces
 
 <div class="d-flex justify-content-center @dropDownCssClass">
     <RadzenSplitButton  Click=@(args => OnButtonClick(args))
@@ -20,14 +21,16 @@
     @switch (dropDownItemSelected)
     {
         case ElementType.BasicNote:
-            <NewBasicNote   @bind-Article:get="Article"
-                            @bind-Article:set="ArticleChanged"
-                            OrdinalPosition="@OrdinalPosition" />
+            <NewBasicNote   @bind-OrderedElementsContainer:get="OrderedElementsContainer"
+                            @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
+                            ArticleId="@ArticleId"
+                            PairedElement="@PairedElement" />
             break;
         case ElementType.ClozeNote:
-            <NewClozeNote   @bind-Article:get="Article"
-                            @bind-Article:set="ArticleChanged"
-                            OrdinalPosition="@OrdinalPosition" />
+            <NewClozeNote   @bind-OrderedElementsContainer:get="OrderedElementsContainer"
+                            @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
+                            ArticleId="@ArticleId"
+                            PairedElement="@PairedElement" />
             break;
         default:
             break;
@@ -37,13 +40,17 @@
 
 @code {
     [Parameter]
-    public Article Article { get; set; } = null!;
+    public string ArticleId { get; set; } = null!;
+
+    // This is null for the last button which does not have a paired element
+    [Parameter]
+    public IArticleElement? PairedElement { get; set; }
 
     [Parameter]
-    public EventCallback<Article> ArticleChanged { get; set; }
+    public OrderedElementsContainer OrderedElementsContainer { get; set; } = null!;
 
     [Parameter]
-    public int OrdinalPosition { get; set; }
+    public EventCallback<OrderedElementsContainer> OrderedElementsContainerChanged { get; set; }
 
     private string dropDownCssClass = "";
 

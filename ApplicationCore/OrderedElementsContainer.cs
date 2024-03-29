@@ -8,22 +8,46 @@ namespace AnkiBooks.ApplicationCore;
 /// The article passed to the constructor must have its article element properties sorted
 /// already for the combining of those into a single ordered list to work with the algorithm
 /// </summary>
-public class OrderedArticleElementsManager
+public class OrderedElementsContainer
 {
-    private readonly Article _article;
     public List<IArticleElement> OrderedElements { get; }
 
-    public OrderedArticleElementsManager(Article article)
+    public OrderedElementsContainer(List<BasicNote> orderedBasicNotes,
+                                    List<ClozeNote> orderedClozeNotes)
     {
-        _article = article;
-        OrderedElements = InitializeOrderedElements();
+        OrderedElements = InitializeOrderedElementsFromOrdered(orderedBasicNotes, orderedClozeNotes);
     }
 
-    private List<IArticleElement> InitializeOrderedElements()
+    public int GetOrdinalPosition(IArticleElement element)
     {
-        List<BasicNote> orderedBasicNotes = _article.BasicNotes;
-        List<ClozeNote> orderedClozeNotes = _article.ClozeNotes;
+        for (int i = 0; i < OrderedElements.Count; i++)
+        {
+            if (element.Id == OrderedElements[i].Id)
+            {
+                return i;
+            } 
+        }
+        // TODO: consider handling this better
+        throw new ApplicationException();
+    }
 
+    public int Count()
+    {
+        return OrderedElements.Count;
+    }
+
+    public void Add(IArticleElement element)
+    {
+        foreach (IArticleElement el in OrderedElements.Where(el => el.OrdinalPosition >= element.OrdinalPosition))
+        {
+            el.OrdinalPosition += 1;
+        }
+        OrderedElements.Insert(element.OrdinalPosition, element);
+    }
+
+    private static List<IArticleElement> InitializeOrderedElementsFromOrdered(List<BasicNote> orderedBasicNotes,
+                                                                            List<ClozeNote> orderedClozeNotes)
+    {
         if (orderedBasicNotes.Count == 0)
         {
             return orderedClozeNotes.Cast<IArticleElement>().ToList();

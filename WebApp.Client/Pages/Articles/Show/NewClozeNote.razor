@@ -1,6 +1,7 @@
 @using System.ComponentModel.DataAnnotations
 @using System.Text.Json
-@using AnkiBooks.ApplicationCore.Entities;
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Interfaces
 @inject ILogger<NewBasicNote> Logger
 @inject HttpClient Http
 
@@ -27,19 +28,16 @@
     private bool hideThisComponent = false;
 
     [Parameter]
-    public Article Article { get; set; } = null!;
+    public string ArticleId { get; set; } = null!;
 
     [Parameter]
-    public EventCallback<Article> ArticleChanged { get; set; }
+    public IArticleElement? PairedElement { get; set; }
 
     [Parameter]
-    public int OrdinalPosition { get; set; }
+    public OrderedElementsContainer OrderedElementsContainer { get; set; } = null!;
 
-    private async Task AddClozeNoteToArticle(ClozeNote clozeNote)
-    {
-        Article.ClozeNotes.Add(clozeNote);
-        await ArticleChanged.InvokeAsync(Article);
-    }
+    [Parameter]
+    public EventCallback<OrderedElementsContainer> OrderedElementsContainerChanged { get; set; }
 
     // TODO: Do not hard code the backend origin
     private const string endpoint = "http://localhost:5247/api/ClozeNotes";
@@ -49,10 +47,10 @@
 
     protected override void OnInitialized()
     {
+        // Set ArticleId here so the form can be submitted (otherwise it is not valid)
         ClozeNote = new()
         {
-            ArticleId = Article.Id,
-            OrdinalPosition = OrdinalPosition
+            ArticleId = ArticleId
         };
     }
 
@@ -60,13 +58,17 @@
     {
         ArgumentNullException.ThrowIfNull(ClozeNote);
         ArgumentNullException.ThrowIfNull(ClozeNote.Text);
-        ArgumentNullException.ThrowIfNull(ClozeNote.ArticleId);
+        ArgumentNullException.ThrowIfNull(ArticleId);
+
+        int ordinalPosition = (PairedElement != null) ? 
+                                    OrderedElementsContainer.GetOrdinalPosition(PairedElement) : 
+                                    OrderedElementsContainer.Count();
 
         ClozeNote data = new ClozeNote
             {
                 Text = ClozeNote.Text,
-                ArticleId = ClozeNote.ArticleId,
-                OrdinalPosition = ClozeNote.OrdinalPosition
+                ArticleId = ArticleId,
+                OrdinalPosition = ordinalPosition
             };
         HttpResponseMessage response = await Http.PostAsJsonAsync(endpoint, data);
         response.EnsureSuccessStatusCode();
@@ -79,7 +81,13 @@
         ClozeNote? clozeNote = JsonSerializer.Deserialize<ClozeNote>(responseBody, jsonOptions);
         ArgumentNullException.ThrowIfNull(clozeNote);
 
-        await AddClozeNoteToArticle(clozeNote);
+        await AddToElements(clozeNote);
         hideThisComponent = true;
+    }
+
+    private async Task AddToElements(ClozeNote clozeNote)
+    {
+        OrderedElementsContainer.Add(clozeNote);
+        await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
     }
 }

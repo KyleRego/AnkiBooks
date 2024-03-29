@@ -12,7 +12,7 @@
 
 @rendermode InteractiveWebAssembly
 
-@if (article == null)
+@if (article == null || orderedElementsContainer == null)
 {
     <PageTitle>Loading article...</PageTitle>
 
@@ -22,9 +22,11 @@ else
 {
     <PageTitle>@article.Title</PageTitle>
 
-    @foreach(IArticleElement articleElement in articleElements)
+    @foreach(IArticleElement articleElement in orderedElementsContainer.OrderedElements)
     {
-        <AddArticleElementSplitButton @bind-Article="article" OrdinalPosition="@(articleElement.OrdinalPosition)" />
+        <AddArticleElementSplitButton @bind-OrderedElementsContainer="@orderedElementsContainer"
+                                        ArticleId="@(article.Id)"
+                                        PairedElement="@articleElement" />
 
         if (articleElement is BasicNote)
         {
@@ -40,16 +42,20 @@ else
         }
     }
 
-    <AddArticleElementSplitButton @bind-Article="article" OrdinalPosition="@articleElements.Count" />
+    <AddArticleElementSplitButton @bind-OrderedElementsContainer="@orderedElementsContainer"
+                                    ArticleId="@(article.Id)"
+                                    PairedElement="@null" />
 }
 
 @code {
     [Parameter]
     public string? Id { get; set; }
 
+    private OrderedElementsContainer? orderedElementsContainer;
+
     string? serviceEndpoint;
     private Article? article;
-    private IList<IArticleElement> articleElements = [];
+
     private PersistingComponentStateSubscription persistingSubscription;
 
     protected override async Task OnParametersSetAsync()
@@ -70,7 +76,7 @@ else
         }
 
         ArgumentNullException.ThrowIfNull(article);
-        articleElements = new OrderedArticleElementsManager(article).OrderedElements;
+        orderedElementsContainer = new(article.BasicNotes, article.ClozeNotes);
     }
 
     private Task PersistData()

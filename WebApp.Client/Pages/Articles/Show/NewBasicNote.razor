@@ -1,6 +1,7 @@
 @using System.ComponentModel.DataAnnotations
 @using System.Text.Json
-@using AnkiBooks.ApplicationCore.Entities;
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Interfaces
 @inject ILogger<NewBasicNote> Logger
 @inject HttpClient Http
 
@@ -29,19 +30,16 @@
     private bool hideThisComponent = false;
 
     [Parameter]
-    public Article Article { get; set; } = null!;
+    public string ArticleId { get; set; } = null!;
 
     [Parameter]
-    public EventCallback<Article> ArticleChanged { get; set; }
+    public IArticleElement? PairedElement { get; set; }
 
     [Parameter]
-    public int OrdinalPosition { get; set; }
+    public OrderedElementsContainer OrderedElementsContainer { get; set; } = null!;
 
-    private async Task AddBasicNoteToArticle(BasicNote basicNote)
-    {
-        Article.BasicNotes.Add(basicNote);
-        await ArticleChanged.InvokeAsync(Article);
-    }
+    [Parameter]
+    public EventCallback<OrderedElementsContainer> OrderedElementsContainerChanged { get; set; }
 
     // TODO: Do not hard code the backend origin
     private const string endpoint = "http://localhost:5247/api/BasicNotes";
@@ -51,11 +49,11 @@
 
     protected override void OnInitialized()
     {
+        // Set ArticleId here so that the form can be submitted (otherwise it is not valid)
         BasicNote = new()
-            {
-                ArticleId = Article.Id,
-                OrdinalPosition = OrdinalPosition
-            };
+        {
+            ArticleId = ArticleId
+        };
     }
 
     private async Task SubmitForm()
@@ -63,14 +61,18 @@
         ArgumentNullException.ThrowIfNull(BasicNote);
         ArgumentNullException.ThrowIfNull(BasicNote.Front);
         ArgumentNullException.ThrowIfNull(BasicNote.Back);
-        ArgumentNullException.ThrowIfNull(BasicNote.ArticleId);
+        ArgumentNullException.ThrowIfNull(ArticleId);
 
+        int ordinalPosition = (PairedElement != null) ? 
+                                    OrderedElementsContainer.GetOrdinalPosition(PairedElement) : 
+                                    OrderedElementsContainer.Count();
+        
         BasicNote data = new BasicNote
             {
                 Front = BasicNote.Front,
                 Back = BasicNote.Back,
-                ArticleId = BasicNote.ArticleId,
-                OrdinalPosition = BasicNote.OrdinalPosition
+                ArticleId = ArticleId,
+                OrdinalPosition = ordinalPosition
             };
         HttpResponseMessage response = await Http.PostAsJsonAsync(endpoint, data);
         response.EnsureSuccessStatusCode();
@@ -83,7 +85,13 @@
         BasicNote? basicNote = JsonSerializer.Deserialize<BasicNote>(responseBody, jsonOptions);
         ArgumentNullException.ThrowIfNull(basicNote);
 
-        await AddBasicNoteToArticle(basicNote);
+        await AddToElements(basicNote);
         hideThisComponent = true;
+    }
+
+    private async Task AddToElements(BasicNote basicNote)
+    {
+        OrderedElementsContainer.Add(basicNote);
+        await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
     }
 }
