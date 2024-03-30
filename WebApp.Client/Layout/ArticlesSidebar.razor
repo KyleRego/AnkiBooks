@@ -4,7 +4,7 @@
 @using System.Text.Json.Serialization
 @using AnkiBooks.ApplicationCore.Entities
 @inject IConfiguration Config
-@inject HttpClient Http
+@inject IAnkiBooksApiService ApiService
 @inject ILogger<Index> Logger
 @implements IDisposable
 @inject PersistentComponentState ApplicationState
@@ -66,19 +66,15 @@
 </RadzenSplitter>
 
 @code {
-    string? serviceEndpoint;
     private Article[]? articles;
     private PersistingComponentStateSubscription persistingSubscription;
-
     protected override async Task OnInitializedAsync()
     {
         persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
 
-        serviceEndpoint = $"{Config.GetValue<string>("Url")}/api/Articles";
-
         if (!ApplicationState.TryTakeFromJson<Article[]>(nameof(articles), out var restored))
         {
-            articles = await GetArticles();
+            articles = await ApiService.GetArticles();
         }
         else
         {
@@ -96,15 +92,5 @@
     void IDisposable.Dispose()
     {
         persistingSubscription.Dispose();
-    }
-
-    private async Task<Article[]?> GetArticles()
-    {
-        JsonSerializerOptions options = new()
-        {
-            ReferenceHandler = ReferenceHandler.Preserve
-        };
-
-        return await Http.GetFromJsonAsync<Article[]>(serviceEndpoint);
     }
 }

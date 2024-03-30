@@ -5,7 +5,7 @@
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Interfaces
 @inject IConfiguration Config
-@inject HttpClient Http
+@inject IAnkiBooksApiService ApiService
 @inject ILogger<Show> Logger
 @implements IDisposable
 @inject PersistentComponentState ApplicationState
@@ -53,7 +53,6 @@ else
 
     private OrderedElementsContainer? orderedElementsContainer;
 
-    string? serviceEndpoint;
     private Article? article;
 
     private PersistingComponentStateSubscription persistingSubscription;
@@ -64,11 +63,9 @@ else
 
         persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
 
-        serviceEndpoint = $"{Config.GetValue<string>("Url")}/api/Articles/{Id}";
-
         if (!ApplicationState.TryTakeFromJson<Article>(nameof(article), out var restored))
         {
-            article = await GetArticle();
+            article = await ApiService.GetArticle(Id);
         }
         else
         {
@@ -89,10 +86,5 @@ else
     void IDisposable.Dispose()
     {
         persistingSubscription.Dispose();
-    }
-
-    private async Task<Article?> GetArticle()
-    {
-        return await Http.GetFromJsonAsync<Article>(serviceEndpoint);
     }
 }

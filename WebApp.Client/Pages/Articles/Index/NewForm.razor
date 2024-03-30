@@ -1,11 +1,10 @@
 @using System.Text.Json
 @using AnkiBooks.ApplicationCore.Entities
-@inject HttpClient Http
+@inject IAnkiBooksApiService ApiService
 @inject NavigationManager Navigation
 @inject IConfiguration Config
 @inject ILogger<New> Logger
 @inject DialogService DialogService
-
 
 <div>
     <EditForm   Model="Article"
@@ -27,12 +26,9 @@
 </div>
 
 @code {
-    string? serviceEndpoint;
-
     protected override void OnInitialized()
     {
         Article ??= new("");
-        serviceEndpoint = $"{Config.GetValue<string>("Url")}/api/Articles";
     }
 
     [SupplyParameterFromForm]
@@ -41,17 +37,9 @@
     private async Task SubmitForm()
     {
         ArgumentNullException.ThrowIfNull(Article);
-        ArgumentNullException.ThrowIfNull(Article.Title);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(Article.Title);
 
-        HttpResponseMessage response = await Http.PostAsJsonAsync(serviceEndpoint, Article);
-        response.EnsureSuccessStatusCode();
-
-        string responseBody = await response.Content.ReadAsStringAsync();
-        JsonSerializerOptions jsonOptions = new()
-        {
-            PropertyNameCaseInsensitive = true
-        };
-        Article? article = JsonSerializer.Deserialize<Article>(responseBody, jsonOptions);
+        Article? article = await ApiService.PostArticle(Article);
         ArgumentNullException.ThrowIfNull(article);
 
         Navigation.NavigateTo($"articles/{article.Id}");

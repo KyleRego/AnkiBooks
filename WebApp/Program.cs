@@ -8,11 +8,14 @@ using AnkiBooks.ApplicationCore.Identity;
 using Radzen;
 using AnkiBooks.ApplicationCore.Interfaces;
 using AnkiBooks.Infrastructure.Repository;
+using AnkiBooks.WebApp.Client;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-// HttpClient needs to be registered here because of prerendering on the server
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["Url"]!) });
+// WebApp.Client Razor components can be prerendered on the server
+// So services used in them must be registered in this Program.cs as well
+builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(builder.Configuration["AppUrl"]!) });
+builder.Services.AddScoped<IAnkiBooksApiService, AnkiBooksApiService>();
 builder.Services.AddRadzenComponents();
 
 builder.Services.AddEndpointsApiExplorer();

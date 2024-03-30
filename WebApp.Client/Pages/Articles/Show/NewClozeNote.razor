@@ -3,7 +3,7 @@
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Interfaces
 @inject ILogger<NewBasicNote> Logger
-@inject HttpClient Http
+@inject IAnkiBooksApiService ApiService
 
 <div class="d-flex justify-content-center my-2">
     <RadzenCard Variant="Variant.Outlined" Style="width: 32rem">
@@ -40,9 +40,6 @@
     [Parameter]
     public EventCallback<bool> HideSplitButtonAndShowFormChanged { get; set; }
 
-    // TODO: Do not hard code the backend origin
-    private const string endpoint = "http://localhost:5247/api/ClozeNotes";
-
     [SupplyParameterFromForm]
     public ClozeNote? ClozeNote { get; set; }
 
@@ -65,21 +62,14 @@
                                     OrderedElementsContainer.GetOrdinalPosition(PairedElement) : 
                                     OrderedElementsContainer.Count();
 
-        ClozeNote data = new ClozeNote
+        ClozeNote cnData = new ClozeNote
             {
                 Text = ClozeNote.Text,
                 ArticleId = ArticleId,
                 OrdinalPosition = ordinalPosition
             };
-        HttpResponseMessage response = await Http.PostAsJsonAsync(endpoint, data);
-        response.EnsureSuccessStatusCode();
 
-        string responseBody = await response.Content.ReadAsStringAsync();
-        JsonSerializerOptions jsonOptions = new()
-            {
-                PropertyNameCaseInsensitive = true
-            };
-        ClozeNote? clozeNote = JsonSerializer.Deserialize<ClozeNote>(responseBody, jsonOptions);
+        ClozeNote? clozeNote = await ApiService.PostClozeNote(cnData);
         ArgumentNullException.ThrowIfNull(clozeNote);
 
         await AddToElements(clozeNote);

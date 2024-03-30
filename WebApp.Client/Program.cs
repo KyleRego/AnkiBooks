@@ -5,7 +5,8 @@ using Radzen;
 
 WebAssemblyHostBuilder builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["Url"]!) });
+builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(builder.Configuration["AppUrl"]!) });
+builder.Services.AddScoped<IAnkiBooksApiService, AnkiBooksApiService>();
 builder.Services.AddRadzenComponents();
 
 builder.Services.AddAuthorizationCore();
