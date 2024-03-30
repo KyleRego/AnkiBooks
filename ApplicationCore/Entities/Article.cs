@@ -14,4 +14,9 @@ public class Article(string title) : EntityBase
     public List<BasicNote> BasicNotes { get; set; } = [];
 
     public List<ClozeNote> ClozeNotes { get; set; } = [];
+
+    public int ElementsCount()
+    {
+        return BasicNotes.Count + ClozeNotes.Count;
+    }
 }

@@ -26,17 +26,25 @@ public class BasicNoteRepository(ApplicationDbContext dbContext) : IBasicNoteRep
                 .Include(a => a.ClozeNotes)
                 .FirstAsync(a => a.Id == basicNote.ArticleId);
 
-        List<BasicNote> basicNotesToShift = article.BasicNotes.Where(bn => bn.OrdinalPosition >= basicNote.OrdinalPosition).ToList();
-        List<ClozeNote> clozeNotesToShift = article.ClozeNotes.Where(cn => cn.OrdinalPosition >= basicNote.OrdinalPosition).ToList();
+        if (basicNote.OrdinalPosition > article.ElementsCount() || basicNote.OrdinalPosition < 0)
+        {
+            basicNote.OrdinalPosition = article.ElementsCount();
+        }
+        else
+        {
+            List<BasicNote> basicNotesToShift = article.BasicNotes.Where(bn => bn.OrdinalPosition >= basicNote.OrdinalPosition).ToList();
+            List<ClozeNote> clozeNotesToShift = article.ClozeNotes.Where(cn => cn.OrdinalPosition >= basicNote.OrdinalPosition).ToList();
 
-        foreach (BasicNote bnToShift in basicNotesToShift)
-        {
-            bnToShift.OrdinalPosition += 1;
+            foreach (BasicNote bnToShift in basicNotesToShift)
+            {
+                bnToShift.OrdinalPosition += 1;
+            }
+            foreach (ClozeNote cnToShift in clozeNotesToShift)
+            {
+                cnToShift.OrdinalPosition += 1;
+            }
         }
-        foreach (ClozeNote cnToShift in clozeNotesToShift)
-        {
-            cnToShift.OrdinalPosition += 1;
-        }
+        
         article.BasicNotes.Add(basicNote);
     
         await _dbContext.SaveChangesAsync();
@@ -53,7 +61,13 @@ public class BasicNoteRepository(ApplicationDbContext dbContext) : IBasicNoteRep
 
     public async Task<BasicNote> UpdateBasicNoteAsync(BasicNote basicNote)
     {
-        // TODO: This needs to handle the shifting of other notes
+        int originalOrdinalPosition = _dbContext.BasicNotes.AsNoTracking().Single(bn => bn.Id == basicNote.Id).OrdinalPosition;
+
+        if (basicNote.OrdinalPosition != originalOrdinalPosition)
+        {
+            // TODO
+        }
+
         _dbContext.Entry(basicNote).State = EntityState.Modified;
         await _dbContext.SaveChangesAsync();
         return basicNote;
@@ -61,6 +75,6 @@ public class BasicNoteRepository(ApplicationDbContext dbContext) : IBasicNoteRep
 
     public async Task<bool> BasicNoteExists(string BasicNoteId)
     {
-        return await _dbContext.BasicNotes.AnyAsync(a => a.Id == BasicNoteId);
+        return await _dbContext.BasicNotes.AnyAsync(bn => bn.Id == BasicNoteId);
     }   
 }

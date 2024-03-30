@@ -58,7 +58,7 @@ public class BasicNotesController(IBasicNoteRepository basicNoteRepository) : Co
             }
         }
 
-        return NoContent();
+        return Ok();
     }
 
     // POST: api/BasicNotes
