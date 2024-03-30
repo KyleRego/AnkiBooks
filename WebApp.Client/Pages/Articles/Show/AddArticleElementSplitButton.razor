@@ -1,10 +1,11 @@
+@inherits AddElementBase
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Enums
 @using AnkiBooks.ApplicationCore.Interfaces
 
 @if (hideSplitButtonAndShowForm == false)
 {
-    <div class="d-flex justify-content-center @dropDownCssClass">
+    <div class="d-flex justify-content-center">
         <RadzenSplitButton  Click=@(args => OnButtonClick(args))
                             Text="Add"
                             Variant="Variant.Outlined"
@@ -43,21 +44,6 @@ else
 }
 
 @code {
-    [Parameter]
-    public string ArticleId { get; set; } = null!;
-
-    // This is null for the last button which does not have a paired element
-    [Parameter]
-    public IArticleElement? PairedElement { get; set; }
-
-    [Parameter]
-    public OrderedElementsContainer OrderedElementsContainer { get; set; } = null!;
-
-    [Parameter]
-    public EventCallback<OrderedElementsContainer> OrderedElementsContainerChanged { get; set; }
-
-    private string dropDownCssClass = "";
-
     private bool hideSplitButtonAndShowForm = false;
 
     private ElementType? dropDownItemSelected = null;

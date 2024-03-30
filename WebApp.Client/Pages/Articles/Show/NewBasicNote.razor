@@ -1,3 +1,4 @@
+@inherits AddElementBase
 @using System.ComponentModel.DataAnnotations
 @using System.Text.Json
 @using AnkiBooks.ApplicationCore.Entities
@@ -24,18 +25,6 @@
 </div>
 
 @code {
-    [Parameter]
-    public string ArticleId { get; set; } = null!;
-
-    [Parameter]
-    public IArticleElement? PairedElement { get; set; }
-
-    [Parameter]
-    public OrderedElementsContainer OrderedElementsContainer { get; set; } = null!;
-
-    [Parameter]
-    public EventCallback<OrderedElementsContainer> OrderedElementsContainerChanged { get; set; }
-
     [Parameter]
     public bool HideSplitButtonAndShowForm { get; set; }
 
@@ -75,13 +64,9 @@
         BasicNote? basicNote = await ApiService.PostBasicNote(bnData);
         ArgumentNullException.ThrowIfNull(basicNote);
 
-        await AddToElements(basicNote);
-    }
-
-    private async Task AddToElements(BasicNote basicNote)
-    {
         OrderedElementsContainer.Add(basicNote);
         await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
+
         HideSplitButtonAndShowForm = false;
         await HideSplitButtonAndShowFormChanged.InvokeAsync(HideSplitButtonAndShowForm);
     }
