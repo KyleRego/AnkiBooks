@@ -39,7 +39,7 @@ public class PutBasicNoteTests(TestServerFactory<Program> factory) : IClassFixtu
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
         dbContext.ChangeTracker.Clear();
-        BasicNote updatedBasicNote = dbContext.BasicNotes.FirstOrDefault(bn => bn.Id == basicNote.Id);
+        BasicNote updatedBasicNote = dbContext.BasicNotes.First(bn => bn.Id == basicNote.Id);
         Assert.Equal("Front", updatedBasicNote.Front);
         Assert.Equal("Back", updatedBasicNote.Back); 
     }
@@ -72,7 +72,7 @@ public class PutBasicNoteTests(TestServerFactory<Program> factory) : IClassFixtu
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
         dbContext.ChangeTracker.Clear();
-        BasicNote updatedBasicNote = dbContext.BasicNotes.FirstOrDefault(bn => bn.Id == basicNote.Id);
+        BasicNote updatedBasicNote = dbContext.BasicNotes.First(bn => bn.Id == basicNote.Id);
         Assert.Equal("Front", updatedBasicNote.Front);
         Assert.Equal(0, updatedBasicNote.OrdinalPosition);     
     }

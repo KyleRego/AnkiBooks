@@ -62,15 +62,81 @@ public class BasicNoteRepository(ApplicationDbContext dbContext) : IBasicNoteRep
     public async Task<BasicNote> UpdateBasicNoteAsync(BasicNote basicNote)
     {
         int originalOrdinalPosition = _dbContext.BasicNotes.AsNoTracking().Single(bn => bn.Id == basicNote.Id).OrdinalPosition;
+        int newOrdinalPosition = basicNote.OrdinalPosition;
 
-        if (basicNote.OrdinalPosition != originalOrdinalPosition)
+        if (newOrdinalPosition == originalOrdinalPosition)
         {
-            // TODO
+            _dbContext.Entry(basicNote).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+            return basicNote;
         }
+        else
+        {
+            Article article = await _dbContext.Articles
+                .Include(a => a.BasicNotes)
+                .Include(a => a.ClozeNotes)
+                .FirstAsync(a => a.Id == basicNote.ArticleId);
 
-        _dbContext.Entry(basicNote).State = EntityState.Modified;
-        await _dbContext.SaveChangesAsync();
-        return basicNote;
+            BasicNote trackedBasicNote = article.BasicNotes.First(bn => bn.Id == basicNote.Id);
+            trackedBasicNote.Front = basicNote.Front;
+            trackedBasicNote.Back = basicNote.Back;
+
+            if (newOrdinalPosition >= article.ElementsCount() || basicNote.OrdinalPosition < 0)
+            {
+                // Desired ordinal position is not valid so only update front and back
+                await _dbContext.SaveChangesAsync();
+                return trackedBasicNote;
+            }
+            else
+            {
+                trackedBasicNote.OrdinalPosition = article.ElementsCount();
+                await _dbContext.SaveChangesAsync();
+
+                if (newOrdinalPosition > originalOrdinalPosition)
+                {
+                    List<BasicNote> basicNotesToShiftDown = article.BasicNotes.Where(
+                        bn => bn.OrdinalPosition > originalOrdinalPosition && bn.OrdinalPosition <= newOrdinalPosition && bn != trackedBasicNote
+                    ).ToList();
+                    List<ClozeNote> clozeNotesToShiftDown = article.ClozeNotes.Where(
+                        cn => cn.OrdinalPosition > originalOrdinalPosition && cn.OrdinalPosition <= newOrdinalPosition
+                    ).ToList();
+
+                    foreach (BasicNote bnToShift in basicNotesToShiftDown)
+                    {
+                        bnToShift.OrdinalPosition -= 1;
+                    }
+                    foreach (ClozeNote cnToShift in clozeNotesToShiftDown)
+                    {
+                        cnToShift.OrdinalPosition -= 1;
+                    }
+                    await _dbContext.SaveChangesAsync();
+                }
+                else
+                {
+                    List<BasicNote> basicNotesToShiftUp = article.BasicNotes.Where(
+                        bn => bn.OrdinalPosition >= newOrdinalPosition && bn.OrdinalPosition < originalOrdinalPosition && bn != trackedBasicNote
+                    ).ToList();
+                    List<ClozeNote> clozeNotesToShiftUp = article.ClozeNotes.Where(
+                        cn => cn.OrdinalPosition >= newOrdinalPosition && cn.OrdinalPosition < originalOrdinalPosition
+                    ).ToList();
+
+                    foreach (BasicNote bnToShift in basicNotesToShiftUp)
+                    {
+                        bnToShift.OrdinalPosition += 1;
+                    }
+                    foreach (ClozeNote cnToShift in clozeNotesToShiftUp)
+                    {
+                        cnToShift.OrdinalPosition += 1;
+                    }
+                    await _dbContext.SaveChangesAsync();
+                }
+
+                trackedBasicNote.OrdinalPosition = newOrdinalPosition;
+                await _dbContext.SaveChangesAsync();
+
+                return trackedBasicNote;
+            }
+        }
     }
 
     public async Task<bool> BasicNoteExists(string BasicNoteId)

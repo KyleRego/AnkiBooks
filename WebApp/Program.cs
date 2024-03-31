@@ -38,8 +38,11 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseSqlite(builder.Configuration.GetConnectionString("Database"))
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    {
+    options.UseSqlite(builder.Configuration.GetConnectionString("Database"));
+    options.EnableSensitiveDataLogging();
+    }
 );
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
 builder.Services.AddScoped<IBasicNoteRepository, BasicNoteRepository>();
