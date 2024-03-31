@@ -44,9 +44,9 @@ public class BasicNoteRepository(ApplicationDbContext dbContext) : IBasicNoteRep
                 cnToShift.OrdinalPosition += 1;
             }
         }
-        
+
         article.BasicNotes.Add(basicNote);
-    
+
         await _dbContext.SaveChangesAsync();
 
         return basicNote;
@@ -54,8 +54,25 @@ public class BasicNoteRepository(ApplicationDbContext dbContext) : IBasicNoteRep
 
     public async Task DeleteBasicNoteAsync(BasicNote basicNote)
     {
-        // TODO: This needs to handle the shifting of other notes
+        int deletedOrdinalPosition = basicNote.OrdinalPosition;
+
         _dbContext.BasicNotes.Remove(basicNote);
+
+        Article article = await _dbContext.Articles
+            .Include(a => a.BasicNotes.Where(bn => bn.OrdinalPosition > deletedOrdinalPosition && bn.Id != basicNote.Id))
+            .Include(a => a.ClozeNotes.Where(cn => cn.OrdinalPosition > deletedOrdinalPosition))
+            .FirstAsync(a => a.Id == basicNote.ArticleId);
+
+        foreach (BasicNote bn in article.BasicNotes.Where(bn => bn.OrdinalPosition > deletedOrdinalPosition))
+        {
+            bn.OrdinalPosition -= 1;
+        }
+
+        foreach (ClozeNote cn in article.ClozeNotes.Where(cn => cn.OrdinalPosition > deletedOrdinalPosition))
+        {
+            cn.OrdinalPosition -= 1;
+        }
+
         await _dbContext.SaveChangesAsync();
     }
 
@@ -142,5 +159,5 @@ public class BasicNoteRepository(ApplicationDbContext dbContext) : IBasicNoteRep
     public async Task<bool> BasicNoteExists(string BasicNoteId)
     {
         return await _dbContext.BasicNotes.AnyAsync(bn => bn.Id == BasicNoteId);
-    }   
+    }
 }
