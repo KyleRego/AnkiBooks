@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using AnkiBooks.ApplicationCore.Interfaces;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AnkiBooks.ApplicationCore.Entities;
 
