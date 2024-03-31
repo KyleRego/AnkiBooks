@@ -1,6 +1,7 @@
 using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.Infrastructure.Data;
 using AnkiBooks.Infrastructure.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace AnkiBooks.WebApp.Tests.RepositoryTests.BasicNoteRepositoryTests;
 
@@ -22,6 +23,10 @@ public class DeleteBasicNoteAsyncTests(TestServerFactory<Program> factory) : ICl
         await basicNoteRepository.DeleteBasicNoteAsync(noteToDelete);
 
         Assert.Null(dbContext.BasicNotes.FirstOrDefault(bn => bn.Id == noteToDelete.Id));
+        article = dbContext.Articles.Include(a => a.BasicNotes)
+                                    .Include(a => a.ClozeNotes)
+                                    .First(a => a.Id == article.Id);
+        Assert.Equal(9, article.ElementsCount());
         Assert.True(article.ElementOrdinalPositionsAreCorrect());
     }
 }

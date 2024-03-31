@@ -107,32 +107,4 @@ public class PostBasicNoteTests(TestServerFactory<Program> factory) : IClassFixt
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
     }
-
-    [Fact]
-    public async Task InsertsNoteAtEndIfOrdinalPositionWasInvalid()
-    {
-        using IServiceScope scope = _factory.Services.CreateScope();
-        ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-        Article article = new("Test article");
-        dbContext.Articles.Add(article);
-        await dbContext.SaveChangesAsync();
-
-        BasicNote basicNote = new()
-        {
-            Front = "Front",
-            Back = "Back",
-            OrdinalPosition = 5,
-            ArticleId = article.Id
-        };
-
-        HttpClient client = _factory.CreateClient();
-
-        HttpResponseMessage response = await client.PostAsJsonAsync("api/BasicNotes", basicNote);
-
-        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-
-        BasicNote createdBasicNote = dbContext.BasicNotes.FirstOrDefault(bn => bn.Id == basicNote.Id);
-        Assert.Equal(0, createdBasicNote.OrdinalPosition);    
-    }
 }

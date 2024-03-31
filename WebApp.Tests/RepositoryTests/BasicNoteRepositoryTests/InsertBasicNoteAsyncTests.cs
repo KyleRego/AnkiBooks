@@ -1,4 +1,5 @@
 using AnkiBooks.ApplicationCore.Entities;
+using AnkiBooks.ApplicationCore.Exceptions;
 using AnkiBooks.ApplicationCore.Interfaces;
 using AnkiBooks.Infrastructure.Data;
 using AnkiBooks.Infrastructure.Repository;
@@ -11,50 +12,126 @@ public class InsertBasicNoteAsyncTests(TestServerFactory<Program> factory) : ICl
     private readonly TestServerFactory<Program> _factory = factory;
 
     [Fact]
-    public async Task BasicNoteIsInsertedInMiddleOfArticleWithNotes()
+    public async Task InvalidBasicNoteOrdinalPositionsThrowAnException()
     {
-        async Task<string> SetupTest()
-        {
-            using IServiceScope scope = _factory.Services.CreateScope();
-            ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            Article article = new("Test article");
-            List<BasicNote> existingBasicNotes =
-            [
-                new() { Front = "Front", Back = "Back", OrdinalPosition = 0 },
-                new() { Front = "Front", Back = "Back", OrdinalPosition = 2 },
-                new() { Front = "Front", Back = "Back", OrdinalPosition = 4 }
-            ];
-            List<ClozeNote> existingClozeNotes =
-            [
-                new() { Text = "a", OrdinalPosition = 1},
-                new() { Text = "b", OrdinalPosition = 3}
-            ];
-            
-            article.BasicNotes = existingBasicNotes;
-            article.ClozeNotes = existingClozeNotes;
-            dbContext.Articles.Add(article);
-            await dbContext.SaveChangesAsync();
-
-            return article.Id;
-        }
-        string articleId = await SetupTest();
+        Article article = await ArticleFactory.ArticleWithTenAlternatingBasicAndClozeNotes(_factory);  
 
         using IServiceScope scope = _factory.Services.CreateScope();
         ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        BasicNoteRepository basicNoteRepository = new(dbContext);
 
-        BasicNote newBasicNote = new()
+        await Assert.ThrowsAsync<OrdinalPositionException>(async () => {
+            BasicNote basicNote = new()
+            {
+                Front = "World2",
+                Back = "Hello2",
+                OrdinalPosition = -1,
+                ArticleId = article.Id
+            };
+        
+            await basicNoteRepository.InsertBasicNoteAsync(basicNote);
+        });
+
+        await Assert.ThrowsAsync<OrdinalPositionException>(async () => {
+            BasicNote basicNote = new()
+            {
+                Front = "World2",
+                Back = "Hello2",
+                OrdinalPosition = article.ElementsCount() + 1,
+                ArticleId = article.Id
+            };
+
+            await basicNoteRepository.InsertBasicNoteAsync(basicNote);
+        });
+    }
+
+    [Fact]
+    public async Task BasicNoteIsInsertedAtBeginningOfArticleWithNotes()
+    {
+        Article article = await ArticleFactory.ArticleWithTenAlternatingBasicAndClozeNotes(_factory);
+
+        BasicNote basicNote = new()
+        {
+            Front = "World2",
+            Back = "Hello2",
+            OrdinalPosition = 0,
+            ArticleId = article.Id
+        };
+
+        using IServiceScope scope = _factory.Services.CreateScope();
+        ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        
+        BasicNoteRepository basicNoteRepository = new(dbContext);
+
+        await basicNoteRepository.InsertBasicNoteAsync(basicNote);
+
+        article = dbContext.Articles.Include(a => a.BasicNotes)
+                                    .Include(a => a.ClozeNotes)
+                                    .First(a => a.Id == article.Id);
+        BasicNote updatedBasicNote = article.BasicNotes.First(bn => bn.OrdinalPosition == 0);
+        Assert.Equal("World2", updatedBasicNote.Front);
+        Assert.Equal("Hello2", updatedBasicNote.Back);
+        Assert.Equal(11, article.ElementsCount());
+        Assert.True(article.ElementOrdinalPositionsAreCorrect());
+    }
+
+    [Fact]
+    public async Task BasicNoteIsInsertedAtEndOfArticleWithNotes()
+    {
+        Article article = await ArticleFactory.ArticleWithTenAlternatingBasicAndClozeNotes(_factory);
+
+        BasicNote basicNote = new()
+        {
+            Front = "World2",
+            Back = "Hello2",
+            OrdinalPosition = 10,
+            ArticleId = article.Id
+        };
+
+        using IServiceScope scope = _factory.Services.CreateScope();
+        ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        
+        BasicNoteRepository basicNoteRepository = new(dbContext);
+
+        await basicNoteRepository.InsertBasicNoteAsync(basicNote);
+
+        article = dbContext.Articles.Include(a => a.BasicNotes)
+                                    .Include(a => a.ClozeNotes)
+                                    .First(a => a.Id == article.Id);
+        BasicNote updatedBasicNote = article.BasicNotes.First(bn => bn.OrdinalPosition == 10);
+        Assert.Equal("World2", updatedBasicNote.Front);
+        Assert.Equal("Hello2", updatedBasicNote.Back);
+        Assert.Equal(11, article.ElementsCount());
+        Assert.True(article.ElementOrdinalPositionsAreCorrect());
+    }
+
+    [Fact]
+    public async Task BasicNoteIsInsertedInMiddleOfArticleWithNotes()
+    {
+        Article article = await ArticleFactory.ArticleWithTenAlternatingBasicAndClozeNotes(_factory);
+
+        BasicNote basicNote = new()
         {
             Front = "World2",
             Back = "Hello2",
             OrdinalPosition = 3,
-            ArticleId = articleId
+            ArticleId = article.Id
         };
+
+        using IServiceScope scope = _factory.Services.CreateScope();
+        ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
-        await basicNoteRepository.InsertBasicNoteAsync(newBasicNote);
+        await basicNoteRepository.InsertBasicNoteAsync(basicNote);
 
-        BasicNote updatedBasicNote = dbContext.BasicNotes.First(bn => bn.OrdinalPosition == 3);
+        article = dbContext.Articles.Include(a => a.BasicNotes)
+                                    .Include(a => a.ClozeNotes)
+                                    .First(a => a.Id == article.Id);
+        BasicNote updatedBasicNote = article.BasicNotes.First(bn => bn.OrdinalPosition == 3);
         Assert.Equal("World2", updatedBasicNote.Front);
         Assert.Equal("Hello2", updatedBasicNote.Back);
+        Assert.Equal(11, article.ElementsCount());
+        Assert.True(article.ElementOrdinalPositionsAreCorrect());
     }
 }

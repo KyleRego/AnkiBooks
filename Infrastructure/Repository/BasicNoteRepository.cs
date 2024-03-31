@@ -1,4 +1,5 @@
 using AnkiBooks.ApplicationCore.Entities;
+using AnkiBooks.ApplicationCore.Exceptions;
 using AnkiBooks.ApplicationCore.Interfaces;
 using AnkiBooks.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,7 @@ public class BasicNoteRepository(ApplicationDbContext dbContext) : IBasicNoteRep
 
         if (basicNote.OrdinalPosition > article.ElementsCount() || basicNote.OrdinalPosition < 0)
         {
-            basicNote.OrdinalPosition = article.ElementsCount();
+            throw new OrdinalPositionException();
         }
         else
         {
@@ -100,9 +101,7 @@ public class BasicNoteRepository(ApplicationDbContext dbContext) : IBasicNoteRep
 
             if (newOrdinalPosition >= article.ElementsCount() || basicNote.OrdinalPosition < 0)
             {
-                // Desired ordinal position is not valid so only update front and back
-                await _dbContext.SaveChangesAsync();
-                return trackedBasicNote;
+                throw new OrdinalPositionException();
             }
             else
             {
