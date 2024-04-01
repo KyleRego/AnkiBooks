@@ -1,11 +1,12 @@
 using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.Infrastructure.Data;
 using AnkiBooks.Infrastructure.Repository;
+using AnkiBooks.WebApp.Tests.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace AnkiBooks.WebApp.Tests.RepositoryTests.BasicNoteRepositoryTests;
 
-public class DeleteBasicNoteAsyncTests(TestServerFactory<Program> factory) : IClassFixture<TestServerFactory<Program>>
+public class DeleteArticleElementAsyncTests(TestServerFactory<Program> factory) : IClassFixture<TestServerFactory<Program>>
 {
     private readonly TestServerFactory<Program> _factory = factory;
 
@@ -20,13 +21,9 @@ public class DeleteBasicNoteAsyncTests(TestServerFactory<Program> factory) : ICl
 
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
-        await basicNoteRepository.DeleteBasicNoteAsync(noteToDelete);
+        await basicNoteRepository.DeleteArticleElementAsync(noteToDelete);
 
         Assert.Null(dbContext.BasicNotes.FirstOrDefault(bn => bn.Id == noteToDelete.Id));
-        article = dbContext.Articles.Include(a => a.BasicNotes)
-                                    .Include(a => a.ClozeNotes)
-                                    .First(a => a.Id == article.Id);
-        Assert.Equal(9, article.ElementsCount());
-        Assert.True(article.ElementOrdinalPositionsAreCorrect());
+        Assert.True(ArticleValidator.CorrectElementsCountAndOrdinalPositions(dbContext, article, 9));
     }
 }

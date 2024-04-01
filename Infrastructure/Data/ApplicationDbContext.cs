@@ -15,7 +15,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         ApplicationRoleClaim, ApplicationUserToken>(options)
 {
     public DbSet<Link> Links { get; set; } = null!;
-
     public DbSet<Article> Articles { get; set; } = null!;
     public DbSet<ArticleElementBase> ArticleElements { get; set; } = null!;
     public DbSet<BasicNote> BasicNotes { get; set; } = null!;

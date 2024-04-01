@@ -44,7 +44,7 @@ public class BasicNotesController(IBasicNoteRepository basicNoteRepository) : Co
 
         try
         {
-            await _basicNoteRepository.UpdateBasicNoteAsync(basicNote);
+            await _basicNoteRepository.UpdateArticleElementAsync(basicNote);
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -68,7 +68,7 @@ public class BasicNotesController(IBasicNoteRepository basicNoteRepository) : Co
     {
         try
         {
-            await _basicNoteRepository.InsertBasicNoteAsync(basicNote);
+            await _basicNoteRepository.InsertArticleElementAsync(basicNote);
         }
         catch (DbUpdateException)
         {
@@ -95,7 +95,7 @@ public class BasicNotesController(IBasicNoteRepository basicNoteRepository) : Co
             return NotFound();
         }
 
-        await _basicNoteRepository.DeleteBasicNoteAsync(basicNote);
+        await _basicNoteRepository.DeleteArticleElementAsync(basicNote);
 
         return NoContent();
     }

@@ -3,11 +3,12 @@ using AnkiBooks.ApplicationCore.Exceptions;
 using AnkiBooks.ApplicationCore.Interfaces;
 using AnkiBooks.Infrastructure.Data;
 using AnkiBooks.Infrastructure.Repository;
+using AnkiBooks.WebApp.Tests.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace AnkiBooks.WebApp.Tests.RepositoryTests.BasicNoteRepositoryTests;
 
-public class InsertBasicNoteAsyncTests(TestServerFactory<Program> factory) : IClassFixture<TestServerFactory<Program>>
+public class InsertArticleElementAsyncTests(TestServerFactory<Program> factory) : IClassFixture<TestServerFactory<Program>>
 {
     private readonly TestServerFactory<Program> _factory = factory;
 
@@ -29,7 +30,7 @@ public class InsertBasicNoteAsyncTests(TestServerFactory<Program> factory) : ICl
                 ArticleId = article.Id
             };
         
-            await basicNoteRepository.InsertBasicNoteAsync(basicNote);
+            await basicNoteRepository.InsertArticleElementAsync(basicNote);
         });
 
         await Assert.ThrowsAsync<OrdinalPositionException>(async () => {
@@ -37,11 +38,11 @@ public class InsertBasicNoteAsyncTests(TestServerFactory<Program> factory) : ICl
             {
                 Front = "World2",
                 Back = "Hello2",
-                OrdinalPosition = article.ElementsCount() + 1,
+                OrdinalPosition = 11,
                 ArticleId = article.Id
             };
 
-            await basicNoteRepository.InsertBasicNoteAsync(basicNote);
+            await basicNoteRepository.InsertArticleElementAsync(basicNote);
         });
     }
 
@@ -63,16 +64,12 @@ public class InsertBasicNoteAsyncTests(TestServerFactory<Program> factory) : ICl
         
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
-        await basicNoteRepository.InsertBasicNoteAsync(basicNote);
+        await basicNoteRepository.InsertArticleElementAsync(basicNote);
 
-        article = dbContext.Articles.Include(a => a.BasicNotes)
-                                    .Include(a => a.ClozeNotes)
-                                    .First(a => a.Id == article.Id);
-        BasicNote updatedBasicNote = article.BasicNotes.First(bn => bn.OrdinalPosition == 0);
+        BasicNote updatedBasicNote = dbContext.BasicNotes.First(bn => bn.Id == basicNote.Id);
         Assert.Equal("World2", updatedBasicNote.Front);
         Assert.Equal("Hello2", updatedBasicNote.Back);
-        Assert.Equal(11, article.ElementsCount());
-        Assert.True(article.ElementOrdinalPositionsAreCorrect());
+        Assert.True(ArticleValidator.CorrectElementsCountAndOrdinalPositions(dbContext, article, 11));
     }
 
     [Fact]
@@ -93,16 +90,12 @@ public class InsertBasicNoteAsyncTests(TestServerFactory<Program> factory) : ICl
         
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
-        await basicNoteRepository.InsertBasicNoteAsync(basicNote);
+        await basicNoteRepository.InsertArticleElementAsync(basicNote);
 
-        article = dbContext.Articles.Include(a => a.BasicNotes)
-                                    .Include(a => a.ClozeNotes)
-                                    .First(a => a.Id == article.Id);
-        BasicNote updatedBasicNote = article.BasicNotes.First(bn => bn.OrdinalPosition == 10);
+        BasicNote updatedBasicNote = dbContext.BasicNotes.First(bn => bn.Id == basicNote.Id);
         Assert.Equal("World2", updatedBasicNote.Front);
         Assert.Equal("Hello2", updatedBasicNote.Back);
-        Assert.Equal(11, article.ElementsCount());
-        Assert.True(article.ElementOrdinalPositionsAreCorrect());
+        Assert.True(ArticleValidator.CorrectElementsCountAndOrdinalPositions(dbContext, article, 11));
     }
 
     [Fact]
@@ -123,15 +116,11 @@ public class InsertBasicNoteAsyncTests(TestServerFactory<Program> factory) : ICl
 
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
-        await basicNoteRepository.InsertBasicNoteAsync(basicNote);
+        await basicNoteRepository.InsertArticleElementAsync(basicNote);
 
-        article = dbContext.Articles.Include(a => a.BasicNotes)
-                                    .Include(a => a.ClozeNotes)
-                                    .First(a => a.Id == article.Id);
-        BasicNote updatedBasicNote = article.BasicNotes.First(bn => bn.OrdinalPosition == 3);
+        BasicNote updatedBasicNote = dbContext.BasicNotes.First(bn => bn.Id == basicNote.Id);
         Assert.Equal("World2", updatedBasicNote.Front);
         Assert.Equal("Hello2", updatedBasicNote.Back);
-        Assert.Equal(11, article.ElementsCount());
-        Assert.True(article.ElementOrdinalPositionsAreCorrect());
+        Assert.True(ArticleValidator.CorrectElementsCountAndOrdinalPositions(dbContext, article, 11));
     }
 }

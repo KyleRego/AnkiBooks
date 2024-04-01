@@ -44,7 +44,7 @@ public class ClozeNotesController(IClozeNoteRepository clozeNoteRepository) : Co
 
         try
         {
-            await _clozeNoteRepository.UpdateClozeNoteAsync(clozeNote);
+            await _clozeNoteRepository.UpdateArticleElementAsync(clozeNote);
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -68,7 +68,7 @@ public class ClozeNotesController(IClozeNoteRepository clozeNoteRepository) : Co
     {
         try
         {
-            await _clozeNoteRepository.InsertClozeNoteAsync(clozeNote);
+            await _clozeNoteRepository.InsertArticleElementAsync(clozeNote);
         }
         catch (DbUpdateException)
         {
@@ -95,7 +95,7 @@ public class ClozeNotesController(IClozeNoteRepository clozeNoteRepository) : Co
             return NotFound();
         }
 
-        await _clozeNoteRepository.DeleteClozeNoteAsync(clozeNote);
+        await _clozeNoteRepository.DeleteArticleElementAsync(clozeNote);
 
         return NoContent();
     }
