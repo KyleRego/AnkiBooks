@@ -16,7 +16,7 @@
 
 @code {
     [Parameter]
-    public BasicNote? StartingBasicNote { get; set; }
+    public BasicNote StartingBasicNote { get; set; } = null!;
 
     protected override void OnInitialized()
     {
@@ -32,7 +32,7 @@
     }
 
     [Parameter]
-    public Func<BasicNote, Task> ParentSubmitMethod { get; set; }
+    public Func<BasicNote, Task> ParentSubmitMethod { get; set; } = null!;
 
     private async Task SubmitForm()
     {
@@ -40,5 +40,5 @@
     }
 
     [SupplyParameterFromForm]
-    public BasicNote BasicNote { get; set; }
+    public BasicNote BasicNote { get; set; } = null!;
 }

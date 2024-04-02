@@ -1,40 +1,37 @@
 @using AnkiBooks.ApplicationCore.Entities
 
-<div class="d-flex justify-content-center my-2">
-    <RadzenCard Variant="Variant.Outlined" Style="width: 32rem" class="p-2">
-    @if (editingNote == false)
-    {
-        <div class="d-flex">
-            <div    class="flex-grow-1 border-end border-primary text-center
-                            d-flex flex-column justify-content-around align-items-center"
-                    role="button"
-                    tabindex="0"
-                    @onclick="FlipCard"
-                    @onkeypress="FlipCardFromKeyboardEnter">
-        
-                    <span>@BasicNote.Front</span>
-                
-                @if (showAnswer == true)
-                {
-                    <span>@BasicNote.Back</span>
-                }
+@if (editingNote == false)
+{
+    <div class="d-flex justify-content-center my-2">
+        <RadzenCard Variant="Variant.Outlined" Style="width: 32rem" class="p-2 pe-0">
+            <div class="d-flex">
+                <div    class="text-center flex-grow-1
+                                d-flex flex-column justify-content-around align-items-center"
+                        role="button"
+                        tabindex="0"
+                        @onclick="FlipCard"
+                        @onkeypress="FlipCardFromKeyboardEnter">
+            
+                    <span>@BasicNote.Front (ordinal position: @BasicNote.OrdinalPosition)</span>
+                    
+                    @if (showAnswer == true)
+                    {
+                        <span>@BasicNote.Back</span>
+                    }
+                </div>
+
+                <div class="d-flex flex-column justify-content-center align-items-center ms-2 me-2">
+                    <RadzenButton Text="Edit" Click="@EditNote" Variant="Variant.Outlined" Size="ButtonSize.Small"/>
+                </div>
             </div>
+        </RadzenCard>
+    </div>
+}
+else
+{
+    <EditBasicNote @bind-EditingNote="editingNote" StartingBasicNote="@BasicNote"/>    
+}
 
-            <div class="d-flex flex-column justify-content-around align-items-center">
-                <span>Basic Note</span>
-
-                <RadzenButton Text="Edit" Click="@EditNote" Variant="Variant.Outlined" Size="ButtonSize.Small"/>
-
-                <span>@BasicNote.OrdinalPosition</span>
-            </div>
-        </div>
-    }
-    else
-    {
-        <EditBasicNote @bind-EditingNote="editingNote" StartingBasicNote="@BasicNote"/>
-    }
-    </RadzenCard>
-</div>
 
 @code {
     [Parameter]

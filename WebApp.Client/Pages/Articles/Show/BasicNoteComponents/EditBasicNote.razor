@@ -5,9 +5,13 @@
 @inject ILogger<EditBasicNote> Logger
 @inject IAnkiBooksApiService ApiService
 
-<BasicNoteForm  StartingBasicNote="@StartingBasicNote"
-                EditingExisting="true"
-                ParentSubmitMethod="@SubmitForm" />
+<div class="d-flex justify-content-center my-2">
+    <RadzenCard Variant="Variant.Outlined" Style="width: 32rem" class="p-2">
+        <BasicNoteForm  StartingBasicNote="@StartingBasicNote"
+                        EditingExisting="true"
+                        ParentSubmitMethod="@SubmitForm" />
+    </RadzenCard>
+</div>
 
 @code {
     [Parameter]
