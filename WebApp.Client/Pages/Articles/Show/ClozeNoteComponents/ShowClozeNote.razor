@@ -1,20 +1,62 @@
 @using AnkiBooks.ApplicationCore.Entities
 
-<div class="d-flex justify-content-center my-2">
-    <RadzenCard Variant="Variant.Outlined" Style="width: 32rem">
-        <div class="d-flex justify-content-around">
-            <span>Cloze Note</span>
-            <span>Edit</span>
-            <span>@ClozeNote.OrdinalPosition</span>
-        </div>
+@if (editingNote == false)
+{
+    <div class="d-flex justify-content-center my-2">
+        <RadzenCard Variant="Variant.Outlined" Style="width: 32rem" class="p-2 pe-0">
+            <div class="d-flex">
+                <div    class="text-center flex-grow-1
+                                d-flex flex-column justify-content-around align-items-center"
+                        role="button"
+                        tabindex="0"
+                        @onclick="FlipCard"
+                        @onkeypress="FlipCardFromKeyboardEnter">
+            
+                    <span>@ClozeNote.Text (ordinal position: @ClozeNote.OrdinalPosition)</span>
 
-        <div class="border-bottom text-center pb-2 my-2">
-            @ClozeNote.Text
-        </div>
-    </RadzenCard>
-</div>
+                    @if (showAnswer)
+                    {
+                        <p>answer</p>
+                    }
+
+                </div>
+
+                <div class="d-flex flex-column justify-content-center align-items-center ms-2 me-2">
+                    <RadzenButton Text="Edit" Click="@EditNote" Variant="Variant.Outlined" Size="ButtonSize.Small"/>
+                </div>
+            </div>
+        </RadzenCard>
+    </div>
+}
+else
+{
+    <EditClozeNote @bind-EditingNote="editingNote" StartingClozeNote="@ClozeNote"/>    
+}
+
 
 @code {
     [Parameter]
     public ClozeNote ClozeNote { get; set; } = null!;
+
+    private bool showAnswer = false;
+
+    private void FlipCard()
+    {
+        showAnswer = !showAnswer;
+    }
+
+    private void FlipCardFromKeyboardEnter(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            FlipCard();
+        }
+    }
+
+    private bool editingNote = false;
+
+    private void EditNote()
+    {
+        editingNote = true;
+    }
 }

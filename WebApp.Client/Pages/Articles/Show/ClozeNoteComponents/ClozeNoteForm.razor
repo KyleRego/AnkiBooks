@@ -1,0 +1,42 @@
+@using AnkiBooks.ApplicationCore.Entities
+
+<EditForm Model="ClozeNote" OnValidSubmit="SubmitForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <RadzenStack Gap="10">
+        <RadzenTextArea @bind-Value="ClozeNote.Text" id="Text" />
+
+        <div class="d-flex justify-content-center">
+            <RadzenButton type="submit" Text="@SubmitButtonText()" Variant="Variant.Outlined" Size="ButtonSize.Small" />
+        </div>
+    </RadzenStack>
+</EditForm>
+
+@code {
+    [Parameter]
+    public ClozeNote StartingClozeNote { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        ClozeNote = StartingClozeNote;
+    }
+
+    [Parameter]
+    public bool EditingExisting { get; set; }
+
+    private string SubmitButtonText()
+    {
+        return EditingExisting ? "Update" : "Create";
+    }
+
+    [Parameter]
+    public Func<ClozeNote, Task> ParentSubmitMethod { get; set; } = null!;
+
+    private async Task SubmitForm()
+    {
+        await ParentSubmitMethod.Invoke(ClozeNote);
+    }
+
+    [SupplyParameterFromForm]
+    public ClozeNote ClozeNote { get; set; } = null!;
+}

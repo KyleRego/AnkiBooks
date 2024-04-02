@@ -35,7 +35,7 @@ public class ClozeNotesController(IClozeNoteRepository clozeNoteRepository) : Co
     // PUT: api/ClozeNotes/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutClozeNote(string id, ClozeNote clozeNote)
+    public async Task<ActionResult<ClozeNote>> PutClozeNote(string id, ClozeNote clozeNote)
     {
         if (id != clozeNote.Id)
         {
@@ -44,7 +44,7 @@ public class ClozeNotesController(IClozeNoteRepository clozeNoteRepository) : Co
 
         try
         {
-            await _clozeNoteRepository.UpdateArticleElementAsync(clozeNote);
+            return (ClozeNote)await _clozeNoteRepository.UpdateArticleElementAsync(clozeNote);
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -57,8 +57,6 @@ public class ClozeNotesController(IClozeNoteRepository clozeNoteRepository) : Co
                 throw;
             }
         }
-
-        return NoContent();
     }
 
     // POST: api/ClozeNotes

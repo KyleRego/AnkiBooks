@@ -45,8 +45,7 @@ public class BasicNotesController(IBasicNoteRepository basicNoteRepository, ILog
 
         try
         {
-            BasicNote updatedBasicNote = (BasicNote)await _basicNoteRepository.UpdateArticleElementAsync(basicNote);
-            return updatedBasicNote;
+            return (BasicNote)await _basicNoteRepository.UpdateArticleElementAsync(basicNote);
         }
         catch (DbUpdateConcurrencyException)
         {

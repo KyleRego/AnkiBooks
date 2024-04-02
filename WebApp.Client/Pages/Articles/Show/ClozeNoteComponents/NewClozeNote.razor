@@ -7,18 +7,10 @@
 @inject IAnkiBooksApiService ApiService
 
 <div class="d-flex justify-content-center my-2">
-    <RadzenCard Variant="Variant.Outlined" Style="width: 32rem">
-        <EditForm Model="ClozeNote" OnValidSubmit="SubmitForm">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-            <RadzenStack Gap="10">
-                <RadzenTextArea @bind-Value="ClozeNote!.Text" id="Text" />
-        
-                <div class="d-flex justify-content-center">
-                    <RadzenButton type="submit" Text="Create" Variant="Variant.Outlined" Size="ButtonSize.Small" />
-                </div>
-            </RadzenStack>
-        </EditForm>
+    <RadzenCard Variant="Variant.Outlined" Style="width: 32rem" class="p-2">
+        <ClozeNoteForm  StartingClozeNote="@StartingClozeNote()"
+                        EditingExisting="false"
+                        ParentSubmitMethod="@SubmitForm" />
     </RadzenCard>
 </div>
 
@@ -29,40 +21,29 @@
     [Parameter]
     public EventCallback<bool> HideSplitButtonAndShowFormChanged { get; set; }
 
-    [SupplyParameterFromForm]
-    public ClozeNote? ClozeNote { get; set; }
-
-    protected override void OnInitialized()
+    private ClozeNote StartingClozeNote()
     {
-        // Set ArticleId here so the form can be submitted (otherwise it is not valid)
-        ClozeNote = new()
+        return new()
         {
             ArticleId = ArticleId
         };
     }
 
-    private async Task SubmitForm()
+    private async Task SubmitForm(ClozeNote newClozeNote)
     {
-        ArgumentNullException.ThrowIfNull(ClozeNote);
-        ArgumentNullException.ThrowIfNull(ClozeNote.Text);
-        ArgumentNullException.ThrowIfNull(ArticleId);
+        ArgumentNullException.ThrowIfNull(newClozeNote.Text);
+        ArgumentNullException.ThrowIfNull(newClozeNote.ArticleId);
 
-        int ordinalPosition = (PairedElement != null) ? 
+        newClozeNote.OrdinalPosition = (PairedElement != null) ? 
                                     OrderedElementsContainer.GetOrdinalPosition(PairedElement) : 
                                     OrderedElementsContainer.Count();
+        
+        ClozeNote? createdClozeNote = await ApiService.PostClozeNote(newClozeNote);
+        ArgumentNullException.ThrowIfNull(createdClozeNote);
 
-        ClozeNote cnData = new ClozeNote
-            {
-                Text = ClozeNote.Text,
-                ArticleId = ArticleId,
-                OrdinalPosition = ordinalPosition
-            };
-
-        ClozeNote? clozeNote = await ApiService.PostClozeNote(cnData);
-        ArgumentNullException.ThrowIfNull(clozeNote);
-
-        OrderedElementsContainer.Add(clozeNote);
+        OrderedElementsContainer.Add(createdClozeNote);
         await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
+
         HideSplitButtonAndShowForm = false;
         await HideSplitButtonAndShowFormChanged.InvokeAsync(HideSplitButtonAndShowForm);
     }
