@@ -1,0 +1,44 @@
+@using AnkiBooks.ApplicationCore.Entities
+
+<EditForm Model="BasicNote" OnValidSubmit="SubmitForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <RadzenStack Gap="10">
+        <RadzenTextArea @bind-Value="BasicNote.Front" id="Front" class="p-2" />
+        
+        <RadzenTextArea @bind-Value="BasicNote.Back" id="Back" class="p-2" />
+
+        <div class="d-flex justify-content-center">
+            <RadzenButton type="submit" Text="@SubmitButtonText()" Variant="Variant.Outlined" Size="ButtonSize.Small" />
+        </div>
+    </RadzenStack>
+</EditForm>
+
+@code {
+    [Parameter]
+    public BasicNote? StartingBasicNote { get; set; }
+
+    protected override void OnInitialized()
+    {
+        BasicNote = StartingBasicNote;
+    }
+
+    [Parameter]
+    public bool EditingExisting { get; set; }
+
+    private string SubmitButtonText()
+    {
+        return EditingExisting ? "Update" : "Create";
+    }
+
+    [Parameter]
+    public Func<BasicNote, Task> ParentSubmitMethod { get; set; }
+
+    private async Task SubmitForm()
+    {
+        await ParentSubmitMethod.Invoke(BasicNote);
+    }
+
+    [SupplyParameterFromForm]
+    public BasicNote BasicNote { get; set; }
+}

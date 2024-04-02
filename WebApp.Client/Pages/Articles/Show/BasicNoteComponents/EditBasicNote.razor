@@ -1,26 +1,13 @@
-@using AnkiBooks.ApplicationCore.Entities
 @using System.ComponentModel.DataAnnotations
 @using System.Text.Json
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Interfaces
-@inject ILogger<BasicNoteForm> Logger
+@inject ILogger<EditBasicNote> Logger
 @inject IAnkiBooksApiService ApiService
 
-<div>
-    <EditForm Model="BasicNote" OnValidSubmit="SubmitForm">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <RadzenStack Gap="10">
-            <RadzenTextArea @bind-Value="BasicNote.Front" id="Front" class="p-2" />
-            
-            <RadzenTextArea @bind-Value="BasicNote.Back" id="Back" class="p-2" />
-
-            <div class="d-flex justify-content-center">
-                <RadzenButton type="submit" Text="@SubmitButtonText()" Variant="Variant.Outlined" Size="ButtonSize.Small" />
-            </div>
-        </RadzenStack>
-    </EditForm>
-</div>
+<BasicNoteForm  StartingBasicNote="@StartingBasicNote"
+                EditingExisting="true"
+                ParentSubmitMethod="@SubmitForm" />
 
 @code {
     [Parameter]
@@ -32,28 +19,14 @@
     [Parameter]
     public EventCallback<bool> EditingNoteChanged { get; set; }
 
-    private string SubmitButtonText()
+    private async Task SubmitForm(BasicNote updatedBasicNote)
     {
-        return StartingBasicNote == null ? "Create" : "Update";
-    }
+        ArgumentNullException.ThrowIfNull(updatedBasicNote.Front);
+        ArgumentNullException.ThrowIfNull(updatedBasicNote.Back);
+        ArgumentNullException.ThrowIfNull(updatedBasicNote.ArticleId);
+        ArgumentNullException.ThrowIfNull(updatedBasicNote.OrdinalPosition);
 
-    [SupplyParameterFromForm]
-    public BasicNote BasicNote { get; set; }
-
-    protected override void OnInitialized()
-    {
-        BasicNote = StartingBasicNote;
-    }
-
-    private async Task SubmitForm()
-    {
-        ArgumentNullException.ThrowIfNull(BasicNote);
-        ArgumentNullException.ThrowIfNull(BasicNote.Front);
-        ArgumentNullException.ThrowIfNull(BasicNote.Back);
-        ArgumentNullException.ThrowIfNull(BasicNote.ArticleId);
-        ArgumentNullException.ThrowIfNull(BasicNote.OrdinalPosition);
-
-        BasicNote? basicNote = await ApiService.PutBasicNote(BasicNote);
+        BasicNote? basicNote = await ApiService.PutBasicNote(updatedBasicNote);
         ArgumentNullException.ThrowIfNull(basicNote);
 
         EditingNote = false;

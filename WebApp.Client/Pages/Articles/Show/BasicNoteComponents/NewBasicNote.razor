@@ -8,19 +8,9 @@
 
 <div class="d-flex justify-content-center my-2">
     <RadzenCard Variant="Variant.Outlined" Style="width: 32rem" class="p-2">
-        <EditForm Model="BasicNote" OnValidSubmit="SubmitForm">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-            <RadzenStack Gap="10">
-                <RadzenTextArea @bind-Value="BasicNote.Front" id="Front" class="p-2" />
-
-                <RadzenTextArea @bind-Value="BasicNote.Back" id="Back" class="p-2" />
-        
-                <div class="d-flex justify-content-center">
-                    <RadzenButton type="submit" Text="Create" Variant="Variant.Outlined" Size="ButtonSize.Small" />
-                </div>
-            </RadzenStack>
-        </EditForm>
+        <BasicNoteForm  StartingBasicNote="@StartingBasicNote()"
+                        EditingExisting="false"
+                        ParentSubmitMethod="@SubmitForm" />
     </RadzenCard>
 </div>
 
@@ -31,40 +21,28 @@
     [Parameter]
     public EventCallback<bool> HideSplitButtonAndShowFormChanged { get; set; }
 
-    [SupplyParameterFromForm]
-    public BasicNote BasicNote { get; set; }
-
-    protected override void OnInitialized()
+    private BasicNote StartingBasicNote()
     {
-        // Set ArticleId here so that the form can be submitted (otherwise it is not valid)
-        BasicNote = new()
+        return new()
         {
             ArticleId = ArticleId
         };
     }
 
-    private async Task SubmitForm()
+    private async Task SubmitForm(BasicNote newBasicNote)
     {
-        ArgumentNullException.ThrowIfNull(BasicNote);
-        ArgumentNullException.ThrowIfNull(BasicNote.Front);
-        ArgumentNullException.ThrowIfNull(BasicNote.Back);
-        ArgumentNullException.ThrowIfNull(ArticleId);
+        ArgumentNullException.ThrowIfNull(newBasicNote.Front);
+        ArgumentNullException.ThrowIfNull(newBasicNote.Back);
+        ArgumentNullException.ThrowIfNull(newBasicNote.ArticleId);
 
-        int ordinalPosition = (PairedElement != null) ? 
+        newBasicNote.OrdinalPosition = (PairedElement != null) ? 
                                     OrderedElementsContainer.GetOrdinalPosition(PairedElement) : 
                                     OrderedElementsContainer.Count();
         
-        BasicNote bnData = new BasicNote
-            {
-                Front = BasicNote.Front,
-                Back = BasicNote.Back,
-                ArticleId = ArticleId,
-                OrdinalPosition = ordinalPosition
-            };
-        BasicNote? basicNote = await ApiService.PostBasicNote(bnData);
-        ArgumentNullException.ThrowIfNull(basicNote);
+        BasicNote? createdBasicNote = await ApiService.PostBasicNote(newBasicNote);
+        ArgumentNullException.ThrowIfNull(createdBasicNote);
 
-        OrderedElementsContainer.Add(basicNote);
+        OrderedElementsContainer.Add(createdBasicNote);
         await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
 
         HideSplitButtonAndShowForm = false;
