@@ -10,6 +10,7 @@ public interface IAnkiBooksApiService
     public Task<Article[]?> GetArticles();
     public Task<Article?> PostArticle(Article articleData);
     public Task<BasicNote?> PostBasicNote(BasicNote bnData);
+    public Task<BasicNote?> PutBasicNote(BasicNote bnData);
     public Task<ClozeNote?> PostClozeNote(ClozeNote cnData);
 }
 
@@ -43,6 +44,14 @@ public class AnkiBooksApiService(HttpClient httpClient) : IAnkiBooksApiService
     public async Task<BasicNote?> PostBasicNote(BasicNote bnData)
     {
         HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/BasicNotes", bnData);
+        response.EnsureSuccessStatusCode();
+        string responseBody = await response.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<BasicNote>(responseBody, _jsonOptions);
+    }
+
+    public async Task<BasicNote?> PutBasicNote(BasicNote bnData)
+    {
+        HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"api/BasicNotes/{bnData.Id}", bnData);
         response.EnsureSuccessStatusCode();
         string responseBody = await response.Content.ReadAsStringAsync();
         return JsonSerializer.Deserialize<BasicNote>(responseBody, _jsonOptions);

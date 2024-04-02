@@ -7,14 +7,14 @@
 @inject IAnkiBooksApiService ApiService
 
 <div class="d-flex justify-content-center my-2">
-    <RadzenCard Variant="Variant.Outlined" Style="width: 32rem">
+    <RadzenCard Variant="Variant.Outlined" Style="width: 32rem" class="p-2">
         <EditForm Model="BasicNote" OnValidSubmit="SubmitForm">
             <DataAnnotationsValidator />
             <ValidationSummary />
             <RadzenStack Gap="10">
-                <RadzenTextArea @bind-Value="BasicNote!.Front" id="Front" />
-                
-                <RadzenTextArea @bind-Value="BasicNote.Back" id="Back" />
+                <RadzenTextArea @bind-Value="BasicNote.Front" id="Front" class="p-2" />
+
+                <RadzenTextArea @bind-Value="BasicNote.Back" id="Back" class="p-2" />
         
                 <div class="d-flex justify-content-center">
                     <RadzenButton type="submit" Text="Create" Variant="Variant.Outlined" Size="ButtonSize.Small" />
@@ -32,7 +32,7 @@
     public EventCallback<bool> HideSplitButtonAndShowFormChanged { get; set; }
 
     [SupplyParameterFromForm]
-    public BasicNote? BasicNote { get; set; }
+    public BasicNote BasicNote { get; set; }
 
     protected override void OnInitialized()
     {

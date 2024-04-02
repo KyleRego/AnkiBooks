@@ -7,9 +7,10 @@ namespace AnkiBooks.WebApp.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class BasicNotesController(IBasicNoteRepository basicNoteRepository) : ControllerBase
+public class BasicNotesController(IBasicNoteRepository basicNoteRepository, ILogger<BasicNotesController> logger) : ControllerBase
 {
     private readonly IBasicNoteRepository _basicNoteRepository = basicNoteRepository;
+    private readonly ILogger<BasicNotesController> _logger = logger;
 
     // GET: api/BasicNotes
     [HttpGet]
@@ -35,7 +36,7 @@ public class BasicNotesController(IBasicNoteRepository basicNoteRepository) : Co
     // PUT: api/BasicNotes/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutBasicNote(string id, BasicNote basicNote)
+    public async Task<ActionResult<BasicNote>> PutBasicNote(string id, BasicNote basicNote)
     {
         if (id != basicNote.Id)
         {
@@ -44,7 +45,8 @@ public class BasicNotesController(IBasicNoteRepository basicNoteRepository) : Co
 
         try
         {
-            await _basicNoteRepository.UpdateArticleElementAsync(basicNote);
+            BasicNote updatedBasicNote = (BasicNote)await _basicNoteRepository.UpdateArticleElementAsync(basicNote);
+            return updatedBasicNote;
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -57,8 +59,6 @@ public class BasicNotesController(IBasicNoteRepository basicNoteRepository) : Co
                 throw;
             }
         }
-
-        return Ok();
     }
 
     // POST: api/BasicNotes

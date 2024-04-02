@@ -1,14 +1,16 @@
 @page "/articles/{id}"
-@layout ArticlesSidebar
 @using System.Text.Json
 @using AnkiBooks.ApplicationCore
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Interfaces
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.BasicNoteComponents
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.ClozeNoteComponents
+@layout ArticlesSidebar
 @inject IConfiguration Config
 @inject IAnkiBooksApiService ApiService
 @inject ILogger<Show> Logger
-@implements IDisposable
 @inject PersistentComponentState ApplicationState
+@implements IDisposable
 
 @rendermode InteractiveWebAssembly
 

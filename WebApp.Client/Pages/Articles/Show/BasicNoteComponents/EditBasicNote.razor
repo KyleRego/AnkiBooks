@@ -1,0 +1,62 @@
+@using AnkiBooks.ApplicationCore.Entities
+@using System.ComponentModel.DataAnnotations
+@using System.Text.Json
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Interfaces
+@inject ILogger<BasicNoteForm> Logger
+@inject IAnkiBooksApiService ApiService
+
+<div>
+    <EditForm Model="BasicNote" OnValidSubmit="SubmitForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <RadzenStack Gap="10">
+            <RadzenTextArea @bind-Value="BasicNote.Front" id="Front" class="p-2" />
+            
+            <RadzenTextArea @bind-Value="BasicNote.Back" id="Back" class="p-2" />
+
+            <div class="d-flex justify-content-center">
+                <RadzenButton type="submit" Text="@SubmitButtonText()" Variant="Variant.Outlined" Size="ButtonSize.Small" />
+            </div>
+        </RadzenStack>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public BasicNote? StartingBasicNote { get; set; }
+
+    [Parameter]
+    public bool EditingNote { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> EditingNoteChanged { get; set; }
+
+    private string SubmitButtonText()
+    {
+        return StartingBasicNote == null ? "Create" : "Update";
+    }
+
+    [SupplyParameterFromForm]
+    public BasicNote BasicNote { get; set; }
+
+    protected override void OnInitialized()
+    {
+        BasicNote = StartingBasicNote;
+    }
+
+    private async Task SubmitForm()
+    {
+        ArgumentNullException.ThrowIfNull(BasicNote);
+        ArgumentNullException.ThrowIfNull(BasicNote.Front);
+        ArgumentNullException.ThrowIfNull(BasicNote.Back);
+        ArgumentNullException.ThrowIfNull(BasicNote.ArticleId);
+        ArgumentNullException.ThrowIfNull(BasicNote.OrdinalPosition);
+
+        BasicNote? basicNote = await ApiService.PutBasicNote(BasicNote);
+        ArgumentNullException.ThrowIfNull(basicNote);
+
+        EditingNote = false;
+        await EditingNoteChanged.InvokeAsync(EditingNote);
+    }
+}

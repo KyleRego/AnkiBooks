@@ -13,6 +13,7 @@
     --rz-on-primary: black;
     --rz-on-primary-lighter: black;
     --rz-card-border: 1px solid var(--ankibooks-border-color);
+    --rz-card-padding: 0;
     --rz-dropdown-open-background-color: var(--ankibooks-background-color);
     --rz-dropdown-item-hover-background-color: var(--ankibooks-background-color);
     --rz-dropdown-item-hover-color: var(--ankibooks-hyperlink-hover-color);
