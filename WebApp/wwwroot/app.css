@@ -28,6 +28,8 @@
     --rz-input-border: 1px solid var(--ankibooks-hyperlink-color);
     --rz-input-value-color: var(--ankibooks-text-color);
     --rz-input-background-color: var(--ankibooks-background-color);
+    --rz-input-hover-border: 1px solid white;
+    --rz-input-focus-border: 1px solid white;
 
     --rz-tree-node-padding: 0;
     --rz-tree-node-hover-color: transparent;
