@@ -18,10 +18,10 @@
     public ClozeNote? StartingClozeNote { get; set; }
 
     [Parameter]
-    public bool EditingNote { get; set; }
+    public bool Editing { get; set; }
 
     [Parameter]
-    public EventCallback<bool> EditingNoteChanged { get; set; }
+    public EventCallback<bool> EditingChanged { get; set; }
 
     private async Task SubmitForm(ClozeNote updatedClozeNote)
     {
@@ -32,7 +32,7 @@
         ClozeNote? clozeNote = await ApiService.PutClozeNote(updatedClozeNote);
         ArgumentNullException.ThrowIfNull(clozeNote);
 
-        EditingNote = false;
-        await EditingNoteChanged.InvokeAsync(EditingNote);
+        Editing = false;
+        await EditingChanged.InvokeAsync(Editing);
     }
 }

@@ -18,10 +18,10 @@
     public BasicNote? StartingBasicNote { get; set; }
 
     [Parameter]
-    public bool EditingNote { get; set; }
+    public bool Editing { get; set; }
 
     [Parameter]
-    public EventCallback<bool> EditingNoteChanged { get; set; }
+    public EventCallback<bool> EditingChanged { get; set; }
 
     private async Task SubmitForm(BasicNote updatedBasicNote)
     {
@@ -33,7 +33,7 @@
         BasicNote? basicNote = await ApiService.PutBasicNote(updatedBasicNote);
         ArgumentNullException.ThrowIfNull(basicNote);
 
-        EditingNote = false;
-        await EditingNoteChanged.InvokeAsync(EditingNote);
+        Editing = false;
+        await EditingChanged.InvokeAsync(Editing);
     }
 }

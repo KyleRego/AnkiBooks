@@ -3,18 +3,18 @@
 @inject IAnkiBooksApiService ApiService
 @inject DialogService DialogService
 
-@if (editingNote == false)
+@if (editing == false)
 {
     <div class="d-flex justify-content-center my-2">
         <RadzenCard Variant="Variant.Outlined" Style="width: 32rem; height: 8rem;">
             <div class="d-flex align-items-center h-100 w-100">
-                <ShowBasicNoteInner BasicNoteFront="@BasicNote.Front" BasicNoteBack="@BasicNote.Back" />
+                <FlippableElement ArticleElement="@ArticleElement" />
 
                 <div class="d-flex flex-column justify-content-around align-items-center ms-2 me-2 h-100">
-                    <RadzenButton Text="Edit" Click="@EditNote" Variant="Variant.Outlined" Size="ButtonSize.Small" />
+                    <RadzenButton Text="Edit" Click="@BeginEditing" Variant="Variant.Outlined" Size="ButtonSize.Small" />
                     <RadzenButton Text="Delete" Click="@ShowInlineDialog" ButtonStyle="ButtonStyle.Danger"
                         Variant="Variant.Outlined" Size="ButtonSize.Small" />
-                    <span>@BasicNote.OrdinalPosition</span>
+                    <span>@ArticleElement.OrdinalPosition</span>
                 </div>
             </div>
         </RadzenCard>
@@ -22,18 +22,18 @@
 }
 else
 {
-    <EditBasicNote @bind-EditingNote="editingNote" StartingBasicNote="@BasicNote" />
+    <EditElement ArticleElement="@ArticleElement" @bind-Editing="@editing" />
 }
 
 @code {
     [Parameter]
-    public BasicNote BasicNote { get; set; } = null!;
+    public ArticleElementBase ArticleElement { get; set; } = null!;
 
-    private bool editingNote = false;
+    private bool editing = false;
 
-    private void EditNote()
+    private void BeginEditing()
     {
-        editingNote = true;
+        editing = true;
     }
 
     async Task ShowInlineDialog()
@@ -45,14 +45,14 @@ else
                 </div>
 
                 <RadzenCard Variant="Variant.Outlined">
-                    <ShowBasicNoteInner BasicNoteFront="@BasicNote.Front" BasicNoteBack="@BasicNote.Back" />
+                    <FlippableElement ArticleElement="@ArticleElement" />
                 </RadzenCard>
 
                 <div class="mt-4 d-flex justify-content-around">
                     <RadzenButton   Text="Yes" 
                                     Click="async () =>
                                     {
-                                        await DeleteNote();
+                                        await DeleteElement();
                                         ds.Close(true);
                                     }"
                                     Variant="Variant.Outlined"
@@ -67,12 +67,14 @@ else
                 </div>
             </div>);
     }
-
-    private async Task DeleteNote()
+    private async Task DeleteElement()
     {
-        await ApiService.DeleteBasicNote(BasicNote.Id);
+        if (ArticleElement is BasicNote)
+        {
+            await ApiService.DeleteBasicNote(ArticleElement.Id);
+        }
 
-        OrderedElementsContainer.Remove(BasicNote);
+        OrderedElementsContainer.Remove(ArticleElement);
         await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
     }
 }

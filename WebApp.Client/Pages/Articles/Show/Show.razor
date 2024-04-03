@@ -26,24 +26,13 @@ else
 
     <article>
         <CascadingValue Value="@article.Id" Name="ArticleId">
-            @foreach(IArticleElement articleElement in orderedElementsContainer.OrderedElements)
+            @foreach(ArticleElementBase articleElement in orderedElementsContainer.OrderedElements)
             {
                 <AddArticleElementSplitButton @bind-OrderedElementsContainer="@orderedElementsContainer"
                                                 PairedElement="@articleElement" />
 
-                if (articleElement is BasicNote)
-                {
-                    BasicNote bn = (BasicNote)articleElement;
-
-                    <ShowBasicNote  @bind-OrderedElementsContainer="@orderedElementsContainer"
-                                    BasicNote="@bn" />
-                }
-                else if (articleElement is ClozeNote)
-                {
-                    ClozeNote cn = (ClozeNote)articleElement;
-
-                    <ShowClozeNote ClozeNote="@cn" />
-                }
+                <ArticleElementComponent @bind-OrderedElementsContainer="@orderedElementsContainer"
+                                ArticleElement="@articleElement"/>
             }
 
             <AddArticleElementSplitButton @bind-OrderedElementsContainer="@orderedElementsContainer"
