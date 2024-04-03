@@ -45,6 +45,15 @@ public class OrderedElementsContainer
         OrderedElements.Insert(element.OrdinalPosition, element);
     }
 
+    public void Remove(IArticleElement element)
+    {
+        OrderedElements.Remove(element);
+        foreach (IArticleElement el in OrderedElements.Where(el => el.OrdinalPosition >= element.OrdinalPosition))
+        {
+            el.OrdinalPosition -= 1;
+        }
+    }
+
     private static List<IArticleElement> InitializeOrderedElementsFromOrdered(List<BasicNote> orderedBasicNotes,
                                                                             List<ClozeNote> orderedClozeNotes)
     {

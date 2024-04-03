@@ -1,0 +1,34 @@
+<div class="text-center text-break flex-grow-1 p-2 pe-0 h-100
+                d-flex flex-column justify-content-around align-items-center" role="button"
+        tabindex="0" @onclick="FlipCard" @onkeypress="FlipCardFromKeyboardEnter">
+
+    <span>@BasicNoteFront</span>
+
+    @if (showAnswer == true)
+        {
+            <span>@BasicNoteBack</span>
+        }
+</div>
+
+@code {
+    [Parameter]
+    public string BasicNoteFront { get; set; } = null!;
+
+    [Parameter]
+    public string BasicNoteBack { get; set; } = null!;
+
+    private bool showAnswer = false;
+
+    private void FlipCard()
+    {
+        showAnswer = !showAnswer;
+    }
+
+    private void FlipCardFromKeyboardEnter(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            FlipCard();
+        }
+    }
+}

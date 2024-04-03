@@ -1,4 +1,4 @@
-@inherits AddElementBase
+@inherits ChangesOrderedElementsContainerBase
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Enums
 @using AnkiBooks.ApplicationCore.Interfaces
@@ -29,14 +29,12 @@ else
             <NewBasicNote   @bind-OrderedElementsContainer:get="OrderedElementsContainer"
                             @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
                             @bind-HideSplitButtonAndShowForm="hideSplitButtonAndShowForm"
-                            ArticleId="@ArticleId"
                             PairedElement="@PairedElement" />
             break;
         case ElementType.ClozeNote:
             <NewClozeNote   @bind-OrderedElementsContainer:get="OrderedElementsContainer"
                             @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
                             @bind-HideSplitButtonAndShowForm="hideSplitButtonAndShowForm"
-                            ArticleId="@ArticleId"
                             PairedElement="@PairedElement" />
             break;
         default:
@@ -46,6 +44,9 @@ else
 }
 
 @code {
+    [Parameter]
+    public IArticleElement? PairedElement { get; set; }
+
     private bool hideSplitButtonAndShowForm = false;
 
     private ElementType? dropDownItemSelected = null;

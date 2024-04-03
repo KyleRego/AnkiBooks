@@ -24,29 +24,32 @@ else
 {
     <PageTitle>@article.Title</PageTitle>
 
-    @foreach(IArticleElement articleElement in orderedElementsContainer.OrderedElements)
-    {
-        <AddArticleElementSplitButton @bind-OrderedElementsContainer="@orderedElementsContainer"
-                                        ArticleId="@(article.Id)"
-                                        PairedElement="@articleElement" />
+    <article>
+        <CascadingValue Value="@article.Id" Name="ArticleId">
+            @foreach(IArticleElement articleElement in orderedElementsContainer.OrderedElements)
+            {
+                <AddArticleElementSplitButton @bind-OrderedElementsContainer="@orderedElementsContainer"
+                                                PairedElement="@articleElement" />
 
-        if (articleElement is BasicNote)
-        {
-            BasicNote bn = (BasicNote)articleElement;
+                if (articleElement is BasicNote)
+                {
+                    BasicNote bn = (BasicNote)articleElement;
 
-            <ShowBasicNote BasicNote="@bn" />
-        }
-        else if (articleElement is ClozeNote)
-        {
-            ClozeNote cn = (ClozeNote)articleElement;
+                    <ShowBasicNote  @bind-OrderedElementsContainer="@orderedElementsContainer"
+                                    BasicNote="@bn" />
+                }
+                else if (articleElement is ClozeNote)
+                {
+                    ClozeNote cn = (ClozeNote)articleElement;
 
-            <ShowClozeNote ClozeNote="@cn" />
-        }
-    }
+                    <ShowClozeNote ClozeNote="@cn" />
+                }
+            }
 
-    <AddArticleElementSplitButton @bind-OrderedElementsContainer="@orderedElementsContainer"
-                                    ArticleId="@(article.Id)"
-                                    PairedElement="@null" />
+            <AddArticleElementSplitButton @bind-OrderedElementsContainer="@orderedElementsContainer"
+                                            PairedElement="@null" />
+        </CascadingValue>
+    </article>
 }
 
 @code {

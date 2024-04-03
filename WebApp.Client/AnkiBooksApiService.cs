@@ -11,6 +11,7 @@ public interface IAnkiBooksApiService
     public Task<Article?> PostArticle(Article articleData);
     public Task<BasicNote?> PostBasicNote(BasicNote bnData);
     public Task<BasicNote?> PutBasicNote(BasicNote bnData);
+    public Task DeleteBasicNote(string basicNoteId);
     public Task<ClozeNote?> PostClozeNote(ClozeNote cnData);
     public Task<ClozeNote?> PutClozeNote(ClozeNote cnData);
 }
@@ -56,6 +57,12 @@ public class AnkiBooksApiService(HttpClient httpClient) : IAnkiBooksApiService
         response.EnsureSuccessStatusCode();
         string responseBody = await response.Content.ReadAsStringAsync();
         return JsonSerializer.Deserialize<BasicNote>(responseBody, _jsonOptions);
+    }
+
+    public async Task DeleteBasicNote(string basicNoteId)
+    {
+        HttpResponseMessage response = await _httpClient.DeleteAsync($"api/BasicNotes/{basicNoteId}");
+        response.EnsureSuccessStatusCode();
     }
 
     public async Task<ClozeNote?> PostClozeNote(ClozeNote cnData)

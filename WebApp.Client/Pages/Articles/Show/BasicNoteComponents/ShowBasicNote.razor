@@ -1,27 +1,20 @@
 @using AnkiBooks.ApplicationCore.Entities
+@inherits ChangesOrderedElementsContainerBase
+@inject IAnkiBooksApiService ApiService
+@inject DialogService DialogService
 
 @if (editingNote == false)
 {
     <div class="d-flex justify-content-center my-2">
-        <RadzenCard Variant="Variant.Outlined" Style="width: 32rem" class="p-2 pe-0">
-            <div class="d-flex">
-                <div    class="text-center text-break flex-grow-1
-                                d-flex flex-column justify-content-around align-items-center"
-                        role="button"
-                        tabindex="0"
-                        @onclick="FlipCard"
-                        @onkeypress="FlipCardFromKeyboardEnter">
-            
-                    <span>@BasicNote.Front (ordinal position: @BasicNote.OrdinalPosition)</span>
-                    
-                    @if (showAnswer == true)
-                    {
-                        <span>@BasicNote.Back</span>
-                    }
-                </div>
+        <RadzenCard Variant="Variant.Outlined" Style="width: 32rem; height: 8rem;">
+            <div class="d-flex align-items-center h-100 w-100">
+                <ShowBasicNoteInner BasicNoteFront="@BasicNote.Front" BasicNoteBack="@BasicNote.Back" />
 
-                <div class="d-flex flex-column justify-content-center align-items-center ms-2 me-2">
-                    <RadzenButton Text="Edit" Click="@EditNote" Variant="Variant.Outlined" Size="ButtonSize.Small"/>
+                <div class="d-flex flex-column justify-content-around align-items-center ms-2 me-2 h-100">
+                    <RadzenButton Text="Edit" Click="@EditNote" Variant="Variant.Outlined" Size="ButtonSize.Small" />
+                    <RadzenButton Text="Delete" Click="@ShowInlineDialog" ButtonStyle="ButtonStyle.Danger"
+                        Variant="Variant.Outlined" Size="ButtonSize.Small" />
+                    <span>@BasicNote.OrdinalPosition</span>
                 </div>
             </div>
         </RadzenCard>
@@ -29,33 +22,57 @@
 }
 else
 {
-    <EditBasicNote @bind-EditingNote="editingNote" StartingBasicNote="@BasicNote"/>    
+    <EditBasicNote @bind-EditingNote="editingNote" StartingBasicNote="@BasicNote" />
 }
-
 
 @code {
     [Parameter]
     public BasicNote BasicNote { get; set; } = null!;
-
-    private bool showAnswer = false;
-
-    private void FlipCard()
-    {
-        showAnswer = !showAnswer;
-    }
-
-    private void FlipCardFromKeyboardEnter(KeyboardEventArgs e)
-    {
-        if (e.Key == "Enter")
-        {
-            FlipCard();
-        }
-    }
 
     private bool editingNote = false;
 
     private void EditNote()
     {
         editingNote = true;
+    }
+
+    async Task ShowInlineDialog()
+    {
+        var result = await DialogService.OpenAsync("Confirmation", ds =>
+            @<div>
+                <div class="mb-4">
+                    <span>Are you sure you want to delete this element?</span>
+                </div>
+
+                <RadzenCard Variant="Variant.Outlined">
+                    <ShowBasicNoteInner BasicNoteFront="@BasicNote.Front" BasicNoteBack="@BasicNote.Back" />
+                </RadzenCard>
+
+                <div class="mt-4 d-flex justify-content-around">
+                    <RadzenButton   Text="Yes" 
+                                    Click="async () =>
+                                    {
+                                        await DeleteNote();
+                                        ds.Close(true);
+                                    }"
+                                    Variant="Variant.Outlined"
+                                    ButtonStyle="ButtonStyle.Danger"
+                                    Style="margin-bottom: 10px; width: 150px" />
+
+                    <RadzenButton   Text="Cancel"
+                                    Click="() => ds.Close(false)"
+                                    Variant="Variant.Outlined"
+                                    ButtonStyle="ButtonStyle.Secondary"
+                                    Style="margin-bottom: 10px; width: 150px" />
+                </div>
+            </div>);
+    }
+
+    private async Task DeleteNote()
+    {
+        await ApiService.DeleteBasicNote(BasicNote.Id);
+
+        OrderedElementsContainer.Remove(BasicNote);
+        await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
     }
 }
