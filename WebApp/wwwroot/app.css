@@ -36,6 +36,19 @@
     --rz-tree-node-hover-background-color: transparent;
     --rz-tree-node-selected-color: transparent;
     --rz-tree-node-selected-background-color: transparent;
+
+    --rz-sidebar-toggle-color: var(--ankibooks-hyperlink-color);
+    --rz-sidebar-toggle-hover-color: var(--ankibooks-hyperlink-hover-color);
+    --rz-sidebar-toggle-background-color: transparent;
+    --rz-sidebar-toggle-hover-background-color: transparent;
+    --rz-sidebar-toggle-padding: 0;
+    --rz-sidebar-toggle-margin: 0;
+    --rz-sidebar-toggle-border: none;
+    --rz-sidebar-toggle-icon-width: 1.75rem;
+    --rz-sidebar-toggle-icon-height: 1.75rem;
+    --rz-transition-all: none;
+    
+    --rz-dialog-mask-background-color: rgba(0, 0, 0, 0.3);
 }
 
 body {

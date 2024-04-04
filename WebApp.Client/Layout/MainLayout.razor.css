@@ -11,3 +11,36 @@
 .site-header a {
     font-size: 16px;
 }
+
+::deep .rz-sidebar-expanded {
+    animation: fadein 0.5s;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+        width: 0;
+    }
+
+    to {
+        opacity: 1;
+        width: var(--rz-sidebar-width);
+    }
+}
+
+::deep .rz-dialog-mask {
+    animation: mask 0.3s;
+    backdrop-filter: blur(10px);
+}
+
+@keyframes mask {
+    from {
+        opacity: 0;
+        background-color: transparent;
+    }
+
+    to {
+        opacity: 0.5;
+        background-color: var(--rz-dialog-mask-background-color);
+    }
+}

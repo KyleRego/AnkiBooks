@@ -2,7 +2,11 @@
 
 <div class="d-flex flex-column min-vh-100">
     <header class="site-header">
-        <span>Anki Books</span>
+        <span class="d-flex align-items-center">
+            <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+
+            <span class="ms-4">Anki Books</span>
+        </span>
 
         <div class="d-flex align-items-center">
             <AuthorizeView>
@@ -26,8 +30,30 @@
         </div>
     </header>
 
+    <RadzenSidebar Responsive="false" @bind-Expanded="@sidebarExpanded" style="position: absolute; z-index: 3">
+        <RadzenStack AlignItems="AlignItems.End" Class="rz-p-2">
+            <RadzenButton Icon="west" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => sidebarExpanded = false)" />
+        </RadzenStack>
+        <RadzenPanelMenu>
+            <RadzenPanelMenuItem Text="Home" Icon="home" />
+            <RadzenPanelMenuItem Text="Users" Icon="account_box" />
+        </RadzenPanelMenu>
+        <div class="rz-p-4">
+            Sidebar
+        </div>
+    </RadzenSidebar>
+
     @Body
+
+    @if (sidebarExpanded)
+    {
+    <div @onclick="@(() => sidebarExpanded = false)" class="rz-dialog-mask" style="position: absolute; z-index: 2"></div>
+    }
 
 </div>
 
 <RadzenComponents />
+
+@code {
+    bool sidebarExpanded = false;
+}
