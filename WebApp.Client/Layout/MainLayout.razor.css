@@ -24,11 +24,11 @@
 
 .ankibooks-app-sidebar.fade-in {
   display: flex;
-  animation: fade-in 0.3s ease-in forwards;
+  animation: fade-in 0.3s ease-in-out forwards;
 }
 
 .ankibooks-app-sidebar.fade-out {
-  animation: fade-out 0.3s ease-out forwards;
+  animation: fade-out 0.3s ease-in-out forwards;
 }
 
 @keyframes fade-in {
