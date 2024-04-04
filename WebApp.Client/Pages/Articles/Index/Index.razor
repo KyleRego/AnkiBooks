@@ -1,9 +1,11 @@
 @page "/articles"
-@layout ArticlesSidebar
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show
 @inject ILogger<Index> Logger
 
 @rendermode InteractiveWebAssembly
 
 <PageTitle>Articles</PageTitle>
+
+<ArticlesTree />
 
 <New />
