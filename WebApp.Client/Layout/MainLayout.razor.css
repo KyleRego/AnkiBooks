@@ -12,35 +12,45 @@
     font-size: 16px;
 }
 
-::deep .rz-sidebar-expanded {
-    animation: fadein 0.5s;
+.ankibooks-app-sidebar {
+    z-index: 3;
+    display: flex;
+    left: -300px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 300px;
 }
 
-@keyframes fadein {
-    from {
-        opacity: 0;
-        width: 0;
-    }
-
-    to {
-        opacity: 1;
-        width: var(--rz-sidebar-width);
-    }
+.ankibooks-app-sidebar.fade-in {
+  display: flex;
+  animation: fade-in 0.3s ease-in forwards;
 }
 
-::deep .rz-dialog-mask {
-    animation: mask 0.3s;
-    backdrop-filter: blur(10px);
+.ankibooks-app-sidebar.fade-out {
+  animation: fade-out 0.3s ease-out forwards;
 }
 
-@keyframes mask {
-    from {
-        opacity: 0;
-        background-color: transparent;
-    }
+@keyframes fade-in {
+  0% {
+    left: -300px;
+    display: none;
+  }
 
-    to {
-        opacity: 0.5;
-        background-color: var(--rz-dialog-mask-background-color);
-    }
+  100% {
+    left: 0;
+    display: flex;
+  }
+}
+
+@keyframes fade-out {
+  0% {
+    left: 0;
+    display: flex;
+  }
+
+  100% {
+    left: -300px;
+    display: none;
+  }
 }
