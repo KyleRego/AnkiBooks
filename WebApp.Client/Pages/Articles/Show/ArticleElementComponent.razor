@@ -1,7 +1,6 @@
 @using AnkiBooks.ApplicationCore.Entities
 @inherits ChangesOrderedElementsContainerBase
 @inject IAnkiBooksApiService ApiService
-@inject DialogService DialogService
 
 @if (editing == false)
 {
@@ -9,7 +8,7 @@
 
         <div class="d-flex flex-column justify-content-around">
             <div class="p-2" role="button" @onclick="BeginEditing">
-                <RadzenIcon Icon="edit" class="text-primary" />
+                EDIT
             </div>
         </div>
 
@@ -18,8 +17,8 @@
         </div>
 
         <div class="d-flex flex-column justify-content-around">
-            <div class="p-2" role="button" @onclick="ShowInlineDialog">
-                <RadzenIcon Icon="delete" class="text-danger" />
+            <div class="p-2" role="button" @onclick="DeleteElement">
+                DELETE
             </div>
         </div>
         
@@ -41,37 +40,6 @@ else
         editing = true;
     }
 
-    async Task ShowInlineDialog()
-    {
-        var result = await DialogService.OpenAsync("Confirmation", ds =>
-            @<div>
-                <div class="mb-4">
-                    <span>Are you sure you want to delete this element?</span>
-                </div>
-
-                <RadzenCard Variant="Variant.Outlined">
-                    <FlippableElement ArticleElement="@ArticleElement" />
-                </RadzenCard>
-
-                <div class="mt-4 d-flex justify-content-around">
-                    <RadzenButton   Text="Yes" 
-                                    Click="async () =>
-                                    {
-                                        await DeleteElement();
-                                        ds.Close(true);
-                                    }"
-                                    Variant="Variant.Outlined"
-                                    ButtonStyle="ButtonStyle.Danger"
-                                    Style="margin-bottom: 10px; width: 150px" />
-
-                    <RadzenButton   Text="Cancel"
-                                    Click="() => ds.Close(false)"
-                                    Variant="Variant.Outlined"
-                                    ButtonStyle="ButtonStyle.Secondary"
-                                    Style="margin-bottom: 10px; width: 150px" />
-                </div>
-            </div>);
-    }
     private async Task DeleteElement()
     {
         if (ArticleElement is BasicNote)

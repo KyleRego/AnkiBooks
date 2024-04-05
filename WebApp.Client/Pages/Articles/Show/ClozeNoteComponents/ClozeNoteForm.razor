@@ -3,13 +3,15 @@
 <EditForm Model="ClozeNote" OnValidSubmit="SubmitForm">
     <DataAnnotationsValidator />
     <ValidationSummary />
-    <RadzenStack Gap="10">
-        <RadzenTextArea @bind-Value="ClozeNote.Text" id="Text" />
+    <div>
+        <InputText @bind-Value="ClozeNote.Text" id="Text" />
 
         <div class="d-flex justify-content-center">
-            <RadzenButton type="submit" Text="@SubmitButtonText()" Variant="Variant.Outlined" Size="ButtonSize.Small" />
+            <button type="submit">
+                @SubmitButtonText()
+            </button>
         </div>
-    </RadzenStack>
+    </div>
 </EditForm>
 
 @code {

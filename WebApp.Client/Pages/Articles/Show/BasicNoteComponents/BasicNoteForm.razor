@@ -3,15 +3,17 @@
 <EditForm Model="BasicNote" OnValidSubmit="SubmitForm">
     <DataAnnotationsValidator />
     <ValidationSummary />
-    <RadzenStack Gap="10">
-        <RadzenTextArea @bind-Value="BasicNote.Front" id="Front" class="p-2" />
+    <div>
+        <InputText @bind-Value="BasicNote.Front" id="Front" class="p-2" />
         
-        <RadzenTextArea @bind-Value="BasicNote.Back" id="Back" class="p-2" />
+        <InputText @bind-Value="BasicNote.Back" id="Back" class="p-2" />
 
         <div class="d-flex justify-content-center">
-            <RadzenButton type="submit" Text="@SubmitButtonText()" Variant="Variant.Outlined" Size="ButtonSize.Small" />
+            <button type="submit">
+                @SubmitButtonText()
+            </button>
         </div>
-    </RadzenStack>
+    </div>
 </EditForm>
 
 @code {

@@ -5,20 +5,17 @@
 @using AnkiBooks.WebApp.Client.Pages.Articles.Show.BasicNoteComponents
 @using AnkiBooks.WebApp.Client.Pages.Articles.Show.ClozeNoteComponents
 
-@if (hideSplitButtonAndShowForm == false)
+@if (dropDownItemSelected == null)
 {
-    <div class="d-flex justify-content-center">
-        <RadzenSplitButton  Click=@(args => OnButtonClick(args))
-                            Text="Add"
-                            Variant="Variant.Outlined"
-                            Size="ButtonSize.Small">
-            <ChildContent>
-                <RadzenSplitButtonItem Text="Basic note" Value="@(ElementType.BasicNote.ToString())" />
-                <RadzenSplitButtonItem Text="Cloze note" Value="@(ElementType.ClozeNote.ToString())" />
-                <RadzenSplitButtonItem Text="Picture note" Value="3" />
-                <RadzenSplitButtonItem Text="Table note" Value="4" />
-            </ChildContent>
-        </RadzenSplitButton>
+     <div>
+        <label>
+            New element:
+            <InputSelect @bind-Value="dropDownItemSelected">
+                <option value=""></option>
+                <option value="@ElementType.BasicNote">Basic note</option>
+                <option value="@ElementType.ClozeNote">Cloze note</option>
+            </InputSelect>
+        </label>
     </div>
 }
 else
@@ -28,13 +25,11 @@ else
         case ElementType.BasicNote:
             <NewBasicNote   @bind-OrderedElementsContainer:get="OrderedElementsContainer"
                             @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
-                            @bind-HideSplitButtonAndShowForm="hideSplitButtonAndShowForm"
                             PairedElement="@PairedElement" />
             break;
         case ElementType.ClozeNote:
             <NewClozeNote   @bind-OrderedElementsContainer:get="OrderedElementsContainer"
                             @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
-                            @bind-HideSplitButtonAndShowForm="hideSplitButtonAndShowForm"
                             PairedElement="@PairedElement" />
             break;
         default:
@@ -47,18 +42,6 @@ else
     [Parameter]
     public IArticleElement? PairedElement { get; set; }
 
-    private bool hideSplitButtonAndShowForm = false;
 
     private ElementType? dropDownItemSelected = null;
-
-    private void OnButtonClick(RadzenSplitButtonItem item)
-    {
-        void ReplaceDropdown()
-        {
-            hideSplitButtonAndShowForm = true;
-        }
-
-        dropDownItemSelected = (ElementType)Enum.Parse(typeof(ElementType), item.Value);
-        ReplaceDropdown();
-    }
 }

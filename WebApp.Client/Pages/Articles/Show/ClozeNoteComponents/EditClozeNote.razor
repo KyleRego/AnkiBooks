@@ -6,11 +6,11 @@
 @inject IAnkiBooksApiService ApiService
 
 <div class="d-flex justify-content-center my-2">
-    <RadzenCard Variant="Variant.Outlined" Style="width: 32rem" class="p-2">
+    <div class="p-2">
         <ClozeNoteForm  StartingClozeNote="@StartingClozeNote"
                         EditingExisting="true"
                         ParentSubmitMethod="@SubmitForm" />
-    </RadzenCard>
+    </div>
 </div>
 
 @code {

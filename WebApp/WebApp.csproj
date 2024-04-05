@@ -14,7 +14,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
-    <PackageReference Include="Radzen.Blazor" Version="4.28.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <ProjectReference Include="../WebApp.Client/WebApp.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.3" />
@@ -26,7 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../ApplicationCore/ApplicationCore.csproj" />
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="../Infrastructure/Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

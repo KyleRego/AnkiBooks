@@ -7,11 +7,11 @@
 @inject IAnkiBooksApiService ApiService
 
 <div class="d-flex justify-content-center my-2">
-    <RadzenCard Variant="Variant.Outlined" Style="width: 32rem" class="p-2">
+    <div class="p-2">
         <ClozeNoteForm  StartingClozeNote="@StartingClozeNote()"
                         EditingExisting="false"
                         ParentSubmitMethod="@SubmitForm" />
-    </RadzenCard>
+    </div>
 </div>
 
 @code {
@@ -20,12 +20,6 @@
 
     [Parameter]
     public IArticleElement? PairedElement { get; set; }
-
-    [Parameter]
-    public bool HideSplitButtonAndShowForm { get; set; }
-
-    [Parameter]
-    public EventCallback<bool> HideSplitButtonAndShowFormChanged { get; set; }
 
     private ClozeNote StartingClozeNote()
     {
@@ -49,8 +43,5 @@
 
         OrderedElementsContainer.Add(createdClozeNote);
         await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
-
-        HideSplitButtonAndShowForm = false;
-        await HideSplitButtonAndShowFormChanged.InvokeAsync(HideSplitButtonAndShowForm);
     }
 }

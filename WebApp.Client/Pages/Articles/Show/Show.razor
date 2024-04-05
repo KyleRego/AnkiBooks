@@ -13,11 +13,11 @@
 
 @rendermode InteractiveWebAssembly
 
-<RadzenSplitter Orientation="Orientation.Horizontal" class="flex-grow-1">
-    <RadzenSplitterPane Size="15rem">
+<div class="d-flex">
+    <div style="max-width: 15rem;">
         <ArticlesTree />
-    </RadzenSplitterPane>
-    <RadzenSplitterPane>
+    </div>
+    <div class="flex-grow-1">
         <div class="p-4">
             @if (article == null || orderedElementsContainer == null)
             {
@@ -46,8 +46,8 @@
                 </article>
             }
         </div>
-    </RadzenSplitterPane>
-</RadzenSplitter>
+    </div>
+</div>
 
 @code {
     [Parameter]

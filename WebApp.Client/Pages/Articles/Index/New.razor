@@ -3,18 +3,21 @@
 @inject NavigationManager Navigation
 @inject IConfiguration Config
 @inject ILogger<New> Logger
-@inject DialogService DialogService
 
 @rendermode InteractiveWebAssembly
 
-<RadzenButton Text="New article" Click="@OpenNewArticleDialog" />
+<button @onclick="showForm">New article</button>
+
+@if (formVisible == true)
+{
+    <NewForm />
+}
 
 @code {
-    public async Task OpenNewArticleDialog()
+    private bool formVisible = false;
+
+    private void showForm()
     {
-        await DialogService.OpenAsync<NewForm>(
-            "New article",
-            null,
-            null);
+        formVisible = true;
     }
 }

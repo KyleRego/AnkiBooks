@@ -8,49 +8,23 @@
 @inject PersistentComponentState ApplicationState
 
 <div class="py-4 px-2">
-    <RadzenTree>
-        <RadzenTreeItem>
-            <Template>
-                <NavLink href="articles" Match="NavLinkMatch.All" class="text-break">Articles</NavLink>
-            </Template>
-            <ChildContent>
-                @if (articles == null)
-                {
-                    <RadzenTreeItem Text="Loading articles..." />
-                }
-                else
-                {
-                    @foreach(Article article in articles)
-                    {
-                        string hrefValue = $"articles/{article.Id}";
-
-                        <RadzenTreeItem>
-                            <Template>
-                                <NavLink href="@hrefValue" class="text-break">@article.Title</NavLink>
-                            </Template>
-                        </RadzenTreeItem>
-                    }
-                }
-            </ChildContent>
-        </RadzenTreeItem>
-    </RadzenTree>
-@if (articles == null)
-{
-    <p>Loading articles</p>
-}
-else
-{
-    <ul>
-    @foreach(Article article in articles)
+    @if (articles == null)
     {
-        string hrefValue = $"articles/{article.Id}";
-
-        <li>
-            <NavLink href="@hrefValue" class="text-break">@article.Title</NavLink>
-        </li>
+        <p>Loading articles</p>
     }
-    </ul>
-}
+    else
+    {
+        <ul>
+        @foreach(Article article in articles)
+        {
+            string hrefValue = $"articles/{article.Id}";
+
+            <li>
+                <NavLink href="@hrefValue" class="text-break">@article.Title</NavLink>
+            </li>
+        }
+        </ul>
+    }
 </div>
 
 @code {

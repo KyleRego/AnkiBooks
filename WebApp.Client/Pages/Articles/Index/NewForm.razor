@@ -4,7 +4,6 @@
 @inject NavigationManager Navigation
 @inject IConfiguration Config
 @inject ILogger<New> Logger
-@inject DialogService DialogService
 
 <div>
     <EditForm   Model="Article"
@@ -16,23 +15,18 @@
         <ValidationSummary />
 
         <div class="mb-3">
-            <RadzenText for="article-title">Title:</RadzenText>
-            <RadzenTextBox @bind-Value="Article!.Title" id="article-title" class="w-100" />
+            <label for="article-title">Title:</label>
+            <InputText @bind-Value="Article.Title" id="article-title" class="w-100" />
         </div>
 
-        <RadzenButton Text="Create" Type="ButtonType.Submit" />
+        <button type="submit">Create</button>
 
     </EditForm>
 </div>
 
 @code {
-    protected override void OnInitialized()
-    {
-        Article ??= new("");
-    }
-
     [SupplyParameterFromForm]
-    private Article? Article { get; set; }
+    private Article Article { get; set; } = new("");
 
     private async Task SubmitForm()
     {

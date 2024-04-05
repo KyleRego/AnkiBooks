@@ -4,7 +4,7 @@
     <header class="site-header">
 
         <span role="button" @onclick="ExpandSidebar">
-            <RadzenIcon Icon="menu" />
+            MENU
         </span>
 
         <div class="d-flex align-items-center">
@@ -34,7 +34,6 @@
         <nav class="text-center bg-dark h-100 flex-grow-1 
                     d-flex flex-column">
             <a href="/" class="d-block py-4 pe-4">
-                <RadzenIcon Icon="book" />
                 <span class="fs-3 text-bg-primary">Anki Books</span>
             </a>
             
@@ -44,21 +43,13 @@
 
         </nav>
         <span role="button" @onclick="CollapseSidebar" class="ms-4 mt-4">
-            <RadzenIcon Icon="close" />
+            CLOSE
         </span>
     </div>
-
-    @if (sidebarExpanded)
-    {
-    <div class="rz-dialog-mask" style="position: absolute; z-index: 2"></div>
-    }
-
 
     @Body
 
 </div>
-
-<RadzenComponents />
 
 @code {
     bool sidebarExpanded = false;
