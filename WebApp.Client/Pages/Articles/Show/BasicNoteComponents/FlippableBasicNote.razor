@@ -1,14 +1,16 @@
-<div    class="text-center text-break p-2 border border-primary"
+<div    class="text-center p-2 border-primary"
         role="button"
         tabindex="0" 
         @onclick="FlipCard" 
         @onkeypress="FlipCardFromKeyboardEnter">
 
-    <div>@BasicNoteFront</div>
+    <div>
+        @BasicNoteFront
+    </div>
 
     @if (showAnswer == true)
         {
-            <div class="mt-2 pt-2 border-top border-primary">
+            <div class="mt-2 pt-2 border-top-primary">
                 @BasicNoteBack
             </div>
         }

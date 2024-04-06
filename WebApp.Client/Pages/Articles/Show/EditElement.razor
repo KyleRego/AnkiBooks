@@ -2,22 +2,24 @@
 @using AnkiBooks.WebApp.Client.Pages.Articles.Show.BasicNoteComponents
 @using AnkiBooks.WebApp.Client.Pages.Articles.Show.ClozeNoteComponents
 
-@if (ArticleElement is BasicNote)
-{
-    BasicNote bn = (BasicNote)ArticleElement;
+<div class="my-2">
+    @if (ArticleElement is BasicNote)
+    {
+        BasicNote bn = (BasicNote)ArticleElement;
 
-    <EditBasicNote  @bind-Editing:get="@Editing"
-                    @bind-Editing:set="@EditingChanged"
-                    StartingBasicNote="@bn" />
-}
-else if (ArticleElement is ClozeNote)
-{
-    ClozeNote cn = (ClozeNote)ArticleElement;
+        <EditBasicNote  @bind-Editing:get="@Editing"
+                        @bind-Editing:set="@EditingChanged"
+                        StartingBasicNote="@bn" />
+    }
+    else if (ArticleElement is ClozeNote)
+    {
+        ClozeNote cn = (ClozeNote)ArticleElement;
 
-    <EditClozeNote  @bind-Editing:get="@Editing"
-                    @bind-Editing:set="@EditingChanged"
-                    StartingClozeNote="@cn" />
-}
+        <EditClozeNote  @bind-Editing:get="@Editing"
+                        @bind-Editing:set="@EditingChanged"
+                        StartingClozeNote="@cn" />
+    }
+</div>
 
 @code {
     [Parameter]

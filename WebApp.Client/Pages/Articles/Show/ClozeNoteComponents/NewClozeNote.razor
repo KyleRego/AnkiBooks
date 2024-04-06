@@ -2,17 +2,14 @@
 @using System.ComponentModel.DataAnnotations
 @using System.Text.Json
 @using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Enums
 @using AnkiBooks.ApplicationCore.Interfaces
 @inject ILogger<NewClozeNote> Logger
 @inject IAnkiBooksApiService ApiService
 
-<div class="d-flex justify-content-center my-2">
-    <div class="p-2">
-        <ClozeNoteForm  StartingClozeNote="@StartingClozeNote()"
-                        EditingExisting="false"
-                        ParentSubmitMethod="@SubmitForm" />
-    </div>
-</div>
+<ClozeNoteForm  StartingClozeNote="@StartingClozeNote()"
+                EditingExisting="false"
+                ParentSubmitMethod="@SubmitForm" />
 
 @code {
     [CascadingParameter(Name="ArticleId")]
@@ -20,6 +17,13 @@
 
     [Parameter]
     public IArticleElement? PairedElement { get; set; }
+
+    [Parameter]
+    public ElementType? DropDownItemSelected { get; set; }
+
+    [Parameter]
+
+    public EventCallback<ElementType?> DropDownItemSelectedChanged { get; set; }
 
     private ClozeNote StartingClozeNote()
     {
@@ -43,5 +47,8 @@
 
         OrderedElementsContainer.Add(createdClozeNote);
         await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
+
+        DropDownItemSelected = null;
+        await DropDownItemSelectedChanged.InvokeAsync(DropDownItemSelected);
     }
 }

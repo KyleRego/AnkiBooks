@@ -28,14 +28,14 @@ else
         <CascadingValue Value="@article.Id" Name="ArticleId">
             @foreach(ArticleElementBase articleElement in orderedElementsContainer.OrderedElements)
             {
-                <AddArticleElementSplitButton @bind-OrderedElementsContainer="@orderedElementsContainer"
+                <NewElement @bind-OrderedElementsContainer="@orderedElementsContainer"
                                                 PairedElement="@articleElement" />
 
                 <ArticleElementComponent @bind-OrderedElementsContainer="@orderedElementsContainer"
                                 ArticleElement="@articleElement"/>
             }
 
-            <AddArticleElementSplitButton @bind-OrderedElementsContainer="@orderedElementsContainer"
+            <NewElement @bind-OrderedElementsContainer="@orderedElementsContainer"
                                             PairedElement="@null" />
         </CascadingValue>
     </article>

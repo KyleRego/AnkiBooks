@@ -5,13 +5,9 @@
 @inject ILogger<EditBasicNote> Logger
 @inject IAnkiBooksApiService ApiService
 
-<div class="d-flex justify-content-center my-2">
-    <div class="p-2">
-        <BasicNoteForm  StartingBasicNote="@StartingBasicNote"
-                        EditingExisting="true"
-                        ParentSubmitMethod="@SubmitForm" />
-    </div>
-</div>
+<BasicNoteForm  StartingBasicNote="@StartingBasicNote"
+                EditingExisting="true"
+                ParentSubmitMethod="@SubmitForm" />
 
 @code {
     [Parameter]

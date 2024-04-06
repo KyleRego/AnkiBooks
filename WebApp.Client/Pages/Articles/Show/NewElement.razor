@@ -7,7 +7,7 @@
 
 @if (dropDownItemSelected == null)
 {
-     <div>
+     <div class="my-2">
         <label>
             New element:
             <InputSelect @bind-Value="dropDownItemSelected">
@@ -25,11 +25,13 @@ else
         case ElementType.BasicNote:
             <NewBasicNote   @bind-OrderedElementsContainer:get="OrderedElementsContainer"
                             @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
+                            @bind-DropDownItemSelected="dropDownItemSelected"
                             PairedElement="@PairedElement" />
             break;
         case ElementType.ClozeNote:
             <NewClozeNote   @bind-OrderedElementsContainer:get="OrderedElementsContainer"
                             @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
+                            @bind-DropDownItemSelected="dropDownItemSelected"
                             PairedElement="@PairedElement" />
             break;
         default:
@@ -41,7 +43,6 @@ else
 @code {
     [Parameter]
     public IArticleElement? PairedElement { get; set; }
-
 
     private ElementType? dropDownItemSelected = null;
 }

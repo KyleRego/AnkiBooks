@@ -2,17 +2,14 @@
 @using System.ComponentModel.DataAnnotations
 @using System.Text.Json
 @using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Enums
 @using AnkiBooks.ApplicationCore.Interfaces
 @inject ILogger<NewBasicNote> Logger
 @inject IAnkiBooksApiService ApiService
 
-<div class="d-flex justify-content-center my-2">
-    <div class="p-2">
-        <BasicNoteForm  StartingBasicNote="@StartingBasicNote()"
-                        EditingExisting="false"
-                        ParentSubmitMethod="@SubmitForm" />
-    </div>
-</div>
+<BasicNoteForm  StartingBasicNote="@StartingBasicNote()"
+                EditingExisting="false"
+                ParentSubmitMethod="@SubmitForm" />
 
 @code {
     [CascadingParameter(Name="ArticleId")]
@@ -22,10 +19,11 @@
     public IArticleElement? PairedElement { get; set; }
 
     [Parameter]
-    public bool HideSplitButtonAndShowForm { get; set; }
+    public ElementType? DropDownItemSelected { get; set; }
 
     [Parameter]
-    public EventCallback<bool> HideSplitButtonAndShowFormChanged { get; set; }
+
+    public EventCallback<ElementType?> DropDownItemSelectedChanged { get; set; }
 
     private BasicNote StartingBasicNote()
     {
@@ -51,7 +49,7 @@
         OrderedElementsContainer.Add(createdBasicNote);
         await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
 
-        HideSplitButtonAndShowForm = false;
-        await HideSplitButtonAndShowFormChanged.InvokeAsync(HideSplitButtonAndShowForm);
+        DropDownItemSelected = null;
+        await DropDownItemSelectedChanged.InvokeAsync(DropDownItemSelected);
     }
 }

@@ -1,3 +1,15 @@
+.border-primary {
+    border: 2px;
+    border-color: var(--ab-border-primary-dark);
+    border-style: solid;
+}
+
+.border-top-primary {
+    border-top: 2px;
+    border-color: var(--ab-border-primary-dark);
+    border-style: solid;    
+}
+
 .border-bottom-primary {
     border-bottom: 2px;
     border-color: var(--ab-border-primary-dark);

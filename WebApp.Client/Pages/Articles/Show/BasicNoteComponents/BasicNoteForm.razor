@@ -1,20 +1,22 @@
 @using AnkiBooks.ApplicationCore.Entities
 
-<EditForm Model="BasicNote" OnValidSubmit="SubmitForm">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div>
-        <InputText @bind-Value="BasicNote.Front" id="Front" class="p-2" />
-        
-        <InputText @bind-Value="BasicNote.Back" id="Back" class="p-2" />
+<div class="p-4 border-primary">
+    <EditForm Model="BasicNote" OnValidSubmit="SubmitForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="d-flex flex-column">
+            <InputTextArea @bind-Value="BasicNote.Front" id="Front" class="p-2 mb-2" />
+            
+            <InputTextArea @bind-Value="BasicNote.Back" id="Back" class="p-2 mb-1" />
 
-        <div class="d-flex justify-content-center">
-            <button type="submit">
-                @SubmitButtonText()
-            </button>
+            <div class="d-flex justify-content-center">
+                <button type="submit">
+                    @SubmitButtonText()
+                </button>
+            </div>
         </div>
-    </div>
-</EditForm>
+    </EditForm>
+</div>
 
 @code {
     [Parameter]

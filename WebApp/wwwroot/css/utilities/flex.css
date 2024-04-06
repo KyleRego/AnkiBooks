@@ -10,12 +10,16 @@
     flex-direction: column;
 }
 
+.justify-content-around {
+    justify-content: space-around;
+}
+
 .justify-content-between {
     justify-content: space-between;
 }
 
-.justify-content-around {
-    justify-content: space-around;
+.justify-content-center {
+    justify-content: center;
 }
 
 .align-items-stretch {
