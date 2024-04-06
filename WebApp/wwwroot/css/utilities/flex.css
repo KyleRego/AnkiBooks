@@ -17,3 +17,7 @@
 .justify-content-around {
     justify-content: space-around;
 }
+
+.align-items-stretch {
+    align-items: stretch;
+}

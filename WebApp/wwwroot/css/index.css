@@ -1,5 +1,3 @@
-@import "./vendor/preflight.css";
-@import "./theme.css";
 @import "./utilities/background-color.css";
 @import "./utilities/border.css";
 @import "./utilities/color.css";
@@ -8,6 +6,10 @@
 @import "./utilities/height.css";
 @import "./utilities/margin.css";
 @import "./utilities/padding.css";
+@import "./utilities/word-break.css";
+@import "./vendor/preflight.css";
+@import "./forms.css";
+@import "./theme.css";
 
 /* :root {
     --ankibooks-background-color: #171717;

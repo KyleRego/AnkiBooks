@@ -3,7 +3,7 @@
 @using AnkiBooks.ApplicationCore.Entities
 @inject IConfiguration Config
 @inject IAnkiBooksApiService ApiService
-@inject ILogger<Index> Logger
+@inject ILogger<ArticlesTree> Logger
 @implements IDisposable
 @inject PersistentComponentState ApplicationState
 
@@ -20,7 +20,7 @@
             string hrefValue = $"articles/{article.Id}";
 
             <li>
-                <NavLink href="@hrefValue" class="text-break">@article.Title</NavLink>
+                <NavLink href="@hrefValue" class="word-break-all">@article.Title</NavLink>
             </li>
         }
         </ul>

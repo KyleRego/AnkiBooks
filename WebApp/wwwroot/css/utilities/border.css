@@ -4,8 +4,20 @@
     border-style: solid;
 }
 
+.border-right-primary {
+    border-right: 2px;
+    border-color: var(--ab-border-primary-dark);
+    border-style: solid;
+}
+
 .border-bottom-secondary {
     border-bottom: 2px;
     border-color: var(--ab-border-secondary-dark);
     border-style: solid;  
+}
+
+.border-right-secondary {
+    border-right: 2px;
+    border-color: var(--ab-border-secondary-dark);
+    border-style: solid;     
 }
