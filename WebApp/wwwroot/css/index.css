@@ -1,0 +1,34 @@
+@import "./vendor/preflight.css";
+@import "./theme.css";
+@import "./utilities/background-color.css";
+@import "./utilities/border.css";
+@import "./utilities/color.css";
+@import "./utilities/display.css";
+@import "./utilities/flex.css";
+@import "./utilities/height.css";
+@import "./utilities/margin.css";
+@import "./utilities/padding.css";
+
+/* :root {
+    --ankibooks-background-color: #171717;
+    --ankibooks-input-background-color: rgb(255, 255, 255);
+    --ankibooks-text-color: #ececec;
+    
+    --ankibooks-hyperlink-color: #75b6e7;
+    --ankibooks-hyperlink-hover-color: #278cda;
+} */
+
+a {
+    color: var(--ankibooks-hyperlink-color);
+    text-decoration: none;
+}
+
+/* TODO: Something else than this */
+a.active {
+    color: white;
+}
+
+a:hover {
+    color: var(--ankibooks-hyperlink-hover-color);
+    text-decoration: underline;
+}

@@ -1,0 +1,42 @@
+.sidebar {
+    display: none;
+    position: absolute;
+    z-index: 3;
+    width: 300px;
+    left: -300px;
+    top: 0;
+    bottom: 0;
+}
+
+.sidebar.fade-in {
+  display: flex;
+  animation: fade-in 0.3s ease-in-out forwards;
+}
+
+.sidebar.fade-out {
+  animation: fade-out 0.3s ease-in-out forwards;
+}
+
+@keyframes fade-in {
+  0% {
+    left: -300px;
+    display: none;
+  }
+
+  100% {
+    left: 0;
+    display: flex;
+  }
+}
+
+@keyframes fade-out {
+  0% {
+    left: 0;
+    display: flex;
+  }
+
+  100% {
+    left: -300px;
+    display: none;
+  }
+}

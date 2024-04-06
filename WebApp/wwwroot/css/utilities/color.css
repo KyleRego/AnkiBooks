@@ -1,0 +1,7 @@
+.text-primary {
+    color: var(--ab-color-primary-dark);
+}
+
+.text-secondary {
+    color: var(--ab-color-secondary-dark);
+}

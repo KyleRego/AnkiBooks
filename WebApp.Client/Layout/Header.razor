@@ -1,0 +1,42 @@
+<header class="site-header d-flex flex-row justify-content-between px-4 py-2 
+                border-bottom-primary">
+
+    <button type="button" @onclick="ExpandSidebar">
+        MENU
+    </button>
+
+    <div class="d-flex align-items-center">
+        <AuthorizeView>
+            <Authorized>
+                <a class="site-header-a" href="Account/Manage">@context.User.Identity?.Name</a>
+
+                <span>
+                    <form action="Account/Logout" method="post">
+                        <AntiforgeryToken />
+                        <input type="hidden" name="ReturnUrl" value="/" />
+                        <button type="submit" class="nav-link">Logout</button>
+                    </form>
+                </span>
+            </Authorized>
+            <NotAuthorized>
+                <a class="mr-4" href="Account/Register">Register</a>
+
+                <a href="Account/Login">Sign in</a>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+</header>
+
+@code {
+    [Parameter]
+    public bool SidebarExpanded { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> SidebarExpandedChanged { get; set; }
+
+    private async Task ExpandSidebar()
+    {
+        SidebarExpanded = true;
+        await SidebarExpandedChanged.InvokeAsync(SidebarExpanded);
+    }
+}

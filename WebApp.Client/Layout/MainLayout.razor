@@ -1,69 +1,17 @@
 ﻿@inherits LayoutComponentBase
 
+<Sidebar    @bind-SidebarExpanded="sidebarExpanded"
+            @bind-SidebarHasBeenCollapsed="sidebarHasBeenCollapsed" />
+
 <div class="d-flex flex-column min-vh-100">
-    <header class="site-header">
+    <Header @bind-SidebarExpanded="sidebarExpanded" />
 
-        <span role="button" @onclick="ExpandSidebar">
-            MENU
-        </span>
-
-        <div class="d-flex align-items-center">
-            <AuthorizeView>
-                <Authorized>
-                    <a class="site-header-a" href="Account/Manage">@context.User.Identity?.Name</a>
-
-                    <span>
-                        <form action="Account/Logout" method="post">
-                            <AntiforgeryToken />
-                            <input type="hidden" name="ReturnUrl" value="/" />
-                            <button type="submit" class="nav-link">Logout</button>
-                        </form>
-                    </span>
-                </Authorized>
-                <NotAuthorized>
-                    <a class="site-header-a me-4" href="Account/Register">Register</a>
-
-                    <a class="site-header-a" href="Account/Login">Login</a>
-                </NotAuthorized>
-            </AuthorizeView>
-        </div>
-    </header>
-
-    <div class="ankibooks-app-sidebar @(sidebarExpanded == true ? "fade-in" :
-                                        (sidebarCollapsed == true) ? "fade-out" : "")">
-        <nav class="text-center bg-dark h-100 flex-grow-1 
-                    d-flex flex-column">
-            <a href="/" class="d-block py-4 pe-4">
-                <span class="fs-3 text-bg-primary">Anki Books</span>
-            </a>
-            
-            <ul>
-                <a href="/articles">Articles</a>
-            </ul>
-
-        </nav>
-        <span role="button" @onclick="CollapseSidebar" class="ms-4 mt-4">
-            CLOSE
-        </span>
-    </div>
-
-    @Body
-
+    <main class="flex-grow-1">
+        @Body
+    </main>
 </div>
 
 @code {
     bool sidebarExpanded = false;
-    bool sidebarCollapsed = false;
-
-    private void ExpandSidebar()
-    {
-        sidebarExpanded = true;
-        sidebarCollapsed = false;
-    }
-
-    private void CollapseSidebar()
-    {
-        sidebarExpanded = false;
-        sidebarCollapsed = true;
-    }
+    bool sidebarHasBeenCollapsed = false;
 }

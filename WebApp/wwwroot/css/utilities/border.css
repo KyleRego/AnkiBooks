@@ -1,0 +1,11 @@
+.border-bottom-primary {
+    border-bottom: 2px;
+    border-color: var(--ab-border-primary-dark);
+    border-style: solid;
+}
+
+.border-bottom-secondary {
+    border-bottom: 2px;
+    border-color: var(--ab-border-secondary-dark);
+    border-style: solid;  
+}

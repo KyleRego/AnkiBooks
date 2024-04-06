@@ -1,0 +1,45 @@
+<div class="flex flex-row
+            sidebar @(SidebarExpanded == true ?
+                                        "fade-in" :
+                                        SidebarHasBeenCollapsed == true ? "fade-out" : "")">
+
+    <nav class="bg-secondary text-secondary text-center flex-grow-1 
+                d-flex flex-column">
+        <a href="/" @onclick="CollapseSidebar" class="d-block p-4 border-bottom-secondary">
+            <span>Anki Books</span>
+        </a>
+        
+        <ul>
+            <li class="p-4">
+                <a href="/articles" @onclick="CollapseSidebar">Articles</a>
+            </li>
+        </ul>
+
+    </nav>
+
+    <button type="button" @onclick="CollapseSidebar">
+        CLOSE
+    </button>
+
+</div>
+
+@code {
+    [Parameter]
+    public bool SidebarExpanded { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> SidebarExpandedChanged { get; set; }
+
+    [Parameter]
+    public bool SidebarHasBeenCollapsed { get; set; }
+    [Parameter]
+    public EventCallback<bool> SidebarHasBeenCollapsedChanged { get; set; }
+
+    private async Task CollapseSidebar()
+    {
+        SidebarExpanded = false;
+        SidebarHasBeenCollapsed = true;
+        await SidebarExpandedChanged.InvokeAsync(SidebarExpanded);
+        await SidebarHasBeenCollapsedChanged.InvokeAsync(SidebarHasBeenCollapsed);
+    }
+}
