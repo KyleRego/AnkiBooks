@@ -8,6 +8,7 @@ using AnkiBooks.ApplicationCore.Identity;
 using AnkiBooks.ApplicationCore.Interfaces;
 using AnkiBooks.Infrastructure.Repository;
 using AnkiBooks.WebApp.Client;
+using AnkiBooks.WebApp.Client.Services;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 // So services used in them must be registered in this Program.cs as well
 builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(builder.Configuration["AppUrl"]!) });
 builder.Services.AddScoped<IAnkiBooksApiService, AnkiBooksApiService>();
+builder.Services.AddSingleton<DragStateService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

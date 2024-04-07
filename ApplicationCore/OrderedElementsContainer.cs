@@ -47,8 +47,12 @@ public class OrderedElementsContainer
 
     public void Remove(IArticleElement element)
     {
+        // OrdinalPosition of element will not be consistent with index in inner array
+        // for reordering currently
+        int ordinalPosition = GetOrdinalPosition(element);
+ 
         OrderedElements.Remove(element);
-        foreach (IArticleElement el in OrderedElements.Where(el => el.OrdinalPosition >= element.OrdinalPosition))
+        foreach (IArticleElement el in OrderedElements.Where(el => el.OrdinalPosition >= ordinalPosition))
         {
             el.OrdinalPosition -= 1;
         }
