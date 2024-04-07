@@ -16,11 +16,13 @@
             </div>
         </div>
 
-        <div class="flex-grow-1" draggable="true"
+        <div class="flex-grow-1 @(nestedDragLevels != 0 ? "highlight-dropzone" : "")"
+                                draggable="true"
                                 @ondragstart="HandleDrag"
                                 @ondragend="HandleDragEnd"
-                                ondragenter="event.preventDefault();"
+                                @ondragenter="HandleDragEnter" @ondragenter:preventDefault
                                 ondragover="event.preventDefault();"
+                                @ondragleave="HandleDragLeave" @ondragleave:preventDefault
                                 @ondrop="HandleDrop">
             <FlippableElement ArticleElement="@ArticleElement" />
         </div>
@@ -72,14 +74,39 @@ else
         dragState.DraggedElement = null;
     }
 
+    private int nestedDragLevels = 0;
+
+    private void HandleDragEnter()
+    {
+        ArticleElementBase? draggedElement = dragState.DraggedElement;
+
+        if (draggedElement == null) return;
+        if (draggedElement == ArticleElement) return;
+        logger.LogInformation("dragenter");
+        nestedDragLevels += 1;
+    }
+
+    private void HandleDragLeave()
+    {
+        ArticleElementBase? draggedElement = dragState.DraggedElement;
+
+        if (draggedElement == null) return;
+        if (draggedElement == ArticleElement) return;
+        logger.LogInformation("dragleave");
+
+        nestedDragLevels -= 1;
+    }
+
     private async Task HandleDrop()
     {
+        nestedDragLevels = 0;
         logger.LogInformation("drop");
         ArticleElementBase? droppedElement = dragState.DraggedElement;
 
         if (droppedElement == null) return;
         if (droppedElement == ArticleElement) return;
 
+        int ordinalPositionBefore = droppedElement.OrdinalPosition;
         droppedElement.OrdinalPosition = ArticleElement.OrdinalPosition;
 
         if (droppedElement is BasicNote)
@@ -95,8 +122,7 @@ else
             await ApiService.PutClozeNote(cn);
         }
 
-        OrderedElementsContainer.Remove(droppedElement);
-        OrderedElementsContainer.Add(droppedElement);
+        OrderedElementsContainer.AddElementAndRemoveFromOldPosition(droppedElement, ordinalPositionBefore);
         await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
     }
 }

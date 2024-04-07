@@ -12,11 +12,7 @@ using AnkiBooks.WebApp.Client.Services;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-// WebApp.Client Razor components can be prerendered on the server
-// So services used in them must be registered in this Program.cs as well
-builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(builder.Configuration["AppUrl"]!) });
-builder.Services.AddScoped<IAnkiBooksApiService, AnkiBooksApiService>();
-builder.Services.AddSingleton<DragStateService>();
+CommonServices.Configure(builder.Services, builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

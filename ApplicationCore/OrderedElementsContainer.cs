@@ -47,15 +47,21 @@ public class OrderedElementsContainer
 
     public void Remove(IArticleElement element)
     {
-        // OrdinalPosition of element will not be consistent with index in inner array
-        // for reordering currently
-        int ordinalPosition = GetOrdinalPosition(element);
- 
         OrderedElements.Remove(element);
-        foreach (IArticleElement el in OrderedElements.Where(el => el.OrdinalPosition >= ordinalPosition))
+        foreach (IArticleElement el in OrderedElements.Where(el => el.OrdinalPosition >= element.OrdinalPosition))
         {
             el.OrdinalPosition -= 1;
         }
+    }
+
+    public void AddElementAndRemoveFromOldPosition(IArticleElement element, int oldPosition)
+    {
+        OrderedElements.RemoveAt(oldPosition);
+        foreach (IArticleElement el in OrderedElements.Where(el => el.OrdinalPosition >= oldPosition))
+        {
+            el.OrdinalPosition -= 1;
+        }
+        Add(element);
     }
 
     private static List<IArticleElement> InitializeOrderedElementsFromOrdered(List<BasicNote> orderedBasicNotes,
