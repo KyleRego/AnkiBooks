@@ -1,0 +1,27 @@
+@using Markdig
+@using Markdig.SyntaxHighlighting
+@using Ganss.Xss
+@using Microsoft.AspNetCore.Components
+
+<span>
+    @RenderIt()
+</span>
+
+@code {
+    [Parameter]
+    public string MarkdownText { get; set; } = null!;
+
+    private MarkdownPipeline pipeline = new MarkdownPipelineBuilder()
+                                            .UseAdvancedExtensions()
+                                            .UseSyntaxHighlighting().Build();
+    private HtmlSanitizer sanitizer = new();
+
+    public MarkupString RenderIt()
+    {
+        string html = Markdown.ToHtml(MarkdownText ?? "", pipeline);
+
+        string sanitizedHtml = sanitizer.Sanitize(html);
+
+        return (MarkupString)sanitizedHtml;
+    }
+}

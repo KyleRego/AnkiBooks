@@ -13,9 +13,12 @@ public class OrderedElementsContainer
     public List<IArticleElement> OrderedElements { get; }
 
     public OrderedElementsContainer(List<BasicNote> orderedBasicNotes,
-                                    List<ClozeNote> orderedClozeNotes)
+                                    List<ClozeNote> orderedClozeNotes,
+                                    List<MarkdownContent> orderedMarkdownContents)
     {
-        OrderedElements = InitializeOrderedElementsFromOrdered(orderedBasicNotes, orderedClozeNotes);
+        OrderedElements = InitializeOrderedElementsFromOrdered( orderedBasicNotes,
+                                                                orderedClozeNotes,
+                                                                orderedMarkdownContents);
     }
 
     public int GetOrdinalPosition(IArticleElement element)
@@ -65,53 +68,14 @@ public class OrderedElementsContainer
     }
 
     private static List<IArticleElement> InitializeOrderedElementsFromOrdered(List<BasicNote> orderedBasicNotes,
-                                                                            List<ClozeNote> orderedClozeNotes)
+                                                                            List<ClozeNote> orderedClozeNotes,
+                                                                            List<MarkdownContent> orderedMarkdownContents)
     {
-        if (orderedBasicNotes.Count == 0)
-        {
-            return orderedClozeNotes.Cast<IArticleElement>().ToList();
-        }
-
-        if (orderedClozeNotes.Count == 0)
-        {
-            return orderedBasicNotes.Cast<IArticleElement>().ToList();
-        }
-        
-        List<IArticleElement> result = [];
-        
-        int finalBnIndex = orderedBasicNotes.Count - 1;
-        int finalCnIndex = orderedClozeNotes.Count - 1;
-        int currentBnIndex = 0;
-        int currentCnIndex = 0;
-
-        while (currentBnIndex <= finalBnIndex && currentCnIndex <= finalCnIndex)
-        {
-            BasicNote currentBn = orderedBasicNotes[currentBnIndex];
-            ClozeNote currentCn = orderedClozeNotes[currentCnIndex];
-
-            if (currentBn.OrdinalPosition > currentCn.OrdinalPosition)
-            {
-                result.Add(currentCn);
-                currentCnIndex += 1;
-            }
-            else
-            {
-                result.Add(currentBn);
-                currentBnIndex += 1;
-            }
-        }
-
-        while (currentBnIndex <= finalBnIndex)
-        {
-            result.Add(orderedBasicNotes[currentBnIndex]);
-            currentBnIndex += 1;
-        }
-
-        while (currentCnIndex <= finalCnIndex)
-        {
-            result.Add(orderedClozeNotes[currentCnIndex]);
-            currentCnIndex += 1;
-        }
+        List<IArticleElement> result = orderedBasicNotes.Cast<IArticleElement>()
+            .Concat(orderedClozeNotes.Cast<IArticleElement>())
+            .Concat(orderedMarkdownContents.Cast<IArticleElement>())
+            .OrderBy(item => item.OrdinalPosition)
+            .ToList();
 
         return result;
     }

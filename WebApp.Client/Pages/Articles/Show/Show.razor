@@ -67,7 +67,7 @@ else
         }
 
         ArgumentNullException.ThrowIfNull(article);
-        orderedElementsContainer = new(article.BasicNotes, article.ClozeNotes);
+        orderedElementsContainer = new(article.BasicNotes, article.ClozeNotes, article.MarkdownContents);
     }
 
     private Task PersistData()

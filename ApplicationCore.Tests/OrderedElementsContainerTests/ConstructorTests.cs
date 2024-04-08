@@ -20,7 +20,7 @@ public class ConstructorTests : Base
             ]
         };
 
-        OrderedElementsContainer manager = new(article.BasicNotes, article.ClozeNotes);
+        OrderedElementsContainer manager = new(article.BasicNotes, article.ClozeNotes, []);
         
         Assert.True(NumberOfElementsIsCorrect(manager, 2));
         Assert.True(ElementsAreCorrectlyOrdered(manager));
@@ -44,7 +44,7 @@ public class ConstructorTests : Base
             ]
         };
 
-        OrderedElementsContainer manager = new(article.BasicNotes, article.ClozeNotes);
+        OrderedElementsContainer manager = new(article.BasicNotes, article.ClozeNotes, []);
 
         Assert.True(NumberOfElementsIsCorrect(manager, 5));
         Assert.True(ElementsAreCorrectlyOrdered(manager));

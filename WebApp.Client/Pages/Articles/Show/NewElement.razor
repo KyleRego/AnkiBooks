@@ -4,6 +4,7 @@
 @using AnkiBooks.ApplicationCore.Interfaces
 @using AnkiBooks.WebApp.Client.Pages.Articles.Show.BasicNoteComponents
 @using AnkiBooks.WebApp.Client.Pages.Articles.Show.ClozeNoteComponents
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.MarkdownContentComponents
 
 @if (dropDownItemSelected == null)
 {
@@ -14,6 +15,7 @@
                 <option value=""></option>
                 <option value="@ElementType.BasicNote">Basic note</option>
                 <option value="@ElementType.ClozeNote">Cloze note</option>
+                <option value="@ElementType.MarkdownContent">Markdown Content</option>
             </InputSelect>
         </label>
     </div>
@@ -33,6 +35,13 @@ else
                             @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
                             @bind-DropDownItemSelected="dropDownItemSelected"
                             PairedElement="@PairedElement" />
+            break;
+
+        case ElementType.MarkdownContent:
+            <NewMarkdownContent @bind-OrderedElementsContainer:get="OrderedElementsContainer"
+                                @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
+                                @bind-DropDownItemSelected="dropDownItemSelected"
+                                PairedElement="@PairedElement" />
             break;
         default:
             break;

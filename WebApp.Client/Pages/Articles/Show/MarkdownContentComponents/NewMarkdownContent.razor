@@ -1,0 +1,53 @@
+@inherits ChangesOrderedElementsContainerBase
+@using System.ComponentModel.DataAnnotations
+@using System.Text.Json
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Enums
+@using AnkiBooks.ApplicationCore.Interfaces
+@inject ILogger<NewMarkdownContent> Logger
+@inject IAnkiBooksApiService ApiService
+
+<MarkdownContentForm  StartingContent="@StartingContent()"
+                EditingExisting="false"
+                ParentSubmitMethod="@SubmitForm" />
+
+@code {
+    [CascadingParameter(Name="ArticleId")]
+    public string ArticleId { get; set; } = null!;
+
+    [Parameter]
+    public IArticleElement? PairedElement { get; set; }
+
+    [Parameter]
+    public ElementType? DropDownItemSelected { get; set; }
+
+    [Parameter]
+
+    public EventCallback<ElementType?> DropDownItemSelectedChanged { get; set; }
+
+    private MarkdownContent StartingContent()
+    {
+        return new()
+        {
+            ArticleId = ArticleId
+        };
+    }
+
+    private async Task SubmitForm(MarkdownContent newContent)
+    {
+        ArgumentNullException.ThrowIfNull(newContent.Text);
+
+        newContent.OrdinalPosition = (PairedElement != null) ? 
+                                    OrderedElementsContainer.GetOrdinalPosition(PairedElement) : 
+                                    OrderedElementsContainer.Count();
+
+        MarkdownContent? createdContent = await ApiService.PostMarkdownContent(newContent);
+        ArgumentNullException.ThrowIfNull(createdContent);
+
+        OrderedElementsContainer.Add(createdContent);
+        await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
+
+        DropDownItemSelected = null;
+        await DropDownItemSelectedChanged.InvokeAsync(DropDownItemSelected);
+    }
+}

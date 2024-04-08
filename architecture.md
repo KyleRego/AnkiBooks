@@ -1,10 +1,5 @@
 # Architecture
 
-Anki Books is a Blazor Web App that takes advantage of static server-side rendering, including prerendering, and client-side rendering where the HTML is generated on the client by the Blazor WebAssembly runtime. Enhanced navigation is currently disabled as it was causing issues with UI flickering
+Anki Books is a Blazor Web App that uses mainly client-side rendering but also static server-side rendering and prerendering. Enhanced navigation is currently disabled as it was causing issues with UI flickering. The project organization is following a clean architecture model but this will probably change to something simpler.
 
-
-## CSS
-
-## Identity
-
-The `blazor` template was used to scaffold the app initially: `dotnet new blazor -int WebAssembly --auth Individual -o WebApp`. This created the Identity Razor components
+To run the app, have the .NET 8 runtime installed and `dotnet run` from the WebApp project root will start the app

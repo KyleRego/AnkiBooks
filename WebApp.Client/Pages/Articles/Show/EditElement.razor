@@ -1,6 +1,7 @@
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.WebApp.Client.Pages.Articles.Show.BasicNoteComponents
 @using AnkiBooks.WebApp.Client.Pages.Articles.Show.ClozeNoteComponents
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.MarkdownContentComponents
 
 <div class="my-2">
     @if (ArticleElement is BasicNote)
@@ -18,6 +19,14 @@
         <EditClozeNote  @bind-Editing:get="@Editing"
                         @bind-Editing:set="@EditingChanged"
                         StartingClozeNote="@cn" />
+    }
+    else if (ArticleElement is MarkdownContent)
+    {
+        MarkdownContent mc = (MarkdownContent)ArticleElement;
+
+        <EditMarkdownContent    @bind-Editing:get="@Editing"
+                                @bind-Editing:set="@EditingChanged"
+                                StartingMarkdownContent="@mc" />
     }
 </div>
 

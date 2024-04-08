@@ -14,6 +14,8 @@ public interface IAnkiBooksApiService
     public Task DeleteBasicNote(string basicNoteId);
     public Task<ClozeNote?> PostClozeNote(ClozeNote cnData);
     public Task<ClozeNote?> PutClozeNote(ClozeNote cnData);
+    public Task<MarkdownContent?> PostMarkdownContent(MarkdownContent content);
+    public Task<MarkdownContent?> PutMarkdownContent(MarkdownContent content);
 }
 
 public class AnkiBooksApiService(HttpClient httpClient) : IAnkiBooksApiService
@@ -79,5 +81,21 @@ public class AnkiBooksApiService(HttpClient httpClient) : IAnkiBooksApiService
         response.EnsureSuccessStatusCode();
         string responseBody = await response.Content.ReadAsStringAsync();
         return JsonSerializer.Deserialize<ClozeNote>(responseBody, _jsonOptions);        
+    }
+
+    public async Task<MarkdownContent?> PostMarkdownContent(MarkdownContent markdownContent)
+    {
+        HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/MarkdownContents", markdownContent);
+        response.EnsureSuccessStatusCode();
+        string responseBody = await response.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<MarkdownContent>(responseBody, _jsonOptions);        
+    }
+
+    public async Task<MarkdownContent?> PutMarkdownContent(MarkdownContent markdownContent)
+    {
+        HttpResponseMessage response = await _httpClient.PutAsJsonAsync("api/MarkdownContents", markdownContent);
+        response.EnsureSuccessStatusCode();
+        string responseBody = await response.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<MarkdownContent>(responseBody, _jsonOptions);        
     }
 }

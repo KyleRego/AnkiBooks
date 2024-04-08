@@ -43,6 +43,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
 builder.Services.AddScoped<IBasicNoteRepository, BasicNoteRepository>();
 builder.Services.AddScoped<IClozeNoteRepository, ClozeNoteRepository>();
+builder.Services.AddScoped<IMarkdownContentRepository, MarkdownContentRepository>();
+
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

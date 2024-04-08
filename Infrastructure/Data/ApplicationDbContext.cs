@@ -20,7 +20,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<BasicNote> BasicNotes { get; set; } = null!;
     public DbSet<ClozeNote> ClozeNotes { get; set; } = null!;
     public DbSet<Concept> Concepts { get; set; } = null!;
-    public DbSet<Heading> Headings { get; set; } = null!;
+    public DbSet<MarkdownContent> MarkdownContents { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

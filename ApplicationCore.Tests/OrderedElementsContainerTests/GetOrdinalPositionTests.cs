@@ -30,7 +30,7 @@ public class GetOrdinalPositionTests : Base
             ]
         };
 
-        OrderedElementsContainer container = new(article.BasicNotes, article.ClozeNotes);
+        OrderedElementsContainer container = new(article.BasicNotes, article.ClozeNotes, []);
 
         Assert.Equal(0, container.GetOrdinalPosition(n1));
         Assert.Equal(1, container.GetOrdinalPosition(n2));

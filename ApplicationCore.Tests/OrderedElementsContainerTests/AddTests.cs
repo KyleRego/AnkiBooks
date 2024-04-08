@@ -20,7 +20,7 @@ public class AddTests : Base
             ]
         };
 
-        OrderedElementsContainer container = new(article.BasicNotes, article.ClozeNotes);
+        OrderedElementsContainer container = new(article.BasicNotes, article.ClozeNotes, []);
         BasicNote noteToAdd = new() { Front="a", Back="b", OrdinalPosition=1 };
         container.Add(noteToAdd);
         Assert.True(ElementsAreCorrectlyOrdered(container));

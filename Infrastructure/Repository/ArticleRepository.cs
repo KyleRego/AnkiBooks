@@ -24,6 +24,7 @@ public class ArticleRepository(ApplicationDbContext dbContext) : IArticleReposit
         return await _dbContext.Articles
                             .Include(a => a.BasicNotes.OrderBy(bn => bn.OrdinalPosition))
                             .Include(a => a.ClozeNotes.OrderBy(cn => cn.OrdinalPosition))
+                            .Include(a => a.MarkdownContents.OrderBy(mc => mc.OrdinalPosition))
                             .FirstOrDefaultAsync(a => a.Id == articleId);
     }
 
