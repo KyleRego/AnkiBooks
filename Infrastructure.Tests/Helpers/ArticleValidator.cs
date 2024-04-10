@@ -1,7 +1,7 @@
 using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.Infrastructure.Data;
 
-namespace AnkiBooks.WebApp.Tests.Helpers;
+namespace AnkiBooks.Infrastructure.Tests.Helpers;
 
 public static class ArticleValidator
 {

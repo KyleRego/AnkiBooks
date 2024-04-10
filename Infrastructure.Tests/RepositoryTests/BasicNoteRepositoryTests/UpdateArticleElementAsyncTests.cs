@@ -2,48 +2,40 @@ using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.ApplicationCore.Exceptions;
 using AnkiBooks.Infrastructure.Data;
 using AnkiBooks.Infrastructure.Repository;
-using AnkiBooks.WebApp.Tests.Helpers;
+using AnkiBooks.Infrastructure.Tests.Extensions;
+using AnkiBooks.Infrastructure.Tests.Helpers;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace AnkiBooks.WebApp.Tests.RepositoryTests.BasicNoteRepositoryTests;
+namespace AnkiBooks.Infrastructure.Tests.RepositoryTests.BasicNoteRepositoryTests;
 
-public class UpdateArticleElementAsyncTests(TestServerFactory<Program> factory) : IClassFixture<TestServerFactory<Program>>
+public class UpdateArticleElementAsyncTests
 {
-    private readonly TestServerFactory<Program> _factory = factory;
-
     [Fact]
     public async Task BasicNoteIsUpdated()
     {
-        async Task<(string basicNoteId, string articleId)> SetupTest()
-        {
-            using IServiceScope scope = _factory.Services.CreateScope();
-            ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            Article article = new("Test article");
-            BasicNote basicNote = new() { Front = "Hello", Back = "World", OrdinalPosition = 0 };
-            article.BasicNotes.Add(basicNote);
-            dbContext.Articles.Add(article);
-            await dbContext.SaveChangesAsync();
+        using var connection = new SqliteConnection("DataSource=:memory:");
+        connection.Open();
 
-            return (basicNote.Id, article.Id);
-        }
-        (string basicNoteId, string articleId) = await SetupTest();
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseSqlite(connection)
+            .Options;
 
-        using IServiceScope scope = _factory.Services.CreateScope();
-        ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        using var dbContext = new ApplicationDbContext(options);
+        dbContext.Database.EnsureCreated();
 
-        BasicNote basicNote = new()
-        {
-            Id = basicNoteId,
-            Front = "World2",
-            Back = "Hello2",
-            OrdinalPosition = 0,
-            ArticleId = articleId
-        };
+        Article article = await dbContext.CreateArticleWithOneBasicNote();
+
+        BasicNote basicNote = article.BasicNotes.First();
+        
+        basicNote.Front = "World2";
+        basicNote.Back = "Hello2";
+
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
         await basicNoteRepository.UpdateArticleElementAsync(basicNote);
 
-        BasicNote updatedBasicNote = dbContext.BasicNotes.First(bn => bn.Id == basicNoteId);
+        BasicNote updatedBasicNote = dbContext.BasicNotes.First(bn => bn.Id == basicNote.Id);
         Assert.Equal("World2", updatedBasicNote.Front);
         Assert.Equal("Hello2", updatedBasicNote.Back);
     }
@@ -51,11 +43,19 @@ public class UpdateArticleElementAsyncTests(TestServerFactory<Program> factory) 
     [Fact]
     public async Task InvalidBasicNoteOrdinalPositionsThrowAnException()
     {
-        Article article = await ArticleFactory.ArticleWithTenAlternatingBasicAndClozeNotes(_factory);
-        BasicNote noteToUpdate = article.BasicNotes.First(bn => bn.OrdinalPosition == 2);       
+        using var connection = new SqliteConnection("DataSource=:memory:");
+        connection.Open();
 
-        using IServiceScope scope = _factory.Services.CreateScope();
-        ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseSqlite(connection)
+            .Options;
+
+        using var dbContext = new ApplicationDbContext(options);
+        dbContext.Database.EnsureCreated();
+
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
+        BasicNote noteToUpdate = article.BasicNotes.First(bn => bn.OrdinalPosition == 2);  
+
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
         await Assert.ThrowsAsync<OrdinalPositionException>(async () => {
@@ -88,11 +88,18 @@ public class UpdateArticleElementAsyncTests(TestServerFactory<Program> factory) 
     [Fact]
     public async Task BasicNoteIsShiftedToHigherOrdinalPosition()
     {
-        Article article = await ArticleFactory.ArticleWithTenAlternatingBasicAndClozeNotes(_factory);
-        BasicNote noteToUpdate = article.BasicNotes.First(bn => bn.OrdinalPosition == 2);
+        using var connection = new SqliteConnection("DataSource=:memory:");
+        connection.Open();
 
-        using IServiceScope scope = _factory.Services.CreateScope();
-        ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseSqlite(connection)
+            .Options;
+
+        using var dbContext = new ApplicationDbContext(options);
+        dbContext.Database.EnsureCreated();
+
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
+        BasicNote noteToUpdate = article.BasicNotes.First(bn => bn.OrdinalPosition == 2);
 
         BasicNote basicNote = new()
         {
@@ -116,11 +123,18 @@ public class UpdateArticleElementAsyncTests(TestServerFactory<Program> factory) 
     [Fact]
     public async Task BasicNoteIsShiftedToLowerOrdinalPosition()
     {
-        Article article = await ArticleFactory.ArticleWithTenAlternatingBasicAndClozeNotes(_factory);
-        BasicNote noteToUpdate = article.BasicNotes.First(bn => bn.OrdinalPosition == 4);
+        using var connection = new SqliteConnection("DataSource=:memory:");
+        connection.Open();
 
-        using IServiceScope scope = _factory.Services.CreateScope();
-        ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseSqlite(connection)
+            .Options;
+
+        using var dbContext = new ApplicationDbContext(options);
+        dbContext.Database.EnsureCreated();
+
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
+        BasicNote noteToUpdate = article.BasicNotes.First(bn => bn.OrdinalPosition == 4);
 
         BasicNote basicNote = new()
         {
@@ -144,11 +158,18 @@ public class UpdateArticleElementAsyncTests(TestServerFactory<Program> factory) 
     [Fact]
     public async Task FirstElementIsMovedToLastPosition()
     {
-        Article article = await ArticleFactory.ArticleWithTenAlternatingBasicAndClozeNotes(_factory);
-        BasicNote noteToUpdate = article.BasicNotes.First(bn => bn.OrdinalPosition == 0);
+        using var connection = new SqliteConnection("DataSource=:memory:");
+        connection.Open();
 
-        using IServiceScope scope = _factory.Services.CreateScope();
-        ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseSqlite(connection)
+            .Options;
+
+        using var dbContext = new ApplicationDbContext(options);
+        dbContext.Database.EnsureCreated();
+
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
+        BasicNote noteToUpdate = article.BasicNotes.First(bn => bn.OrdinalPosition == 0);
 
         BasicNote basicNote = new()
         {

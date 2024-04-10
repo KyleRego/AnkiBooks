@@ -3,22 +3,29 @@ using AnkiBooks.ApplicationCore.Exceptions;
 using AnkiBooks.ApplicationCore.Interfaces;
 using AnkiBooks.Infrastructure.Data;
 using AnkiBooks.Infrastructure.Repository;
-using AnkiBooks.WebApp.Tests.Helpers;
+using AnkiBooks.Infrastructure.Tests.Extensions;
+using AnkiBooks.Infrastructure.Tests.Helpers;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace AnkiBooks.WebApp.Tests.RepositoryTests.BasicNoteRepositoryTests;
+namespace AnkiBooks.Infrastructure.Tests.RepositoryTests.BasicNoteRepositoryTests;
 
-public class InsertArticleElementAsyncTests(TestServerFactory<Program> factory) : IClassFixture<TestServerFactory<Program>>
+public class InsertArticleElementAsyncTests
 {
-    private readonly TestServerFactory<Program> _factory = factory;
-
     [Fact]
     public async Task InvalidBasicNoteOrdinalPositionsThrowAnException()
     {
-        Article article = await ArticleFactory.ArticleWithTenAlternatingBasicAndClozeNotes(_factory);  
+        using var connection = new SqliteConnection("DataSource=:memory:");
+        connection.Open();
 
-        using IServiceScope scope = _factory.Services.CreateScope();
-        ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseSqlite(connection)
+            .Options;
+
+        using var dbContext = new ApplicationDbContext(options);
+        dbContext.Database.EnsureCreated();
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
+
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
         await Assert.ThrowsAsync<OrdinalPositionException>(async () => {
@@ -49,7 +56,17 @@ public class InsertArticleElementAsyncTests(TestServerFactory<Program> factory) 
     [Fact]
     public async Task BasicNoteIsInsertedAtBeginningOfArticleWithNotes()
     {
-        Article article = await ArticleFactory.ArticleWithTenAlternatingBasicAndClozeNotes(_factory);
+        using var connection = new SqliteConnection("DataSource=:memory:");
+        connection.Open();
+
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseSqlite(connection)
+            .Options;
+
+        using var dbContext = new ApplicationDbContext(options);
+        dbContext.Database.EnsureCreated();
+
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
 
         BasicNote basicNote = new()
         {
@@ -58,9 +75,6 @@ public class InsertArticleElementAsyncTests(TestServerFactory<Program> factory) 
             OrdinalPosition = 0,
             ArticleId = article.Id
         };
-
-        using IServiceScope scope = _factory.Services.CreateScope();
-        ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
@@ -75,7 +89,17 @@ public class InsertArticleElementAsyncTests(TestServerFactory<Program> factory) 
     [Fact]
     public async Task BasicNoteIsInsertedAtEndOfArticleWithNotes()
     {
-        Article article = await ArticleFactory.ArticleWithTenAlternatingBasicAndClozeNotes(_factory);
+        using var connection = new SqliteConnection("DataSource=:memory:");
+        connection.Open();
+
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseSqlite(connection)
+            .Options;
+
+        using var dbContext = new ApplicationDbContext(options);
+        dbContext.Database.EnsureCreated();
+
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
 
         BasicNote basicNote = new()
         {
@@ -84,9 +108,6 @@ public class InsertArticleElementAsyncTests(TestServerFactory<Program> factory) 
             OrdinalPosition = 10,
             ArticleId = article.Id
         };
-
-        using IServiceScope scope = _factory.Services.CreateScope();
-        ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
@@ -101,7 +122,17 @@ public class InsertArticleElementAsyncTests(TestServerFactory<Program> factory) 
     [Fact]
     public async Task BasicNoteIsInsertedInMiddleOfArticleWithNotes()
     {
-        Article article = await ArticleFactory.ArticleWithTenAlternatingBasicAndClozeNotes(_factory);
+        using var connection = new SqliteConnection("DataSource=:memory:");
+        connection.Open();
+
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseSqlite(connection)
+            .Options;
+
+        using var dbContext = new ApplicationDbContext(options);
+        dbContext.Database.EnsureCreated();
+
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
 
         BasicNote basicNote = new()
         {
@@ -110,9 +141,6 @@ public class InsertArticleElementAsyncTests(TestServerFactory<Program> factory) 
             OrdinalPosition = 3,
             ArticleId = article.Id
         };
-
-        using IServiceScope scope = _factory.Services.CreateScope();
-        ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         BasicNoteRepository basicNoteRepository = new(dbContext);
 

@@ -3,19 +3,29 @@ using AnkiBooks.ApplicationCore.Exceptions;
 using AnkiBooks.ApplicationCore.Interfaces;
 using AnkiBooks.Infrastructure.Data;
 using AnkiBooks.Infrastructure.Repository;
-using AnkiBooks.WebApp.Tests.Helpers;
+using AnkiBooks.Infrastructure.Tests.Extensions;
+using AnkiBooks.Infrastructure.Tests.Helpers;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace AnkiBooks.WebApp.Tests.RepositoryTests.ClozeNoteRepositoryTests;
+namespace AnkiBooks.Infrastructure.Tests.RepositoryTests.ClozeNoteRepositoryTests;
 
-public class InsertArticleElementAsyncTests(TestServerFactory<Program> factory) : IClassFixture<TestServerFactory<Program>>
+public class InsertArticleElementAsyncTests
 {
-    private readonly TestServerFactory<Program> _factory = factory;
-
     [Fact]
     public async Task ClozeNoteIsInsertedInMiddleOfArticleWithNotes()
     {
-        Article article = await ArticleFactory.ArticleWithTenAlternatingBasicAndClozeNotes(_factory);
+        using var connection = new SqliteConnection("DataSource=:memory:");
+        connection.Open();
+
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseSqlite(connection)
+            .Options;
+
+        using var dbContext = new ApplicationDbContext(options);
+        dbContext.Database.EnsureCreated();
+
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
 
         ClozeNote clozeNote = new()
         {
@@ -23,9 +33,6 @@ public class InsertArticleElementAsyncTests(TestServerFactory<Program> factory) 
             OrdinalPosition = 6,
             ArticleId = article.Id
         };
-
-        using IServiceScope scope = _factory.Services.CreateScope();
-        ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         ClozeNoteRepository clozeNoteRepository = new(dbContext);
 

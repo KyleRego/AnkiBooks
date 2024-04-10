@@ -2,23 +2,30 @@ using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.ApplicationCore.Exceptions;
 using AnkiBooks.Infrastructure.Data;
 using AnkiBooks.Infrastructure.Repository;
-using AnkiBooks.WebApp.Tests.Helpers;
+using AnkiBooks.Infrastructure.Tests.Extensions;
+using AnkiBooks.Infrastructure.Tests.Helpers;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace AnkiBooks.WebApp.Tests.RepositoryTests.ClozeNoteRepositoryTests;
+namespace AnkiBooks.Infrastructure.Tests.RepositoryTests.ClozeNoteRepositoryTests;
 
-public class UpdateArticleElementAsyncTests(TestServerFactory<Program> factory) : IClassFixture<TestServerFactory<Program>>
+public class UpdateArticleElementAsyncTests
 {
-    private readonly TestServerFactory<Program> _factory = factory;
-
     [Fact]
     public async Task LastElementIsMovedToFirstPosition()
     {
-        Article article = await ArticleFactory.ArticleWithTenAlternatingBasicAndClozeNotes(_factory);
-        ClozeNote noteToUpdate = article.ClozeNotes.First(bn => bn.OrdinalPosition == 9);
+        using var connection = new SqliteConnection("DataSource=:memory:");
+        connection.Open();
 
-        using IServiceScope scope = _factory.Services.CreateScope();
-        ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseSqlite(connection)
+            .Options;
+
+        using var dbContext = new ApplicationDbContext(options);
+        dbContext.Database.EnsureCreated();
+
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
+        ClozeNote noteToUpdate = article.ClozeNotes.First(bn => bn.OrdinalPosition == 9);
 
         ClozeNote clozeNote = new()
         {
