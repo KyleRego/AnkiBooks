@@ -1,5 +1,4 @@
 @using Markdig
-@using Markdig.SyntaxHighlighting
 @using Ganss.Xss
 @using Microsoft.AspNetCore.Components
 
@@ -13,7 +12,7 @@
 
     private MarkdownPipeline pipeline = new MarkdownPipelineBuilder()
                                             .UseAdvancedExtensions()
-                                            .UseSyntaxHighlighting().Build();
+                                            .Build();
     private HtmlSanitizer sanitizer = new();
 
     public MarkupString RenderIt()
