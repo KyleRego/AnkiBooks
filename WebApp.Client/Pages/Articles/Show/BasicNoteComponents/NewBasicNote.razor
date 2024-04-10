@@ -40,7 +40,7 @@
         ArgumentNullException.ThrowIfNull(newBasicNote.ArticleId);
 
         newBasicNote.OrdinalPosition = (PairedElement != null) ? 
-                                    OrderedElementsContainer.GetOrdinalPosition(PairedElement) : 
+                                    OrderedElementsContainer.GetPosition(PairedElement) : 
                                     OrderedElementsContainer.Count();
         
         BasicNote? createdBasicNote = await ApiService.PostBasicNote(newBasicNote);

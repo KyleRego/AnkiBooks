@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Query;
 
 namespace AnkiBooks.ApplicationCore.Tests.OrderedElementsContainerTests;
 
-public class AddTests : Base
+public class AddTests
 {
     [Fact]
     public void TestAddWithTwoElementsAlready()
@@ -20,10 +20,13 @@ public class AddTests : Base
             ]
         };
 
-        OrderedElementsContainer container = new(article.BasicNotes, article.ClozeNotes, []);
+        OrderedElementsContainer container = new(article.OrderedElements());
         BasicNote noteToAdd = new() { Front="a", Back="b", OrdinalPosition=1 };
         container.Add(noteToAdd);
-        Assert.True(ElementsAreCorrectlyOrdered(container));
-        Assert.Equal(1, container.GetOrdinalPosition(noteToAdd));
+        container.ExpectElementsCountIs(3);
+        container.ExpectElementsAreOrdered();
+
+        IArticleElement element = container.OrderedElements.First(el => el.OrdinalPosition == 1);
+        Assert.Equal(noteToAdd, element);
     }
 }

@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using AnkiBooks.ApplicationCore.Interfaces;
+
 namespace AnkiBooks.ApplicationCore.Entities;
 
 public class Article(string title) : EntityBase
@@ -16,4 +19,13 @@ public class Article(string title) : EntityBase
     public List<ClozeNote> ClozeNotes { get; set; } = [];
 
     public List<MarkdownContent> MarkdownContents { get; set; } = [];
+
+    public List<IArticleElement> OrderedElements()
+    {
+        return BasicNotes.Cast<IArticleElement>()
+            .Concat(ClozeNotes.Cast<IArticleElement>())
+            .Concat(MarkdownContents.Cast<IArticleElement>())
+            .OrderBy(item => item.OrdinalPosition)
+            .ToList();
+    }
 }

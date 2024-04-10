@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Query;
 
 namespace AnkiBooks.ApplicationCore.Tests.OrderedElementsContainerTests;
 
-public class GetOrdinalPositionTests : Base
+public class GetPositionTests
 {
     [Fact]
     public void TestGettingOrdinalPositionsOfElements()
@@ -30,12 +30,12 @@ public class GetOrdinalPositionTests : Base
             ]
         };
 
-        OrderedElementsContainer container = new(article.BasicNotes, article.ClozeNotes, []);
+        OrderedElementsContainer container = new(article.OrderedElements());
 
-        Assert.Equal(0, container.GetOrdinalPosition(n1));
-        Assert.Equal(1, container.GetOrdinalPosition(n2));
-        Assert.Equal(2, container.GetOrdinalPosition(n3));
-        Assert.Equal(3, container.GetOrdinalPosition(n4));
-        Assert.Equal(4, container.GetOrdinalPosition(n5));
+        Assert.Equal(0, container.GetPosition(n1));
+        Assert.Equal(1, container.GetPosition(n2));
+        Assert.Equal(2, container.GetPosition(n3));
+        Assert.Equal(3, container.GetPosition(n4));
+        Assert.Equal(4, container.GetPosition(n5));
     }
 }

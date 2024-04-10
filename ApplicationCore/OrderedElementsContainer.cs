@@ -3,25 +3,11 @@ using AnkiBooks.ApplicationCore.Interfaces;
 
 namespace AnkiBooks.ApplicationCore;
 
-/// <summary>
-/// Wraps an article and a list of the article's polymorphic (IArticleElement) elements
-/// The article passed to the constructor must have its article element properties sorted
-/// already for the combining of those into a single ordered list to work with the algorithm
-/// </summary>
-public class OrderedElementsContainer
+public class OrderedElementsContainer(List<IArticleElement> orderedElements)
 {
-    public List<IArticleElement> OrderedElements { get; }
+    public List<IArticleElement> OrderedElements { get; } = orderedElements;
 
-    public OrderedElementsContainer(List<BasicNote> orderedBasicNotes,
-                                    List<ClozeNote> orderedClozeNotes,
-                                    List<MarkdownContent> orderedMarkdownContents)
-    {
-        OrderedElements = InitializeOrderedElementsFromOrdered( orderedBasicNotes,
-                                                                orderedClozeNotes,
-                                                                orderedMarkdownContents);
-    }
-
-    public int GetOrdinalPosition(IArticleElement element)
+    public int GetPosition(IArticleElement element)
     {
         for (int i = 0; i < OrderedElements.Count; i++)
         {
@@ -32,6 +18,11 @@ public class OrderedElementsContainer
         }
         // TODO: consider handling this better
         throw new ApplicationException();
+    }
+
+    public IArticleElement ElementAtPosition(int position)
+    {
+        return OrderedElements[position];
     }
 
     public int Count()
@@ -57,26 +48,15 @@ public class OrderedElementsContainer
         }
     }
 
-    public void AddElementAndRemoveFromOldPosition(IArticleElement element, int oldPosition)
+    public void UpdatePosition(IArticleElement element)
     {
-        OrderedElements.RemoveAt(oldPosition);
-        foreach (IArticleElement el in OrderedElements.Where(el => el.OrdinalPosition >= oldPosition))
-        {
-            el.OrdinalPosition -= 1;
-        }
+        // TODO: This can be done in a better way
+        int newPosition = element.OrdinalPosition;
+        int oldPosition = GetPosition(element);
+
+        element.OrdinalPosition = oldPosition;
+        Remove(element);
+        element.OrdinalPosition = newPosition;
         Add(element);
-    }
-
-    private static List<IArticleElement> InitializeOrderedElementsFromOrdered(List<BasicNote> orderedBasicNotes,
-                                                                            List<ClozeNote> orderedClozeNotes,
-                                                                            List<MarkdownContent> orderedMarkdownContents)
-    {
-        List<IArticleElement> result = orderedBasicNotes.Cast<IArticleElement>()
-            .Concat(orderedClozeNotes.Cast<IArticleElement>())
-            .Concat(orderedMarkdownContents.Cast<IArticleElement>())
-            .OrderBy(item => item.OrdinalPosition)
-            .ToList();
-
-        return result;
     }
 }

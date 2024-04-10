@@ -14,7 +14,7 @@
 
 @rendermode InteractiveWebAssembly
 
-@if (article == null || orderedElementsContainer == null)
+@if (article == null || OrderedElementsContainer == null)
 {
     <PageTitle>Loading article...</PageTitle>
 
@@ -26,16 +26,16 @@ else
 
     <article>
         <CascadingValue Value="@article.Id" Name="ArticleId">
-            @foreach(ArticleElementBase articleElement in orderedElementsContainer.OrderedElements)
+            @foreach(ArticleElementBase articleElement in OrderedElementsContainer.OrderedElements)
             {
-                <NewElement @bind-OrderedElementsContainer="@orderedElementsContainer"
+                <NewElement @bind-OrderedElementsContainer="@OrderedElementsContainer"
                                                 PairedElement="@articleElement" />
 
-                <Element @bind-OrderedElementsContainer="@orderedElementsContainer"
+                <Element @bind-OrderedElementsContainer="@OrderedElementsContainer"
                                 ArticleElement="@articleElement"/>
             }
 
-            <NewElement @bind-OrderedElementsContainer="@orderedElementsContainer"
+            <NewElement @bind-OrderedElementsContainer="@OrderedElementsContainer"
                                             PairedElement="@null" />
         </CascadingValue>
     </article>
@@ -45,7 +45,7 @@ else
     [Parameter]
     public string? Id { get; set; }
 
-    private OrderedElementsContainer? orderedElementsContainer;
+    private OrderedElementsContainer? OrderedElementsContainer;
 
     private Article? article;
 
@@ -67,7 +67,7 @@ else
         }
 
         ArgumentNullException.ThrowIfNull(article);
-        orderedElementsContainer = new(article.BasicNotes, article.ClozeNotes, article.MarkdownContents);
+        OrderedElementsContainer = new(article.OrderedElements());
     }
 
     private Task PersistData()
