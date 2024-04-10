@@ -10,19 +10,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AnkiBooks.Infrastructure.Tests.RepositoryTests.BasicNoteRepositoryTests;
 
-public class InsertArticleElementAsyncTests
+public class InsertArticleElementAsyncTests : RepositoryTestBase
 {
     [Fact]
     public async Task InvalidBasicNoteOrdinalPositionsThrowAnException()
     {
-        using var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        using var dbContext = new ApplicationDbContext(options);
+        using var dbContext = InMemoryDbContext();
         dbContext.Database.EnsureCreated();
         Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
 
@@ -56,15 +49,7 @@ public class InsertArticleElementAsyncTests
     [Fact]
     public async Task BasicNoteIsInsertedAtBeginningOfArticleWithNotes()
     {
-        using var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        using var dbContext = new ApplicationDbContext(options);
-        dbContext.Database.EnsureCreated();
+        using var dbContext = InMemoryDbContext();
 
         Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
 
@@ -89,15 +74,7 @@ public class InsertArticleElementAsyncTests
     [Fact]
     public async Task BasicNoteIsInsertedAtEndOfArticleWithNotes()
     {
-        using var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        using var dbContext = new ApplicationDbContext(options);
-        dbContext.Database.EnsureCreated();
+        using var dbContext = InMemoryDbContext();
 
         Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
 
@@ -122,15 +99,7 @@ public class InsertArticleElementAsyncTests
     [Fact]
     public async Task BasicNoteIsInsertedInMiddleOfArticleWithNotes()
     {
-        using var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        using var dbContext = new ApplicationDbContext(options);
-        dbContext.Database.EnsureCreated();
+        using var dbContext = InMemoryDbContext();
 
         Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
 

@@ -10,20 +10,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AnkiBooks.Infrastructure.Tests.RepositoryTests.ClozeNoteRepositoryTests;
 
-public class InsertArticleElementAsyncTests
+public class InsertArticleElementAsyncTests : RepositoryTestBase
 {
     [Fact]
     public async Task ClozeNoteIsInsertedInMiddleOfArticleWithNotes()
     {
-        using var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        using var dbContext = new ApplicationDbContext(options);
-        dbContext.Database.EnsureCreated();
+        using var dbContext = InMemoryDbContext();
 
         Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
 

@@ -9,20 +9,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AnkiBooks.Infrastructure.Tests.RepositoryTests.BasicNoteRepositoryTests;
 
-public class UpdateArticleElementAsyncTests
+public class UpdateArticleElementAsyncTests : RepositoryTestBase
 {
     [Fact]
     public async Task BasicNoteIsUpdated()
     {
-        using var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        using var dbContext = new ApplicationDbContext(options);
-        dbContext.Database.EnsureCreated();
+        using var dbContext = InMemoryDbContext();
 
         Article article = await dbContext.CreateArticleWithOneBasicNote();
 
@@ -43,15 +35,7 @@ public class UpdateArticleElementAsyncTests
     [Fact]
     public async Task InvalidBasicNoteOrdinalPositionsThrowAnException()
     {
-        using var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        using var dbContext = new ApplicationDbContext(options);
-        dbContext.Database.EnsureCreated();
+        using var dbContext = InMemoryDbContext();
 
         Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
         BasicNote noteToUpdate = article.BasicNotes.First(bn => bn.OrdinalPosition == 2);  
@@ -88,15 +72,7 @@ public class UpdateArticleElementAsyncTests
     [Fact]
     public async Task BasicNoteIsShiftedToHigherOrdinalPosition()
     {
-        using var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        using var dbContext = new ApplicationDbContext(options);
-        dbContext.Database.EnsureCreated();
+        using var dbContext = InMemoryDbContext();
 
         Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
         BasicNote noteToUpdate = article.BasicNotes.First(bn => bn.OrdinalPosition == 2);
@@ -123,15 +99,7 @@ public class UpdateArticleElementAsyncTests
     [Fact]
     public async Task BasicNoteIsShiftedToLowerOrdinalPosition()
     {
-        using var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        using var dbContext = new ApplicationDbContext(options);
-        dbContext.Database.EnsureCreated();
+        using var dbContext = InMemoryDbContext();
 
         Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
         BasicNote noteToUpdate = article.BasicNotes.First(bn => bn.OrdinalPosition == 4);
@@ -158,15 +126,7 @@ public class UpdateArticleElementAsyncTests
     [Fact]
     public async Task FirstElementIsMovedToLastPosition()
     {
-        using var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        using var dbContext = new ApplicationDbContext(options);
-        dbContext.Database.EnsureCreated();
+        using var dbContext = InMemoryDbContext();
 
         Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
         BasicNote noteToUpdate = article.BasicNotes.First(bn => bn.OrdinalPosition == 0);

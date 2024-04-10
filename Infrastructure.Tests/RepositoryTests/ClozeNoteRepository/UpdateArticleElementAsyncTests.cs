@@ -9,20 +9,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AnkiBooks.Infrastructure.Tests.RepositoryTests.ClozeNoteRepositoryTests;
 
-public class UpdateArticleElementAsyncTests
+public class UpdateArticleElementAsyncTests : RepositoryTestBase
 {
     [Fact]
     public async Task LastElementIsMovedToFirstPosition()
     {
-        using var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        using var dbContext = new ApplicationDbContext(options);
-        dbContext.Database.EnsureCreated();
+        using var dbContext = InMemoryDbContext();
 
         Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
         ClozeNote noteToUpdate = article.ClozeNotes.First(bn => bn.OrdinalPosition == 9);
