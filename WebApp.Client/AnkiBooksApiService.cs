@@ -93,7 +93,8 @@ public class AnkiBooksApiService(HttpClient httpClient) : IAnkiBooksApiService
 
     public async Task<MarkdownContent?> PutMarkdownContent(MarkdownContent markdownContent)
     {
-        HttpResponseMessage response = await _httpClient.PutAsJsonAsync("api/MarkdownContents", markdownContent);
+        HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"api/MarkdownContents/{markdownContent.Id}",
+                                                                        markdownContent);
         response.EnsureSuccessStatusCode();
         string responseBody = await response.Content.ReadAsStringAsync();
         return JsonSerializer.Deserialize<MarkdownContent>(responseBody, _jsonOptions);        

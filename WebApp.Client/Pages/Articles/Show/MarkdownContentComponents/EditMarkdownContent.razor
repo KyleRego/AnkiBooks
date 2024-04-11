@@ -36,10 +36,7 @@
         MarkdownContent? createdContent = await ApiService.PutMarkdownContent(newContent);
         ArgumentNullException.ThrowIfNull(createdContent);
 
-        OrderedElementsContainer.Add(createdContent);
-        await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
-
-        DropDownItemSelected = null;
-        await DropDownItemSelectedChanged.InvokeAsync(DropDownItemSelected);
+        Editing = false;
+        await EditingChanged.InvokeAsync(Editing);
     }
 }
