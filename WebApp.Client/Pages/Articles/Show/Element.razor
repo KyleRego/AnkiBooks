@@ -1,5 +1,6 @@
 @using AnkiBooks.ApplicationCore.Entities
 @using System.Text.Json
+@using AnkiBooks.ApplicationCore.Interfaces
 @using AnkiBooks.WebApp.Client.Services
 @inherits ChangesOrderedElementsContainerBase
 @inject IAnkiBooksApiService ApiService
@@ -42,7 +43,7 @@ else
 
 @code {
     [Parameter]
-    public ArticleElementBase ArticleElement { get; set; } = null!;
+    public IArticleElement ArticleElement { get; set; } = null!;
 
     private bool editing = false;
 
@@ -78,7 +79,7 @@ else
 
     private void HandleDragEnter()
     {
-        ArticleElementBase? draggedElement = dragState.DraggedElement;
+        IArticleElement? draggedElement = dragState.DraggedElement;
 
         if (draggedElement == null) return;
         if (draggedElement == ArticleElement) return;
@@ -88,7 +89,7 @@ else
 
     private void HandleDragLeave()
     {
-        ArticleElementBase? draggedElement = dragState.DraggedElement;
+        IArticleElement? draggedElement = dragState.DraggedElement;
 
         if (draggedElement == null) return;
         if (draggedElement == ArticleElement) return;
@@ -101,7 +102,7 @@ else
     {
         nestedDragLevels = 0;
         logger.LogInformation("drop");
-        ArticleElementBase? droppedElement = dragState.DraggedElement;
+        IArticleElement? droppedElement = dragState.DraggedElement;
 
         if (droppedElement == null) return;
         if (droppedElement == ArticleElement) return;
