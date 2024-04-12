@@ -9,15 +9,12 @@
 @if (dropDownItemSelected == null)
 {
      <div class="my-2 d-flex justify-content-center">
-        <label>
-            New element:
-            <InputSelect @bind-Value="dropDownItemSelected">
-                <option value=""></option>
-                <option value="@ElementType.BasicNote">Basic note</option>
-                <option value="@ElementType.ClozeNote">Cloze note</option>
-                <option value="@ElementType.MarkdownContent">Markdown Content</option>
-            </InputSelect>
-        </label>
+        <InputSelect @bind-Value="dropDownItemSelected" name="new-element">
+            <option value="" selected>New element</option>
+            <option value="@ElementType.BasicNote">Basic note</option>
+            <option value="@ElementType.ClozeNote">Cloze note</option>
+            <option value="@ElementType.MarkdownContent">Markdown content</option>
+        </InputSelect>
     </div>
 }
 else
