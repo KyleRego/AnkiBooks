@@ -8,6 +8,7 @@
 @import "./utilities/min-width.css";
 @import "./utilities/padding.css";
 @import "./utilities/text-align.css";
+@import "./utilities/width.css";
 @import "./utilities/word-break.css";
 @import "./vendor/preflight.css";
 @import "./forms.css";

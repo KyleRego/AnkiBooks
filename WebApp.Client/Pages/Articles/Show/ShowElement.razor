@@ -4,24 +4,26 @@
 @using AnkiBooks.WebApp.Client.Pages.Articles.Show.ClozeNoteComponents
 @using AnkiBooks.WebApp.Client.Pages.Articles.Show.MarkdownContentComponents
 
-@if (ArticleElement is BasicNote)
-{
-    BasicNote bn = (BasicNote)ArticleElement;
+<div class="word-break-all">
+    @if (ArticleElement is BasicNote)
+    {
+        BasicNote bn = (BasicNote)ArticleElement;
 
-    <ShowBasicNote BasicNoteFront="@bn.Front" BasicNoteBack="@bn.Back" />
-}
-else if (ArticleElement is ClozeNote)
-{
-    ClozeNote cn = (ClozeNote)ArticleElement;
+        <ShowBasicNote BasicNoteFront="@bn.Front" BasicNoteBack="@bn.Back" />
+    }
+    else if (ArticleElement is ClozeNote)
+    {
+        ClozeNote cn = (ClozeNote)ArticleElement;
 
-    <ShowClozeNote ClozeNoteText="@cn.Text" />
-}
-else if (ArticleElement is MarkdownContent)
-{
-    MarkdownContent mc = (MarkdownContent)ArticleElement;
+        <ShowClozeNote ClozeNoteText="@cn.Text" />
+    }
+    else if (ArticleElement is MarkdownContent)
+    {
+        MarkdownContent mc = (MarkdownContent)ArticleElement;
 
-    <ShowMarkdownContent MarkdownText="@mc.Text" />
-}
+        <ShowMarkdownContent MarkdownText="@mc.Text" />
+    }
+</div>
 
 @code {
     [Parameter]

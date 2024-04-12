@@ -34,26 +34,28 @@ else
             }
             else
             {
-                int k = 0;
-                IArticleElement kElement = elements[k];
-
-                @if (kElement is not IArticleContent)
+                int k, i;
+                <div class="d-flex">
+                @for (k = 0; k < elements.Count; k++)
                 {
-                    <div class="d-flex">
-                        @while(kElement is not IArticleContent)
-                        {
-                            <Element @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@kElement" />
-                            k += 1;
-                            kElement = elements[k];
-                        }
-                    </div>
-                }
+                    IArticleElement kElement = elements[k];
 
-                @for (int i = k; i < elements.Count; i++)
+                    @if (kElement is IArticleNote)
+                    {
+                        <Element @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@kElement" />
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                </div>
+
+                @for (i = k; i < elements.Count; i++)
                 {
                     IArticleElement element = elements[i];
-
-                    @if (!(i + 1 < elements.Count))
+                    <span>@i</span>
+                    @if (i == (elements.Count - 1))
                     {
                         <Element @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@element"/>
                     }
@@ -77,10 +79,11 @@ else
                                         @if (jElement is IArticleNote)
                                         {
                                             <Element @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@jElement"/>
+                                            i += 1;
                                         }
                                         else
                                         {
-                                            i = j - 1; break;
+                                            break;
                                         }
                                     }
                                 </div>
