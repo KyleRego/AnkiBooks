@@ -1,6 +1,6 @@
 @using AnkiBooks.ApplicationCore.Entities
 
-<div class="p-4 border-primary">
+<div class="px-2 pt-2 pb-1 border-primary">
     <EditForm Model="ClozeNote" OnValidSubmit="SubmitForm">
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -30,7 +30,7 @@
 
     private string SubmitButtonText()
     {
-        return EditingExisting ? "Update" : "Create";
+        return EditingExisting ? "Update cloze note" : "Create cloze note";
     }
 
     [Parameter]
