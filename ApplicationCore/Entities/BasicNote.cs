@@ -1,6 +1,8 @@
+using AnkiBooks.ApplicationCore.Interfaces;
+
 namespace AnkiBooks.ApplicationCore.Entities;
 
-public class BasicNote : ArticleElementBase
+public class BasicNote : ArticleElementBase, IArticleNote
 {
     [Required]
     public string? Front { get; set; }
