@@ -5,6 +5,7 @@
 @import "./utilities/flex.css";
 @import "./utilities/height.css";
 @import "./utilities/margin.css";
+@import "./utilities/min-width.css";
 @import "./utilities/padding.css";
 @import "./utilities/text-align.css";
 @import "./utilities/word-break.css";

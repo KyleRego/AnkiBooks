@@ -17,14 +17,16 @@
             </div>
         </div>
 
-        <div class="flex-grow-1 @(nestedDragLevels != 0 ? "highlight-dropzone" : "")"
-                                draggable="true"
-                                @ondragstart="HandleDrag"
-                                @ondragend="HandleDragEnd"
-                                @ondragenter="HandleDragEnter" @ondragenter:preventDefault
-                                ondragover="event.preventDefault();"
-                                @ondragleave="HandleDragLeave" @ondragleave:preventDefault
-                                @ondrop="HandleDrop">
+        <div class="min-w-0 flex-1 word-break-all
+                        @(nestedDragLevels != 0 ? "highlight-dropzone" : "")"
+                        
+                        draggable="true"
+                        @ondragstart="HandleDrag"
+                        @ondragend="HandleDragEnd"
+                        @ondragenter="HandleDragEnter" @ondragenter:preventDefault
+                        ondragover="event.preventDefault();"
+                        @ondragleave="HandleDragLeave" @ondragleave:preventDefault
+                        @ondrop="HandleDrop">
             <ShowElement ArticleElement="@ArticleElement" />
         </div>
 
@@ -57,9 +59,18 @@ else
 
     private async Task DeleteElement()
     {
+        // TODO: Pull this down into the ApiService
         if (ArticleElement is BasicNote)
         {
             await ApiService.DeleteBasicNote(ArticleElement.Id);
+        }
+        else if (ArticleElement is ClozeNote)
+        {
+            await ApiService.DeleteClozeNote(ArticleElement.Id);
+        }
+        else if (ArticleElement is MarkdownContent)
+        {
+            await ApiService.DeleteMarkdownContent(ArticleElement.Id);
         }
 
         OrderedElementsContainer.Remove(ArticleElement);
@@ -113,6 +124,7 @@ else
         int ordinalPositionBefore = droppedElement.OrdinalPosition;
         droppedElement.OrdinalPosition = ArticleElement.OrdinalPosition;
 
+        // TODO: Pull this down into the ApiService
         if (droppedElement is BasicNote)
         {
             BasicNote bn = (BasicNote)droppedElement;
@@ -124,6 +136,12 @@ else
             ClozeNote cn = (ClozeNote)droppedElement;
 
             await ApiService.PutClozeNote(cn);
+        }
+        else if (droppedElement is MarkdownContent)
+        {
+            MarkdownContent content = (MarkdownContent)droppedElement;
+
+            await ApiService.PutMarkdownContent(content);
         }
 
         OrderedElementsContainer.UpdatePosition(droppedElement);
