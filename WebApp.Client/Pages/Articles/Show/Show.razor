@@ -14,7 +14,7 @@
 
 @rendermode InteractiveWebAssembly
 
-@if (article == null || OrderedElementsContainer == null)
+@if (article == null || ElementsContainer == null)
 {
     <PageTitle>Loading article...</PageTitle>
 
@@ -22,21 +22,52 @@
 }
 else
 {
+    List<IArticleElement> elements = ElementsContainer.OrderedElements;
+
     <PageTitle>@article.Title</PageTitle>
 
     <article>
         <CascadingValue Value="@article.Id" Name="ArticleId">
-            @foreach(IArticleElement articleElement in OrderedElementsContainer.OrderedElements)
+            @if (elements.Count > 0)
             {
-                <NewElement @bind-OrderedElementsContainer="@OrderedElementsContainer"
-                                                PairedElement="@articleElement" />
+                @for (int i = 0; i < elements.Count; i++)
+                {
+                    IArticleElement element = elements[i];
 
-                <Element @bind-OrderedElementsContainer="@OrderedElementsContainer"
-                                ArticleElement="@articleElement"/>
+                    @if (element is IArticleContent)
+                    {
+                        <div class="d-flex flex-row">
+                            <div>
+                                <Element @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@element"/>
+                            </div>
+                            <div>
+                                @for (int j = i + 1; j < elements.Count; j++)
+                                {
+                                    IArticleElement jElement = elements[j];
+
+                                    @if (jElement is IArticleNote)
+                                    {
+                                        <Element @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@jElement"/>
+                                    }
+                                    else
+                                    {
+                                        i = j;
+                                        break;
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                    else if (element is IArticleNote)
+                    {
+                        <Element @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@element" />
+                    }
+                }
             }
-
-            <NewElement @bind-OrderedElementsContainer="@OrderedElementsContainer"
-                                            PairedElement="@null" />
+            else
+            {
+                <NewElement @bind-OrderedElementsContainer="@ElementsContainer" PairedElement="@null" />
+            }
         </CascadingValue>
     </article>
 }
@@ -45,7 +76,7 @@ else
     [Parameter]
     public string? Id { get; set; }
 
-    private OrderedElementsContainer? OrderedElementsContainer;
+    private OrderedElementsContainer? ElementsContainer;
 
     private Article? article;
 
@@ -67,7 +98,7 @@ else
         }
 
         ArgumentNullException.ThrowIfNull(article);
-        OrderedElementsContainer = new(article.OrderedElements());
+        ElementsContainer = new(article.OrderedElements());
     }
 
     private Task PersistData()

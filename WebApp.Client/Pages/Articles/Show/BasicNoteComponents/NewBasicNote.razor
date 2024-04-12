@@ -22,7 +22,6 @@
     public ElementType? DropDownItemSelected { get; set; }
 
     [Parameter]
-
     public EventCallback<ElementType?> DropDownItemSelectedChanged { get; set; }
 
     private BasicNote StartingBasicNote()
@@ -40,7 +39,7 @@
         ArgumentNullException.ThrowIfNull(newBasicNote.ArticleId);
 
         newBasicNote.OrdinalPosition = (PairedElement != null) ? 
-                                    OrderedElementsContainer.GetPosition(PairedElement) : 
+                                    OrderedElementsContainer.GetPosition(PairedElement) + 1 : 
                                     OrderedElementsContainer.Count();
         
         BasicNote? createdBasicNote = await ApiService.PostBasicNote(newBasicNote);

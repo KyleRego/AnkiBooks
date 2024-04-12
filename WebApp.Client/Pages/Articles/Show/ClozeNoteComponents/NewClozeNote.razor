@@ -39,7 +39,7 @@
         ArgumentNullException.ThrowIfNull(newClozeNote.ArticleId);
 
         newClozeNote.OrdinalPosition = (PairedElement != null) ? 
-                                    OrderedElementsContainer.GetPosition(PairedElement) : 
+                                    OrderedElementsContainer.GetPosition(PairedElement) + 1 : 
                                     OrderedElementsContainer.Count();
         
         ClozeNote? createdClozeNote = await ApiService.PostClozeNote(newClozeNote);

@@ -38,7 +38,7 @@
         ArgumentNullException.ThrowIfNull(newContent.Text);
 
         newContent.OrdinalPosition = (PairedElement != null) ? 
-                                    OrderedElementsContainer.GetPosition(PairedElement) : 
+                                    OrderedElementsContainer.GetPosition(PairedElement) + 1 : 
                                     OrderedElementsContainer.Count();
 
         MarkdownContent? createdContent = await ApiService.PostMarkdownContent(newContent);
