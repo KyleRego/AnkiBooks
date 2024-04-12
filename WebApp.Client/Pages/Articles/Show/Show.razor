@@ -28,45 +28,66 @@ else
 
     <article>
         <CascadingValue Value="@article.Id" Name="ArticleId">
-            @if (elements.Count > 0)
+            @if (elements.Count < 1)
             {
-                @for (int i = 0; i < elements.Count; i++)
-                {
-                    IArticleElement element = elements[i];
-
-                    @if (element is IArticleContent)
-                    {
-                        <div class="d-flex flex-row">
-                            <div class="flex-grow-2 min-w-2-3">
-                                <Element @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@element"/>
-                            </div>
-                            <div class="flex-grow-1 min-w-1-3">
-                                @for (int j = i + 1; j < elements.Count; j++)
-                                {
-                                    IArticleElement jElement = elements[j];
-
-                                    @if (jElement is IArticleNote)
-                                    {
-                                        <Element @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@jElement"/>
-                                    }
-                                    else
-                                    {
-                                        i = j - 1;
-                                        break;
-                                    }
-                                }
-                            </div>
-                        </div>
-                    }
-                    else if (element is IArticleNote)
-                    {
-                        <Element @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@element" />
-                    }
-                }
+                <NewElement @bind-OrderedElementsContainer="@ElementsContainer" PairedElement="@null" />
             }
             else
             {
-                <NewElement @bind-OrderedElementsContainer="@ElementsContainer" PairedElement="@null" />
+                int k = 0;
+                IArticleElement kElement = elements[k];
+
+                @if (kElement is not IArticleContent)
+                {
+                    <div class="d-flex">
+                        @while(kElement is not IArticleContent)
+                        {
+                            <Element @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@kElement" />
+                            k += 1;
+                            kElement = elements[k];
+                        }
+                    </div>
+                }
+
+                @for (int i = k; i < elements.Count; i++)
+                {
+                    IArticleElement element = elements[i];
+
+                    @if (!(i + 1 < elements.Count))
+                    {
+                        <Element @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@element"/>
+                    }
+                    else
+                    {
+                        @if(elements[i + 1] is IArticleContent)
+                        {
+                            <Element @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@element"/>
+                        }
+                        else
+                        {
+                            <div class="d-flex">
+                                <div class="flex-grow-2 min-w-2-3">
+                                    <Element @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@element"/>
+                                </div>
+                                <div class="flex-grow-1 min-w-1-3">
+                                    @for (int j = i + 1; j < elements.Count; j++)
+                                    {
+                                        IArticleElement jElement = elements[j];
+
+                                        @if (jElement is IArticleNote)
+                                        {
+                                            <Element @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@jElement"/>
+                                        }
+                                        else
+                                        {
+                                            i = j - 1; break;
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                }
             }
         </CascadingValue>
     </article>
