@@ -33,7 +33,7 @@
     private async Task SubmitForm(MarkdownContent newContent)
     {
         ArgumentNullException.ThrowIfNull(newContent.Text);
-        MarkdownContent? createdContent = await ApiService.PutMarkdownContent(newContent);
+        MarkdownContent? createdContent = (MarkdownContent?)await ApiService.PutArticleElement(newContent);
         ArgumentNullException.ThrowIfNull(createdContent);
 
         Editing = false;

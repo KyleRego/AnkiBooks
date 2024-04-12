@@ -42,7 +42,7 @@
                                     OrderedElementsContainer.GetPosition(PairedElement) + 1 : 
                                     OrderedElementsContainer.Count();
         
-        BasicNote? createdBasicNote = await ApiService.PostBasicNote(newBasicNote);
+        BasicNote? createdBasicNote = (BasicNote?)await ApiService.PostArticleElement(newBasicNote);
         ArgumentNullException.ThrowIfNull(createdBasicNote);
 
         OrderedElementsContainer.Add(createdBasicNote);

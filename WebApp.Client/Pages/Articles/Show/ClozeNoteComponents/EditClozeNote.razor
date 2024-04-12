@@ -25,7 +25,7 @@
         ArgumentNullException.ThrowIfNull(updatedClozeNote.ArticleId);
         ArgumentNullException.ThrowIfNull(updatedClozeNote.OrdinalPosition);
 
-        ClozeNote? clozeNote = await ApiService.PutClozeNote(updatedClozeNote);
+        ClozeNote? clozeNote = (ClozeNote?)await ApiService.PutArticleElement(updatedClozeNote);
         ArgumentNullException.ThrowIfNull(clozeNote);
 
         Editing = false;

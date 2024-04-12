@@ -14,7 +14,7 @@ public abstract class RepositoryTestBase
             .UseSqlite(connection)
             .Options;
 
-        ApplicationDbContext dbContext = new ApplicationDbContext(options);
+        ApplicationDbContext dbContext = new(options);
         dbContext.Database.EnsureCreated();
 
         return dbContext;

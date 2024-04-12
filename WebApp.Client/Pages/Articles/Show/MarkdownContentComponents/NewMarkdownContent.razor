@@ -41,7 +41,7 @@
                                     OrderedElementsContainer.GetPosition(PairedElement) + 1 : 
                                     OrderedElementsContainer.Count();
 
-        MarkdownContent? createdContent = await ApiService.PostMarkdownContent(newContent);
+        MarkdownContent? createdContent = (MarkdownContent?)await ApiService.PostArticleElement(newContent);
         ArgumentNullException.ThrowIfNull(createdContent);
 
         OrderedElementsContainer.Add(createdContent);

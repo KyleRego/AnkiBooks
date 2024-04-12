@@ -56,19 +56,7 @@ else
 
     private async Task DeleteElement()
     {
-        // TODO: Pull this down into the ApiService
-        if (ArticleElement is BasicNote)
-        {
-            await ApiService.DeleteBasicNote(ArticleElement.Id);
-        }
-        else if (ArticleElement is ClozeNote)
-        {
-            await ApiService.DeleteClozeNote(ArticleElement.Id);
-        }
-        else if (ArticleElement is MarkdownContent)
-        {
-            await ApiService.DeleteMarkdownContent(ArticleElement.Id);
-        }
+        await ApiService.DeleteArticleElement(ArticleElement);
 
         OrderedElementsContainer.Remove(ArticleElement);
         await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
@@ -121,25 +109,7 @@ else
         int ordinalPositionBefore = droppedElement.OrdinalPosition;
         droppedElement.OrdinalPosition = ArticleElement.OrdinalPosition;
 
-        // TODO: Pull this down into the ApiService
-        if (droppedElement is BasicNote)
-        {
-            BasicNote bn = (BasicNote)droppedElement;
-
-            await ApiService.PutBasicNote(bn);
-        }
-        else if (droppedElement is ClozeNote)
-        {
-            ClozeNote cn = (ClozeNote)droppedElement;
-
-            await ApiService.PutClozeNote(cn);
-        }
-        else if (droppedElement is MarkdownContent)
-        {
-            MarkdownContent content = (MarkdownContent)droppedElement;
-
-            await ApiService.PutMarkdownContent(content);
-        }
+        await ApiService.PutArticleElement(droppedElement);
 
         OrderedElementsContainer.UpdatePosition(droppedElement);
         await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
