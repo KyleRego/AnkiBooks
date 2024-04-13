@@ -1,6 +1,6 @@
 input, textarea, select {
-    color: black;
-    background-color: rgb(197, 197, 197);
+    color: rgb(255, 255, 255);
+    background-color: #343434;
 }
 
 option {

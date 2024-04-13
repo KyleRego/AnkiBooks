@@ -1,12 +1,6 @@
 @using AnkiBooks.ApplicationCore.Entities
 
-<div class="mb-2 border-bottom-primary">
-    Preview:
-</div>
-
-<ShowMarkdownContent MarkdownText="@Content.Text" />
-
-<EditForm Model="Content" OnValidSubmit="SubmitForm" class="mt-2">
+<EditForm Model="Content" OnValidSubmit="SubmitForm" class="mt-2 border-primary">
     <DataAnnotationsValidator />
     <ValidationSummary />
     <div class="d-flex flex-column">
