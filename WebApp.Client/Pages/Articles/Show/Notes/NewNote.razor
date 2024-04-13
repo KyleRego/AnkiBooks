@@ -1,0 +1,46 @@
+@inherits ChangesOrderedElementsContainerBase
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Enums
+@using AnkiBooks.ApplicationCore.Interfaces
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.Notes.Basic
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.Notes.Cloze
+
+@if (dropDownItemSelected == null)
+{
+    <span>
+        <InputSelect @bind-Value="dropDownItemSelected" name="new-element">
+            <option value="" selected>New element</option>
+            <option value="@ElementType.BasicNote">Basic note</option>
+            <option value="@ElementType.ClozeNote">Cloze note</option>
+        </InputSelect>
+    </span>
+}
+else
+{
+    @switch (dropDownItemSelected)
+    {
+        case ElementType.BasicNote:
+            <NewBasicNote   @bind-OrderedElementsContainer:get="OrderedElementsContainer"
+                            @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
+                            @bind-DropDownItemSelected="dropDownItemSelected"
+                            OrdinalPosition="@OrdinalPosition" />
+            break;
+        case ElementType.ClozeNote:
+            <NewClozeNote   @bind-OrderedElementsContainer:get="OrderedElementsContainer"
+                            @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
+                            @bind-DropDownItemSelected="dropDownItemSelected"
+                            OrdinalPosition="@OrdinalPosition" />
+            break;
+
+        default:
+            break;
+
+    }
+}
+
+@code {
+    [Parameter]
+    public int OrdinalPosition { get; set; }
+
+    private ElementType? dropDownItemSelected = null;
+}

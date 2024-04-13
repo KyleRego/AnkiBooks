@@ -4,10 +4,10 @@
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Enums
 @using AnkiBooks.ApplicationCore.Interfaces
-@inject ILogger<NewBasicNote> Logger
+@inject ILogger<NewClozeNote> Logger
 @inject IAnkiBooksApiService ApiService
 
-<BasicNoteForm  StartingBasicNote="@StartingBasicNote()"
+<ClozeNoteForm  StartingClozeNote="@StartingClozeNote()"
                 EditingExisting="false"
                 ParentSubmitMethod="@SubmitForm" />
 
@@ -16,15 +16,16 @@
     public string ArticleId { get; set; } = null!;
 
     [Parameter]
-    public IArticleElement? PairedElement { get; set; }
+    public int OrdinalPosition { get; set; }
 
     [Parameter]
     public ElementType? DropDownItemSelected { get; set; }
 
     [Parameter]
+
     public EventCallback<ElementType?> DropDownItemSelectedChanged { get; set; }
 
-    private BasicNote StartingBasicNote()
+    private ClozeNote StartingClozeNote()
     {
         return new()
         {
@@ -32,20 +33,17 @@
         };
     }
 
-    private async Task SubmitForm(BasicNote newBasicNote)
+    private async Task SubmitForm(ClozeNote newClozeNote)
     {
-        ArgumentNullException.ThrowIfNull(newBasicNote.Front);
-        ArgumentNullException.ThrowIfNull(newBasicNote.Back);
-        ArgumentNullException.ThrowIfNull(newBasicNote.ArticleId);
+        ArgumentNullException.ThrowIfNull(newClozeNote.Text);
+        ArgumentNullException.ThrowIfNull(newClozeNote.ArticleId);
 
-        newBasicNote.OrdinalPosition = (PairedElement != null) ? 
-                                    OrderedElementsContainer.GetPosition(PairedElement) + 1 : 
-                                    OrderedElementsContainer.Count();
+        newClozeNote.OrdinalPosition = OrdinalPosition;
         
-        BasicNote? createdBasicNote = (BasicNote?)await ApiService.PostArticleElement(newBasicNote);
-        ArgumentNullException.ThrowIfNull(createdBasicNote);
+        ClozeNote? createdClozeNote = (ClozeNote?)await ApiService.PostArticleElement(newClozeNote);
+        ArgumentNullException.ThrowIfNull(createdClozeNote);
 
-        OrderedElementsContainer.Add(createdBasicNote);
+        OrderedElementsContainer.Add(createdClozeNote);
         await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
 
         DropDownItemSelected = null;

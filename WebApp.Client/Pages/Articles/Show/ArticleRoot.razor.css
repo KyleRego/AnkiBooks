@@ -6,3 +6,7 @@
 ::deep option {
     color: var(--ab-color-primary-dark);
 }
+
+::deep .highlight-dropzone {
+    background-color: rgb(72, 173, 255);
+}

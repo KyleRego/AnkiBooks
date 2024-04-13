@@ -59,4 +59,30 @@ public class OrderedElementsContainer(List<IArticleElement> orderedElements)
         element.OrdinalPosition = newPosition;
         Add(element);
     }
+
+    public List<IArticleContent> OrderedContents()
+    {
+        List<IArticleContent> result = [];
+        foreach (IArticleElement element in OrderedElements)
+        {
+            if (element is IArticleContent content)
+            {
+                result.Add(content);
+            }
+        }
+        return result;
+    }
+
+    public List<IArticleNote> OrderedNotes()
+    {
+        List<IArticleNote> result = [];
+        foreach (IArticleElement element in OrderedElements)
+        {
+            if (element is IArticleNote note)
+            {
+                result.Add(note);
+            }
+        }
+        return result;
+    }
 }

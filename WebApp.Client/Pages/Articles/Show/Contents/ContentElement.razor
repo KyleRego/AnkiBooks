@@ -1,0 +1,125 @@
+@using AnkiBooks.ApplicationCore.Entities
+@using System.Text.Json
+@using AnkiBooks.ApplicationCore.Interfaces
+@using AnkiBooks.WebApp.Client.Services
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.Contents.Markdown
+@inherits ChangesOrderedElementsContainerBase
+@inject IAnkiBooksApiService ApiService
+@inject ILogger<ContentElement> logger
+@inject DragStateService dragState
+
+@if (editing == false)
+{
+    <div class="d-flex flex-column">
+
+        <div class="min-w-0 flex-1
+                        @(nestedDragLevels != 0 ? "highlight-dropzone" : "")"
+                        
+                        draggable="true"
+                        @ondragstart="HandleDrag"
+                        @ondragend="HandleDragEnd"
+                        @ondragenter="HandleDragEnter" @ondragenter:preventDefault
+                        ondragover="event.preventDefault();"
+                        @ondragleave="HandleDragLeave" @ondragleave:preventDefault
+                        @ondrop="HandleDrop">
+            @switch (ArticleElement)
+            {
+                case MarkdownContent markdownContent:
+                    <ShowMarkdownContent MarkdownText="@markdownContent.Text" />
+                    break;
+            }
+        </div>
+
+        <div class="d-flex justify-content-around">
+            <span role="button" @onclick="BeginEditing">
+                Edit content
+            </span>
+
+            <span role="button" @onclick="DeleteElement">
+                Delete
+            </span>
+        </div>
+    </div>
+}
+else
+{
+    @switch (ArticleElement)
+    {
+        case MarkdownContent markdownContent:
+            <EditMarkdownContent StartingMarkdownContent="@markdownContent" @bind-Editing="@editing" />
+            break;
+    }
+}
+
+@code {
+    [Parameter]
+    public IArticleElement ArticleElement { get; set; } = null!;
+
+    private bool editing = false;
+
+    private void BeginEditing()
+    {
+        editing = true;
+    }
+
+    private async Task DeleteElement()
+    {
+        await ApiService.DeleteArticleElement(ArticleElement);
+
+        OrderedElementsContainer.Remove(ArticleElement);
+        await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
+    }
+
+    private void HandleDrag()
+    {
+        logger.LogInformation("drag");
+        dragState.DraggedElement = ArticleElement;
+    }
+
+    private void HandleDragEnd()
+    {
+        logger.LogInformation("dragend");
+        dragState.DraggedElement = null;
+    }
+
+    private int nestedDragLevels = 0;
+
+    private void HandleDragEnter()
+    {
+        IArticleElement? draggedElement = dragState.DraggedElement;
+
+        if (draggedElement == null) return;
+        if (draggedElement == ArticleElement) return;
+        logger.LogInformation("dragenter");
+        nestedDragLevels += 1;
+    }
+
+    private void HandleDragLeave()
+    {
+        IArticleElement? draggedElement = dragState.DraggedElement;
+
+        if (draggedElement == null) return;
+        if (draggedElement == ArticleElement) return;
+        logger.LogInformation("dragleave");
+
+        nestedDragLevels -= 1;
+    }
+
+    private async Task HandleDrop()
+    {
+        nestedDragLevels = 0;
+        logger.LogInformation("drop");
+        IArticleElement? droppedElement = dragState.DraggedElement;
+
+        if (droppedElement == null) return;
+        if (droppedElement == ArticleElement) return;
+
+        int ordinalPositionBefore = droppedElement.OrdinalPosition;
+        droppedElement.OrdinalPosition = ArticleElement.OrdinalPosition;
+
+        await ApiService.PutArticleElement(droppedElement);
+
+        OrderedElementsContainer.UpdatePosition(droppedElement);
+        await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
+    }
+}

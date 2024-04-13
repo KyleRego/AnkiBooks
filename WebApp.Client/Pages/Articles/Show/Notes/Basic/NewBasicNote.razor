@@ -4,10 +4,10 @@
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Enums
 @using AnkiBooks.ApplicationCore.Interfaces
-@inject ILogger<NewMarkdownContent> Logger
+@inject ILogger<NewBasicNote> Logger
 @inject IAnkiBooksApiService ApiService
 
-<MarkdownContentForm  StartingContent="@StartingContent()"
+<BasicNoteForm  StartingBasicNote="@StartingBasicNote()"
                 EditingExisting="false"
                 ParentSubmitMethod="@SubmitForm" />
 
@@ -16,16 +16,15 @@
     public string ArticleId { get; set; } = null!;
 
     [Parameter]
-    public IArticleElement? PairedElement { get; set; }
+    public int OrdinalPosition { get; set; }
 
     [Parameter]
     public ElementType? DropDownItemSelected { get; set; }
 
     [Parameter]
-
     public EventCallback<ElementType?> DropDownItemSelectedChanged { get; set; }
 
-    private MarkdownContent StartingContent()
+    private BasicNote StartingBasicNote()
     {
         return new()
         {
@@ -33,18 +32,18 @@
         };
     }
 
-    private async Task SubmitForm(MarkdownContent newContent)
+    private async Task SubmitForm(BasicNote newBasicNote)
     {
-        ArgumentNullException.ThrowIfNull(newContent.Text);
+        ArgumentNullException.ThrowIfNull(newBasicNote.Front);
+        ArgumentNullException.ThrowIfNull(newBasicNote.Back);
+        ArgumentNullException.ThrowIfNull(newBasicNote.ArticleId);
 
-        newContent.OrdinalPosition = (PairedElement != null) ? 
-                                    OrderedElementsContainer.GetPosition(PairedElement) + 1 : 
-                                    OrderedElementsContainer.Count();
+        newBasicNote.OrdinalPosition = OrdinalPosition;
 
-        MarkdownContent? createdContent = (MarkdownContent?)await ApiService.PostArticleElement(newContent);
-        ArgumentNullException.ThrowIfNull(createdContent);
+        BasicNote? createdBasicNote = (BasicNote?)await ApiService.PostArticleElement(newBasicNote);
+        ArgumentNullException.ThrowIfNull(createdBasicNote);
 
-        OrderedElementsContainer.Add(createdContent);
+        OrderedElementsContainer.Add(createdBasicNote);
         await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
 
         DropDownItemSelected = null;

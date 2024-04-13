@@ -1,0 +1,37 @@
+@inherits ChangesOrderedElementsContainerBase
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Enums
+@using AnkiBooks.ApplicationCore.Interfaces
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.Contents.Markdown
+
+@if (dropDownItemSelected == null)
+{
+    <span>
+    <InputSelect @bind-Value="dropDownItemSelected" name="new-element">
+        <option value="" selected>New element</option>
+        <option value="@ElementType.MarkdownContent">Markdown</option>
+    </InputSelect>
+    </span>
+}
+else
+{
+    @switch (dropDownItemSelected)
+    {
+        case ElementType.MarkdownContent:
+            <NewMarkdownContent @bind-OrderedElementsContainer:get="OrderedElementsContainer"
+                                @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
+                                @bind-DropDownItemSelected="dropDownItemSelected"
+                                OrdinalPosition="@OrdinalPosition" />
+            break;
+        default:
+            break;
+
+    }
+}
+
+@code {
+    [Parameter]
+    public int OrdinalPosition { get; set; }
+
+    private ElementType? dropDownItemSelected = null;
+}

@@ -3,8 +3,10 @@
 @using AnkiBooks.ApplicationCore
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Interfaces
-@using AnkiBooks.WebApp.Client.Pages.Articles.Show.BasicNoteComponents
-@using AnkiBooks.WebApp.Client.Pages.Articles.Show.ClozeNoteComponents
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.Contents
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.Notes
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.Notes.Basic
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.Notes.Cloze
 @layout ArticlesLayout
 @inject IConfiguration Config
 @inject IAnkiBooksApiService ApiService
@@ -22,9 +24,8 @@
 }
 else
 {
-    List<IArticleElement> elements = ElementsContainer.OrderedElements;
-    List<IArticleElement> contents = elements.Where(el => el is IArticleContent).ToList();
-    List<IArticleElement> notes = elements.Where(el => el is IArticleNote).ToList();
+    List<IArticleContent> contents = ElementsContainer.OrderedContents();
+    List<IArticleNote> notes = ElementsContainer.OrderedNotes();
 
     <PageTitle>@article.Title</PageTitle>
 
@@ -32,19 +33,41 @@ else
         <CascadingValue Value="@article.Id" Name="ArticleId">
             <div class="d-flex">
                 <div class="flex-grow-2 min-w-2-3 mr-1">
-                    @for (int i = 0; i < contents.Count; i++)
+                    @if (contents.Count == 0)
                     {
-                        IArticleElement content = contents[i];
+                        <NewContent OrdinalPosition="@(0)"
+                                    @bind-OrderedElementsContainer="@ElementsContainer"/>
+                    }
+                    else
+                    {
+                        @for (int i = 0; i < contents.Count; i++)
+                        {
+                            IArticleElement content = contents[i];
 
-                        <Element @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@content" />
+                            <ContentElement @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@content" />
+
+                            <NewContent OrdinalPosition="@(content.OrdinalPosition + 1)"
+                                    @bind-OrderedElementsContainer="@ElementsContainer"/>
+                        }
                     }
                 </div>
                 <div class="flex-grow-1 min-w-1-3">
-                    @for (int i = 0; i < notes.Count; i++)
+                    @if (notes.Count == 0)
                     {
-                        IArticleElement note = notes[i];
+                        <NewNote OrdinalPosition="@contents.Count"
+                                 @bind-OrderedElementsContainer="@ElementsContainer" />
+                    }
+                    else
+                    {
+                        @for (int i = 0; i < notes.Count; i++)
+                        {
+                            IArticleElement note = notes[i];
 
-                        <Element @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@note" />
+                            <NoteElement @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@note" />
+
+                            <NewNote OrdinalPosition="@(note.OrdinalPosition + 1)"
+                                    @bind-OrderedElementsContainer="@ElementsContainer"/>
+                        }
                     }
                 </div>
             </div>
