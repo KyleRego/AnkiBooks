@@ -14,14 +14,7 @@
 {
     <div class="d-flex align-items-stretch">
 
-        <div class="flex-grow-0 d-flex flex-column justify-content-around p-1">
-            <div class="w-6 h-6" role="button">
-                <Drag />
-            </div>
-        </div>
-
         <div class="min-w-0 flex-grow-1
-                    d-flex flex-column justify-content-center
                     @(nestedDragLevels != 0 ? "highlight-dropzone" : "")"
 
                     draggable="true"
@@ -43,12 +36,11 @@
             }
         </div>
 
-        <div class="flex-grow-0 d-flex flex-column justify-content-around p-1">
+        <div class="flex-grow-0 d-flex flex-column justify-content-around align-items-center p-1">
             <div class="w-5 h-5" role="button" @onclick="BeginEditing">
                 <Edit />
             </div>
-
-            <div class="w-5 h-5 mt-2" role="button" @onclick="DeleteElement">
+            <div class="w-5 h-5 mt-4" role="button" @onclick="DeleteElement">
                 <Delete />
             </div>
         </div>
