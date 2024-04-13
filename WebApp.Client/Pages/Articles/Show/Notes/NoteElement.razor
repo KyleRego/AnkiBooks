@@ -4,6 +4,7 @@
 @using AnkiBooks.WebApp.Client.Services
 @using AnkiBooks.WebApp.Client.Pages.Articles.Show.Notes.Basic
 @using AnkiBooks.WebApp.Client.Pages.Articles.Show.Notes.Cloze
+@using AnkiBooks.WebApp.Client.Shared.Heroicons
 @inherits ChangesOrderedElementsContainerBase
 @inject IAnkiBooksApiService ApiService
 @inject ILogger<NoteElement> logger
@@ -12,6 +13,12 @@
 @if (editing == false)
 {
     <div class="d-flex align-items-stretch">
+
+        <div class="flex-grow-0 d-flex flex-column justify-content-around p-1">
+            <div class="w-6 h-6" role="button">
+                <Drag />
+            </div>
+        </div>
 
         <div class="min-w-0 flex-grow-1
                     d-flex flex-column justify-content-center
@@ -37,12 +44,12 @@
         </div>
 
         <div class="flex-grow-0 d-flex flex-column justify-content-around p-1">
-            <div role="button" @onclick="BeginEditing">
-                Edit
+            <div class="w-5 h-5" role="button" @onclick="BeginEditing">
+                <Edit />
             </div>
 
-            <div role="button" @onclick="DeleteElement">
-                Delete
+            <div class="w-5 h-5 mt-2" role="button" @onclick="DeleteElement">
+                <Delete />
             </div>
         </div>
     </div>
