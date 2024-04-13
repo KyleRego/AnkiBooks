@@ -11,9 +11,12 @@
 
 @if (editing == false)
 {
-    <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-stretch">
 
-        <div class="@(nestedDragLevels != 0 ? "highlight-dropzone" : "")"
+        <div class="min-w-0 flex-grow-1
+                    d-flex flex-column justify-content-center
+                    @(nestedDragLevels != 0 ? "highlight-dropzone" : "")"
+
                     draggable="true"
                     @ondragstart="HandleDrag"
                     @ondragend="HandleDragEnd"
@@ -33,14 +36,14 @@
             }
         </div>
 
-        <div class="d-flex flex-column justify-content-between p-1">
-            <span role="button" @onclick="BeginEditing">
+        <div class="flex-grow-0 d-flex flex-column justify-content-around p-1">
+            <div role="button" @onclick="BeginEditing">
                 Edit
-            </span>
+            </div>
 
-            <span role="button" @onclick="DeleteElement">
+            <div role="button" @onclick="DeleteElement">
                 Delete
-            </span>
+            </div>
         </div>
     </div>
 }

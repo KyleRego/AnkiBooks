@@ -1,23 +1,24 @@
 @using AnkiBooks.ApplicationCore.Entities
-<div class="px-2 pt-2 pb-1 border-primary">
-    <div class="mb-2">Preview:</div>
 
-    <ShowMarkdownContent MarkdownText="@Content.Text" />
-
-    <EditForm Model="Content" OnValidSubmit="SubmitForm" class="mt-2">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <div class="d-flex flex-column">
-            <InputTextArea @bind-Value="Content.Text" id="Text" class="p-2 mb-1" rows="20" />
-
-            <div class="d-flex justify-content-center">
-                <button type="submit">
-                    @SubmitButtonText()
-                </button>
-            </div>
-        </div>
-    </EditForm>
+<div class="mb-2 border-bottom-primary">
+    Preview:
 </div>
+
+<ShowMarkdownContent MarkdownText="@Content.Text" />
+
+<EditForm Model="Content" OnValidSubmit="SubmitForm" class="mt-2">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="d-flex flex-column">
+        <InputTextArea @bind-Value="Content.Text" id="Text" class="p-2 mb-1" rows="20" />
+
+        <div class="d-flex justify-content-center">
+            <button type="submit">
+                @SubmitButtonText()
+            </button>
+        </div>
+    </div>
+</EditForm>
 
 @code {
     [Parameter]

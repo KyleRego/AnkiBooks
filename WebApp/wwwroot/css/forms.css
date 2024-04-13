@@ -1,3 +1,8 @@
-input, textarea, select, option {
+input, textarea, select {
+    color: black;
+    background-color: rgb(197, 197, 197);
+}
+
+option {
     color: black;
 }

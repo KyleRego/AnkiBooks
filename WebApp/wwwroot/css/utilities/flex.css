@@ -10,6 +10,10 @@
     flex: 0.8;
 }
 
+.flex-grow-0 {
+    flex: 0;
+}
+
 .flex-grow-1 {
     flex: 1;
 }
@@ -36,6 +40,10 @@
 
 .justify-content-center {
     justify-content: center;
+}
+
+.justify-content-end {
+    justify-content: end;
 }
 
 .align-items-stretch {

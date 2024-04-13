@@ -7,13 +7,13 @@
 
 @if (dropDownItemSelected == null)
 {
-    <span>
+    <div class="my-1 d-flex justify-content-end">
         <InputSelect @bind-Value="dropDownItemSelected" name="new-element">
-            <option value="" selected>New element</option>
+            <option value="" selected>New note</option>
             <option value="@ElementType.BasicNote">Basic note</option>
             <option value="@ElementType.ClozeNote">Cloze note</option>
         </InputSelect>
-    </span>
+    </div>
 }
 else
 {
