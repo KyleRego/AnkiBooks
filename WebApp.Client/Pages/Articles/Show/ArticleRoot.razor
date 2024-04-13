@@ -1,0 +1,95 @@
+@page "/articles/{id}"
+@using System.Text.Json
+@using AnkiBooks.ApplicationCore
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Interfaces
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.BasicNoteComponents
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.ClozeNoteComponents
+@layout ArticlesLayout
+@inject IConfiguration Config
+@inject IAnkiBooksApiService ApiService
+@inject ILogger<ArticleRoot> Logger
+@inject PersistentComponentState ApplicationState
+@implements IDisposable
+
+@rendermode InteractiveWebAssembly
+
+@if (article == null || ElementsContainer == null)
+{
+    <PageTitle>Loading article...</PageTitle>
+
+    <p>Loading article...</p>
+}
+else
+{
+    List<IArticleElement> elements = ElementsContainer.OrderedElements;
+    List<IArticleElement> contents = elements.Where(el => el is IArticleContent).ToList();
+    List<IArticleElement> notes = elements.Where(el => el is IArticleNote).ToList();
+
+    <PageTitle>@article.Title</PageTitle>
+
+    <article>
+        <CascadingValue Value="@article.Id" Name="ArticleId">
+            <div class="d-flex">
+                <div class="flex-grow-2 min-w-2-3 mr-1">
+                    @for (int i = 0; i < contents.Count; i++)
+                    {
+                        IArticleElement content = contents[i];
+
+                        <Element @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@content" />
+                    }
+                </div>
+                <div class="flex-grow-1 min-w-1-3">
+                    @for (int i = 0; i < notes.Count; i++)
+                    {
+                        IArticleElement note = notes[i];
+
+                        <Element @bind-OrderedElementsContainer="@ElementsContainer" ArticleElement="@note" />
+                    }
+                </div>
+            </div>
+        </CascadingValue>
+    </article>
+}
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+
+    private OrderedElementsContainer? ElementsContainer;
+
+    private Article? article;
+
+    private PersistingComponentStateSubscription persistingSubscription;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        ArgumentNullException.ThrowIfNull(Id);
+
+        persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
+
+        if (!ApplicationState.TryTakeFromJson<Article>(nameof(article), out var restored))
+        {
+            article = await ApiService.GetArticle(Id);
+        }
+        else
+        {
+            article = restored;
+        }
+
+        ArgumentNullException.ThrowIfNull(article);
+        ElementsContainer = new(article.OrderedElements());
+    }
+
+    private Task PersistData()
+    {
+        ApplicationState.PersistAsJson(nameof(article), article);
+
+        return Task.CompletedTask;
+    }
+
+    void IDisposable.Dispose()
+    {
+        persistingSubscription.Dispose();
+    }
+}
