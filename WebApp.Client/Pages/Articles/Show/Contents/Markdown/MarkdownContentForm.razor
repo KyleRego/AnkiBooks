@@ -1,18 +1,39 @@
 @using AnkiBooks.ApplicationCore.Entities
+@inject IJSRuntime JS
 
-<EditForm Model="Content" OnValidSubmit="SubmitForm" class="px-2 pt-2 pb-1 border-primary">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div class="d-flex flex-column">
-        <InputTextArea @bind-Value="Content.Text" id="Text" class="p-2 mb-1" rows="20" />
+<div class="px-2 pt-2 pb-1 border-primary" id="@ContainerDomId">
 
-        <div class="d-flex justify-content-center">
-            <button type="submit">
-                @SubmitButtonText()
-            </button>
+    <div class="d-flex justify-content-between">
+        <div>
+            <div role="button" class="markdown-bold-button">
+                Bold
+            </div>
+            <div role="button" class="markdown-italic-button">
+                Italic
+            </div>
+            <div role="button" class="markdown-strike-button">
+                Strike
+            </div>
+            <div role="button" class="markdown-link-button">
+                Link
+            </div>
         </div>
     </div>
-</EditForm>
+
+    <EditForm Model="Content" OnValidSubmit="SubmitForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="d-flex flex-column">
+            <InputTextArea  @bind-Value="Content.Text" class="p-2 mb-1" rows="20" />
+
+            <div class="d-flex justify-content-center">
+                <button type="submit">
+                    @SubmitButtonText()
+                </button>
+            </div>
+        </div>
+    </EditForm>
+</div>
 
 @code {
     [Parameter]
@@ -41,4 +62,19 @@
 
     [SupplyParameterFromForm]
     public MarkdownContent Content { get; set; } = null!;
+
+    private IJSObjectReference? module;
+    private string? result;
+
+    private string ContainerDomId = Guid.NewGuid().ToString();
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            module = await JS.InvokeAsync<IJSObjectReference>("import",
+                "./Pages/Articles/Show/Contents/Markdown/MarkdownContentForm.razor.js");
+            await module.InvokeVoidAsync("setupEventHandlers", ContainerDomId);
+        }
+    }
 }
