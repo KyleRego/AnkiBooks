@@ -1,38 +1,62 @@
 @using AnkiBooks.ApplicationCore.Entities
 @inject IJSRuntime JS
 
-<div class="px-2 pt-2 pb-1 border-primary" id="@ContainerDomId">
+<div class="border-primary" id="@ContainerDomId">
 
-    <div class="d-flex justify-content-between">
-        <div>
-            <div role="button" class="markdown-bold-button">
+    <div class="border-bottom-primary p-2 d-flex justify-content-between">
+        <div class="d-flex justify-content-start">
+            <div role="button" class="markdown-bold-button mr-2" title="Bold">
                 Bold
             </div>
-            <div role="button" class="markdown-italic-button">
+            <div role="button" class="markdown-italic-button mr-2" title="Italic">
                 Italic
             </div>
-            <div role="button" class="markdown-strike-button">
+            <div role="button" class="markdown-strike-button" title="Strikethrough">
                 Strike
             </div>
+        </div>
+        <div class="d-flex justify-content-start">
+            <div role="button" class="markdown-heading-1-button mr-2" title="H1">
+                H1
+            </div>
+            <div role="button" class="markdown-heading-2-button mr-2" title="H2">
+                H2
+            </div>
+            <div role="button" class="markdown-heading-3-button mr-2" title="H3">
+                H3
+            </div>
+            <div role="button" class="markdown-heading-4-button mr-2" title="H4">
+                H4
+            </div>
+            <div role="button" class="markdown-heading-5-button mr-2" title="H5">
+                H5
+            </div>
+            <div role="button" class="markdown-heading-6-button mr-2" title="H6">
+                H6
+            </div>
+        </div>
+        <div>
             <div role="button" class="markdown-link-button">
                 Link
             </div>
         </div>
     </div>
 
-    <EditForm Model="Content" OnValidSubmit="SubmitForm">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <div class="d-flex flex-column">
-            <InputTextArea  @bind-Value="Content.Text" class="p-2 mb-1" rows="20" />
+    <div class="px-2 pt-2 pb-1">
+        <EditForm Model="Content" OnValidSubmit="SubmitForm">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="d-flex flex-column">
+                <InputTextArea  @bind-Value="Content.Text" class="p-2 mb-1" rows="20" />
 
-            <div class="d-flex justify-content-center">
-                <button type="submit">
-                    @SubmitButtonText()
-                </button>
+                <div class="d-flex justify-content-center">
+                    <button type="submit">
+                        @SubmitButtonText()
+                    </button>
+                </div>
             </div>
-        </div>
-    </EditForm>
+        </EditForm>
+    </div>
 </div>
 
 @code {

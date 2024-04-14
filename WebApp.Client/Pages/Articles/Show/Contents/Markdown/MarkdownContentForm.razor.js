@@ -4,24 +4,69 @@ export function setupEventHandlers(domContainerId) {
     const boldButton = containingElement.querySelector(".markdown-bold-button");
     const italicButton = containingElement.querySelector(".markdown-italic-button");
     const strikeButton = containingElement.querySelector(".markdown-strike-button");
+
+    for (let i = 1; i <= 6; i++)
+    {
+        const headingSelector = `.markdown-heading-${i}-button`;
+        containingElement.querySelector(headingSelector).addEventListener("click", () => {
+            insertAroundSelection(`${"#".repeat(i)} `, "");
+        })
+    }
+
     const linkButton = containingElement.querySelector(".markdown-link-button");
-    console.log(textArea);
+
+    textArea.addEventListener("keydown", (event) => {
+        if (event.ctrlKey && event.key != "Control") {
+            event.preventDefault();
+
+            const keyName = event.key;
+
+            switch (keyName)
+            {
+                case "b":
+                    insertBold();
+                    break;
+                case "i":
+                    insertItalic();
+                    break;
+                case "s":
+                    insertStrikethrough();
+                    break;
+            }
+        }
+    })
 
     boldButton.addEventListener("click", () => {
-        insertAroundSelection("**", "**");
+        insertBold();
     });
 
     italicButton.addEventListener("click", () => {
-        insertAroundSelection("*", "*");
+        insertItalic();
     })
 
     strikeButton.addEventListener("click", () => {
-        insertAroundSelection("~~", "~~");
+        insertStrikethrough();
     });
 
     linkButton.addEventListener("click", () => {
-        insertAroundSelection("[", "]()");
+        insertLink();
     })
+
+    function insertBold() {
+        insertAroundSelection("**", "**");
+    }
+
+    function insertItalic() {
+        insertAroundSelection("*", "*");
+    }
+
+    function insertStrikethrough() {
+        insertAroundSelection("~~", "~~")
+    }
+
+    function insertLink() {
+        insertAroundSelection("[", "]()");
+    }
 
     function insertAroundSelection(before, after) {
         const text = textArea.value;
