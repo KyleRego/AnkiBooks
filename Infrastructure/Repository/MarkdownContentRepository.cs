@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace AnkiBooks.Infrastructure.Repository;
 
 public class MarkdownContentRepository(ApplicationDbContext dbContext)
-            : ArticleElementRepositoryBase(dbContext), IMarkdownContentRepository
+            : ArticleContentRepository(dbContext), IMarkdownContentRepository
 {
     public async Task<List<MarkdownContent>> GetMarkdownContentsAsync()
     {

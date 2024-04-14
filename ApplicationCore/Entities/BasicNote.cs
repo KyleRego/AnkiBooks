@@ -2,7 +2,7 @@ using AnkiBooks.ApplicationCore.Interfaces;
 
 namespace AnkiBooks.ApplicationCore.Entities;
 
-public class BasicNote : ArticleElementBase, IArticleNote
+public class BasicNote : ArticleNoteBase, IArticleNote
 {
     [Required]
     public string? Front { get; set; }

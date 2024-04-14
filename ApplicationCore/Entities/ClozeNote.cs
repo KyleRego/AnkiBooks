@@ -2,7 +2,7 @@ using AnkiBooks.ApplicationCore.Interfaces;
 
 namespace AnkiBooks.ApplicationCore.Entities;
 
-public class ClozeNote : ArticleElementBase, IArticleNote
+public class ClozeNote : ArticleNoteBase, IArticleNote
 {
     [Required]
     public string? Text { get; set; }

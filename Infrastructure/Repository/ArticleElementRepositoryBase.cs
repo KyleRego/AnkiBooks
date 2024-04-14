@@ -1,19 +1,37 @@
 using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.ApplicationCore.Exceptions;
+using AnkiBooks.ApplicationCore.Interfaces;
 using AnkiBooks.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace AnkiBooks.Infrastructure.Repository;
 
-public abstract class ArticleElementRepositoryBase(ApplicationDbContext dbContext)
+public abstract class ArticleElementRepositoryBase<T>(ApplicationDbContext dbContext) where T : IArticleElement
 {
     protected readonly ApplicationDbContext _dbContext = dbContext;
 
-    public async Task<ArticleElementBase> InsertArticleElementAsync(ArticleElementBase newElement)
+    protected abstract int ArticleElementsCount(string articleId);
+
+    protected abstract void AddElementToDbContext(T element);
+
+    protected abstract void RemoveElementFromDbContext(T element);
+
+    protected abstract List<T> ElementsToShiftUpOnInsert(string articleId, int ordinalPosition);
+
+    protected abstract List<T> ElementsToShiftDownOnDelete(string articleId, int ordinalPosition);
+
+    protected abstract List<T> ElementsToShiftUpOnMove(T element, int origHighOrdPos, int newLowOrdPos);
+
+    protected abstract List<T> ElementsToShiftDownOnMove(T element, int origLowOrdPos, int newHighOrdPos);
+
+    protected abstract int CurrentOrdinalPositionOfUpdatedElement(T element);
+
+    protected abstract T CurrentVersionOfChangedElement(T element);
+
+    public async Task<T> InsertArticleElementAsync(T newElement)
     {
-        int articleElementsCount = _dbContext.ArticleElements.Count(
-            e => e.ArticleId == newElement.ArticleId
-        );
+        ArgumentNullException.ThrowIfNull(newElement.ArticleId);
+        int articleElementsCount = ArticleElementsCount(newElement.ArticleId);
 
         if (newElement.OrdinalPosition > articleElementsCount || newElement.OrdinalPosition < 0)
         {
@@ -21,41 +39,41 @@ public abstract class ArticleElementRepositoryBase(ApplicationDbContext dbContex
         }
         else
         {
-            List<ArticleElementBase> elementsToShift = _dbContext.ArticleElements.Where(
-                e => e.ArticleId == newElement.ArticleId && e.OrdinalPosition >= newElement.OrdinalPosition
-            ).ToList();
+            List<T> elementsToShift = ElementsToShiftUpOnInsert(newElement.ArticleId, newElement.OrdinalPosition);
 
-            foreach (ArticleElementBase e in elementsToShift) { e.OrdinalPosition += 1; }
+            foreach (T e in elementsToShift) { e.OrdinalPosition += 1; }
         }
 
-        _dbContext.ArticleElements.Add(newElement);
+        AddElementToDbContext(newElement);
 
         await _dbContext.SaveChangesAsync();
 
         return newElement;
     }
 
-    public async Task DeleteArticleElementAsync(ArticleElementBase elementToDelete)
+    public async Task DeleteArticleElementAsync(T elementToDelete)
     {
+        ArgumentNullException.ThrowIfNull(elementToDelete.ArticleId);
+
         int deletedOrdinalPosition = elementToDelete.OrdinalPosition;
 
-        _dbContext.ArticleElements.Remove(elementToDelete);
+        RemoveElementFromDbContext(elementToDelete);
 
-        List<ArticleElementBase> elementsToShift = _dbContext.ArticleElements.Where(
-            e => e.ArticleId == elementToDelete.ArticleId && e.OrdinalPosition > deletedOrdinalPosition
-        ).ToList();
+        List<T> elementsToShift = ElementsToShiftDownOnDelete(elementToDelete.ArticleId, deletedOrdinalPosition);
 
-        foreach (ArticleElementBase e in elementsToShift) { e.OrdinalPosition -= 1; }
+        foreach (T e in elementsToShift) { e.OrdinalPosition -= 1; }
 
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<ArticleElementBase> UpdateArticleElementAsync(ArticleElementBase changedElement)
+    public async Task<T> UpdateArticleElementAsync(T changedElement)
     {
-        int originalOrdinalPosition = _dbContext.ArticleElements.AsNoTracking().Single(e => e.Id == changedElement.Id).OrdinalPosition;
-        int newOrdinalPosition = changedElement.OrdinalPosition;
+        ArgumentNullException.ThrowIfNull(changedElement.ArticleId);
 
-        if (newOrdinalPosition == originalOrdinalPosition)
+        int origOrdPos = CurrentOrdinalPositionOfUpdatedElement(changedElement);
+        int newOrdPos = changedElement.OrdinalPosition;
+
+        if (newOrdPos == origOrdPos)
         {
             _dbContext.Entry(changedElement).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
@@ -63,42 +81,30 @@ public abstract class ArticleElementRepositoryBase(ApplicationDbContext dbContex
         }
         else
         {
-            int articleElementsCount = _dbContext.ArticleElements.AsNoTracking().Count(
-                e => e.ArticleId == changedElement.ArticleId
-            );
+            int articleElementsCount = ArticleElementsCount(changedElement.ArticleId);
 
-            if (newOrdinalPosition >= articleElementsCount || changedElement.OrdinalPosition < 0)
+            if (newOrdPos >= articleElementsCount || changedElement.OrdinalPosition < 0)
             {
                 throw new OrdinalPositionException();
             }
             else
             {
-                ArticleElementBase existingElement = _dbContext.ArticleElements.First(bn => bn.Id == changedElement.Id);
+                T existingElement = CurrentVersionOfChangedElement(changedElement);
                 existingElement.OrdinalPosition = articleElementsCount;
 
-                if (newOrdinalPosition > originalOrdinalPosition)
+                if (newOrdPos > origOrdPos)
                 {
-                    List<ArticleElementBase> elementsToShiftDown = _dbContext.ArticleElements.Where(
-                        e => e.ArticleId == changedElement.ArticleId 
-                        && e.OrdinalPosition > originalOrdinalPosition
-                        && e.OrdinalPosition <= newOrdinalPosition
-                        && e.Id != changedElement.Id
-                    ).ToList();
+                    List<T> elementsToShiftDown = ElementsToShiftDownOnMove(changedElement, origOrdPos, newOrdPos);
 
-                    foreach (ArticleElementBase e in elementsToShiftDown) { e.OrdinalPosition -= 1; }
+                    foreach (T e in elementsToShiftDown) { e.OrdinalPosition -= 1; }
 
                     await _dbContext.SaveChangesAsync();
                 }
                 else
                 {
-                    List<ArticleElementBase> elementsToShiftUp = _dbContext.ArticleElements.Where(
-                        e => e.ArticleId == changedElement.ArticleId
-                        && e.OrdinalPosition < originalOrdinalPosition
-                        && e.OrdinalPosition >= newOrdinalPosition
-                        && e.Id != changedElement.Id
-                    ).ToList();
+                    List<T> elementsToShiftUp = ElementsToShiftUpOnMove(changedElement, origOrdPos, newOrdPos);
 
-                    foreach (ArticleElementBase e in elementsToShiftUp) { e.OrdinalPosition += 1; }
+                    foreach (T e in elementsToShiftUp) { e.OrdinalPosition += 1; }
 
                     await _dbContext.SaveChangesAsync();
                 }

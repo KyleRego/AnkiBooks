@@ -8,7 +8,7 @@ public static class ArticleValidator
     public static bool CorrectElementsCountAndOrdinalPositions(
         ApplicationDbContext dbContext, Article article, int expectedCount)
     {
-        List<ArticleElementBase> elements = dbContext.ArticleElements.Where(
+        List<ArticleNoteBase> elements = dbContext.ArticleNotes.Where(
             e => e.ArticleId == article.Id
         ).OrderBy(e => e.OrdinalPosition).ToList();
 
@@ -18,7 +18,7 @@ public static class ArticleValidator
         }
 
         List<int> ordinalPositions = [];
-        foreach (ArticleElementBase element in elements)
+        foreach (ArticleNoteBase element in elements)
         {
             ordinalPositions.Add(element.OrdinalPosition);
         }

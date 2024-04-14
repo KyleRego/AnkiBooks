@@ -14,12 +14,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin,
         ApplicationRoleClaim, ApplicationUserToken>(options)
 {
-    public DbSet<Link> Links { get; set; } = null!;
     public DbSet<Article> Articles { get; set; } = null!;
-    public DbSet<ArticleElementBase> ArticleElements { get; set; } = null!;
+    public DbSet<ArticleContentBase> ArticleContents { get; set; } = null!;
+    public DbSet<ArticleNoteBase> ArticleNotes { get; set; } = null!;
     public DbSet<BasicNote> BasicNotes { get; set; } = null!;
     public DbSet<ClozeNote> ClozeNotes { get; set; } = null!;
-    public DbSet<Concept> Concepts { get; set; } = null!;
     public DbSet<MarkdownContent> MarkdownContents { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -27,7 +26,13 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         base.OnModelCreating(builder);
 
         builder
-            .Entity<ArticleElementBase>()
+            .Entity<ArticleContentBase>()
+            .ToTable(b => b.HasCheckConstraint(
+                "CK_ArticleElementOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0"
+            ));
+
+        builder
+            .Entity<ArticleNoteBase>()
             .ToTable(b => b.HasCheckConstraint(
                 "CK_ArticleElementOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0"
             ));

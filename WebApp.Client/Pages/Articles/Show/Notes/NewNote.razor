@@ -10,8 +10,8 @@
     <div class="my-1 d-flex justify-content-center">
         <InputSelect @bind-Value="dropDownItemSelected" name="new-element">
             <option value="" selected>New note</option>
-            <option value="@ElementType.BasicNote">Basic note</option>
-            <option value="@ElementType.ClozeNote">Cloze note</option>
+            <option value="@NoteType.BasicNote">Basic note</option>
+            <option value="@NoteType.ClozeNote">Cloze note</option>
         </InputSelect>
     </div>
 }
@@ -19,13 +19,13 @@ else
 {
     @switch (dropDownItemSelected)
     {
-        case ElementType.BasicNote:
+        case NoteType.BasicNote:
             <NewBasicNote   @bind-OrderedElementsContainer:get="OrderedElementsContainer"
                             @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
                             @bind-DropDownItemSelected="dropDownItemSelected"
                             OrdinalPosition="@OrdinalPosition" />
             break;
-        case ElementType.ClozeNote:
+        case NoteType.ClozeNote:
             <NewClozeNote   @bind-OrderedElementsContainer:get="OrderedElementsContainer"
                             @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
                             @bind-DropDownItemSelected="dropDownItemSelected"
@@ -42,5 +42,5 @@ else
     [Parameter]
     public int OrdinalPosition { get; set; }
 
-    private ElementType? dropDownItemSelected = null;
+    private NoteType? dropDownItemSelected = null;
 }

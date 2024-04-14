@@ -19,11 +19,10 @@
     public int OrdinalPosition { get; set; }
 
     [Parameter]
-    public ElementType? DropDownItemSelected { get; set; }
+    public NoteType? DropDownItemSelected { get; set; }
 
     [Parameter]
-
-    public EventCallback<ElementType?> DropDownItemSelectedChanged { get; set; }
+    public EventCallback<NoteType?> DropDownItemSelectedChanged { get; set; }
 
     private ClozeNote StartingClozeNote()
     {

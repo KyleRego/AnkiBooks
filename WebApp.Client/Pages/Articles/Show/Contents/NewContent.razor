@@ -9,7 +9,7 @@
     <div class="my-2 d-flex justify-content-center">
         <InputSelect @bind-Value="dropDownItemSelected" name="new-element">
             <option value="" selected>New content</option>
-            <option value="@ElementType.MarkdownContent">Markdown</option>
+            <option value="@ContentType.MarkdownContent">Markdown</option>
         </InputSelect>
     </div>
 }
@@ -17,7 +17,7 @@ else
 {
     @switch (dropDownItemSelected)
     {
-        case ElementType.MarkdownContent:
+        case ContentType.MarkdownContent:
             <NewMarkdownContent @bind-OrderedElementsContainer:get="OrderedElementsContainer"
                                 @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
                                 @bind-DropDownItemSelected="dropDownItemSelected"
@@ -33,5 +33,5 @@ else
     [Parameter]
     public int OrdinalPosition { get; set; }
 
-    private ElementType? dropDownItemSelected = null;
+    private ContentType? dropDownItemSelected = null;
 }

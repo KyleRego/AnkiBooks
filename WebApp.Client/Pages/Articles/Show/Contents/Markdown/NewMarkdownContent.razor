@@ -19,11 +19,11 @@
     public int OrdinalPosition { get; set; }
 
     [Parameter]
-    public ElementType? DropDownItemSelected { get; set; }
+    public ContentType? DropDownItemSelected { get; set; }
 
     [Parameter]
 
-    public EventCallback<ElementType?> DropDownItemSelectedChanged { get; set; }
+    public EventCallback<ContentType?> DropDownItemSelectedChanged { get; set; }
 
     private MarkdownContent StartingContent()
     {

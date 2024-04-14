@@ -1,8 +1,6 @@
 namespace AnkiBooks.ApplicationCore.Enums;
 
-public enum ElementType
+public enum ContentType
 {
-    BasicNote,
-    ClozeNote,
     MarkdownContent
 }

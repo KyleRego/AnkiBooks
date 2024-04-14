@@ -25,10 +25,10 @@
     public IArticleElement? PairedElement { get; set; }
 
     [Parameter]
-    public ElementType? DropDownItemSelected { get; set; }
+    public ContentType? DropDownItemSelected { get; set; }
 
     [Parameter]
-    public EventCallback<ElementType?> DropDownItemSelectedChanged { get; set; }
+    public EventCallback<ContentType?> DropDownItemSelectedChanged { get; set; }
 
     private async Task SubmitForm(MarkdownContent newContent)
     {

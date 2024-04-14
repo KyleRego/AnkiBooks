@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace AnkiBooks.Infrastructure.Repository;
 
 public class BasicNoteRepository(ApplicationDbContext dbContext)
-                            : ArticleElementRepositoryBase(dbContext), IBasicNoteRepository
+                            : ArticleNoteRepository(dbContext), IBasicNoteRepository
 {
     public async Task<List<BasicNote>> GetBasicNotesAsync()
     {

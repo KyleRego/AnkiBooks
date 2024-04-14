@@ -1,12 +1,11 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using AnkiBooks.ApplicationCore.Interfaces;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AnkiBooks.ApplicationCore.Entities;
 
 [Index(nameof(ArticleId), nameof(OrdinalPosition), IsUnique=true)]
-public abstract class ArticleElementBase : EntityBase, IArticleElement
+public abstract class ArticleContentBase : EntityBase, IArticleContent
 {
     [Required]
     public string? ArticleId { get; set; }

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace AnkiBooks.Infrastructure.Repository;
 
 public class ClozeNoteRepository(ApplicationDbContext dbContext)
-            : ArticleElementRepositoryBase(dbContext), IClozeNoteRepository
+            : ArticleNoteRepository(dbContext), IClozeNoteRepository
 {
     public async Task<List<ClozeNote>> GetClozeNotesAsync()
     {
