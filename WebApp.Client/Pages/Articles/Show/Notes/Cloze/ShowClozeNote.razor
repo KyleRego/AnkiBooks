@@ -1,14 +1,22 @@
-<div    class="text-center p-2 border-primary h-100
+<div    class="text-center p-4 h-100
                 d-flex flex-column justify-content-center"
         role="button"
         tabindex="0" @onclick="FlipCard" @onkeypress="FlipCardFromKeyboardEnter">
 
-    <span>@ClozeNoteText</span>
+    <span>
+        @ClozeNoteText
 
-    @if (showAnswer == true)
+        @if (showAnswer == true)
         {
-            <span>hello world</span>
+            <span> this is a cloze note</span>
         }
+        else
+        {
+            <span> [...]</span>
+        }
+    </span>
+
+    
 </div>
 
 @code {

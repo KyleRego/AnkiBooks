@@ -12,10 +12,16 @@
 
 @if (editing == false)
 {
-    <div class="d-flex align-items-stretch">
-
-        <div class="min-w-0 flex-grow-1
-                    @(nestedDragLevels != 0 ? "highlight-dropzone" : "")"
+    <div class="border-primary">
+        <div class="d-flex justify-content-between p-1">
+            <div class="w-5 h-5" role="button" @onclick="BeginEditing">
+                <Edit />
+            </div>
+            <div class="w-5 h-5" role="button" @onclick="DeleteElement">
+                <Delete />
+            </div>
+        </div>
+        <div class="border-top-primary @(nestedDragLevels != 0 ? "highlight-dropzone" : "")"
 
                     draggable="true"
                     @ondragstart="HandleDrag"
@@ -34,15 +40,6 @@
                     <ShowClozeNote ClozeNoteText="@clozeNote.Text" />
                     break;
             }
-        </div>
-
-        <div class="flex-grow-0 d-flex flex-column justify-content-around align-items-center p-1">
-            <div class="w-5 h-5" role="button" @onclick="BeginEditing">
-                <Edit />
-            </div>
-            <div class="w-5 h-5 mt-4" role="button" @onclick="DeleteElement">
-                <Delete />
-            </div>
         </div>
     </div>
 }
