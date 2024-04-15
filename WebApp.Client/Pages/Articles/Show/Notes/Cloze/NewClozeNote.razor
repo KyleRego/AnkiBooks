@@ -12,8 +12,8 @@
                 ParentSubmitMethod="@SubmitForm" />
 
 @code {
-    [CascadingParameter(Name="ArticleId")]
-    public string ArticleId { get; set; } = null!;
+    [CascadingParameter(Name="SectionId")]
+    public string SectionId { get; set; } = null!;
 
     [Parameter]
     public int OrdinalPosition { get; set; }
@@ -28,18 +28,18 @@
     {
         return new()
         {
-            ArticleId = ArticleId
+            SectionId = SectionId
         };
     }
 
     private async Task SubmitForm(ClozeNote newClozeNote)
     {
         ArgumentNullException.ThrowIfNull(newClozeNote.Text);
-        ArgumentNullException.ThrowIfNull(newClozeNote.ArticleId);
+        ArgumentNullException.ThrowIfNull(newClozeNote.SectionId);
 
         newClozeNote.OrdinalPosition = OrdinalPosition;
         
-        ClozeNote? createdClozeNote = (ClozeNote?)await ApiService.PostArticleElement(newClozeNote);
+        ClozeNote? createdClozeNote = (ClozeNote?)await ApiService.PostNote(newClozeNote);
         ArgumentNullException.ThrowIfNull(createdClozeNote);
 
         OrderedElementsContainer.Add(createdClozeNote);

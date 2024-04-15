@@ -11,9 +11,13 @@ public interface IAnkiBooksApiService
     public Task<Article[]?> GetArticles();
     public Task<Article?> PostArticle(Article articleData);
 
-    public Task<IArticleElement?> PostArticleElement(IArticleElement element);
-    public Task<IArticleElement?> PutArticleElement(IArticleElement element);
-    public Task DeleteArticleElement(IArticleElement element);
+    public Task<INote?> PostNote(INote element);
+    public Task<INote?> PutNote(INote element);
+    public Task DeleteNote(INote element);
+
+    public Task<Section?> PostSection(Section section);
+    public Task<Section?> PutSection(Section section);
+    public Task DeleteSection(string sectionId);
 }
 
 public class AnkiBooksApiService(HttpClient httpClient) : IAnkiBooksApiService
@@ -43,7 +47,7 @@ public class AnkiBooksApiService(HttpClient httpClient) : IAnkiBooksApiService
         return JsonSerializer.Deserialize<Article>(responseBody, _jsonOptions);
     }
 
-    public async Task<IArticleElement?> PostArticleElement(IArticleElement element)
+    public async Task<INote?> PostNote(INote element)
     {
         if (element is BasicNote basicNote)
         {
@@ -53,17 +57,13 @@ public class AnkiBooksApiService(HttpClient httpClient) : IAnkiBooksApiService
         {
             return await PostClozeNote(clozeNote);
         }
-        else if (element is MarkdownContent content)
-        {
-            return await PostMarkdownContent(content);
-        }
         else
         {
             throw new ApplicationException();
         }
     }
 
-    public async Task<IArticleElement?> PutArticleElement(IArticleElement element)
+    public async Task<INote?> PutNote(INote element)
     {
         if (element is BasicNote basicNote)
         {
@@ -73,17 +73,13 @@ public class AnkiBooksApiService(HttpClient httpClient) : IAnkiBooksApiService
         {
             return await PutClozeNote(clozeNote);
         }
-        else if (element is MarkdownContent content)
-        {
-            return await PutMarkdownContent(content);
-        }
         else
         {
             throw new ApplicationException();
         }
     }
 
-    public async Task DeleteArticleElement(IArticleElement element)
+    public async Task DeleteNote(INote element)
     {
         if (element is BasicNote basicNote)
         {
@@ -92,10 +88,6 @@ public class AnkiBooksApiService(HttpClient httpClient) : IAnkiBooksApiService
         else if (element is ClozeNote clozeNote)
         {
             await DeleteClozeNote(clozeNote.Id);
-        }
-        else if (element is MarkdownContent content)
-        {
-            await DeleteMarkdownContent(content.Id);
         }
         else
         {
@@ -147,26 +139,26 @@ public class AnkiBooksApiService(HttpClient httpClient) : IAnkiBooksApiService
         response.EnsureSuccessStatusCode();
     }
 
-    private async Task<MarkdownContent?> PostMarkdownContent(MarkdownContent markdownContent)
+    public async Task<Section?> PostSection(Section section)
     {
-        HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/MarkdownContents", markdownContent);
+        HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/Sections", section);
         response.EnsureSuccessStatusCode();
         string responseBody = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<MarkdownContent>(responseBody, _jsonOptions);        
+        return JsonSerializer.Deserialize<Section>(responseBody, _jsonOptions);        
     }
 
-    private async Task<MarkdownContent?> PutMarkdownContent(MarkdownContent markdownContent)
+    public async Task<Section?> PutSection(Section section)
     {
-        HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"api/MarkdownContents/{markdownContent.Id}",
-                                                                        markdownContent);
+        HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"api/Sections/{section.Id}",
+                                                                        section);
         response.EnsureSuccessStatusCode();
         string responseBody = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<MarkdownContent>(responseBody, _jsonOptions);        
+        return JsonSerializer.Deserialize<Section>(responseBody, _jsonOptions);        
     }
 
-    private async Task DeleteMarkdownContent(string contentId)
+    public async Task DeleteSection(string contentId)
     {
-        HttpResponseMessage response = await _httpClient.DeleteAsync($"api/MarkdownContents/{contentId}");
+        HttpResponseMessage response = await _httpClient.DeleteAsync($"api/Sections/{contentId}");
         response.EnsureSuccessStatusCode();
     }
 }

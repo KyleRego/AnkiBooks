@@ -18,6 +18,11 @@ public class PostClozeNoteTests(TestServerFactory<Program> factory) : IClassFixt
         ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         Article article = new("Test article");
+        Section section = new("Test section")
+        {
+            Text = "hello world"
+        };
+        article.Sections.Add(section);
         dbContext.Articles.Add(article);
         await dbContext.SaveChangesAsync();
 
@@ -25,7 +30,7 @@ public class PostClozeNoteTests(TestServerFactory<Program> factory) : IClassFixt
         {
             Text = "Content",
             OrdinalPosition = 0,
-            ArticleId = article.Id
+            SectionId = section.Id
         };
 
         HttpClient client = _factory.CreateClient();
@@ -42,6 +47,11 @@ public class PostClozeNoteTests(TestServerFactory<Program> factory) : IClassFixt
         ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         Article article = new("Test article");
+        Section section = new("Test section")
+        {
+            Text = "hello world"
+        };
+        article.Sections.Add(section);
         List<BasicNote> existingBasicNotes =
         [
             new() { Front = "Front", Back = "Back", OrdinalPosition = 0 },
@@ -53,8 +63,8 @@ public class PostClozeNoteTests(TestServerFactory<Program> factory) : IClassFixt
             new() { Text = "Content", OrdinalPosition = 3 }
         ];
         
-        article.BasicNotes = existingBasicNotes;
-        article.ClozeNotes = existingClozeNotes;
+        section.BasicNotes = existingBasicNotes;
+        section.ClozeNotes = existingClozeNotes;
         dbContext.Articles.Add(article);
         await dbContext.SaveChangesAsync();
 
@@ -62,7 +72,7 @@ public class PostClozeNoteTests(TestServerFactory<Program> factory) : IClassFixt
         {
             Text = "Content",
             OrdinalPosition = 1,
-            ArticleId = article.Id
+            SectionId = section.Id
         };
 
         HttpClient client = _factory.CreateClient();

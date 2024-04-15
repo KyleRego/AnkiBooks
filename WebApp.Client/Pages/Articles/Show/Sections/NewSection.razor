@@ -1,0 +1,46 @@
+@using System.ComponentModel.DataAnnotations
+@using System.Text.Json
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Enums
+@using AnkiBooks.ApplicationCore.Interfaces
+@inject ILogger<NewSection> Logger
+@inject IAnkiBooksApiService ApiService
+
+<SectionForm  StartingSection="@StartingSection()"
+                EditingExisting="false"
+                ParentSubmitMethod="@SubmitForm" />
+
+@code {
+    [CascadingParameter(Name="ArticleId")]
+    public string ArticleId { get; set; } = null!;
+
+    [Parameter]
+    public int OrdinalPosition { get; set; }
+
+    [Parameter]
+    public OrderedElementsContainer OrderedSectionsContainer { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<OrderedElementsContainer?> OrderedSectionsContainerChanged { get; set; }
+
+    private Section StartingSection()
+    {
+        return new("")
+        {
+            ArticleId = ArticleId
+        };
+    }
+
+    private async Task SubmitForm(Section newSection)
+    {
+        ArgumentNullException.ThrowIfNull(newSection.Text);
+
+        newSection.OrdinalPosition = OrdinalPosition;
+
+        Section? createdContent = (Section?)await ApiService.PostSection(newSection);
+        ArgumentNullException.ThrowIfNull(createdContent);
+
+        OrderedSectionsContainer.Add(createdContent);
+        await OrderedSectionsContainerChanged.InvokeAsync(OrderedSectionsContainer);
+    }
+}

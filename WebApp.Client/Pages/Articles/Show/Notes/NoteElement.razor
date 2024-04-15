@@ -30,7 +30,7 @@
                     ondragover="event.preventDefault();"
                     @ondragleave="HandleDragLeave" @ondragleave:preventDefault
                     @ondrop="HandleDrop">
-            @switch (ArticleElement)
+            @switch (Note)
             {
                 case BasicNote basicNote:
                     <ShowBasicNote BasicNoteFront="@basicNote.Front" BasicNoteBack="@basicNote.Back" />
@@ -45,7 +45,7 @@
 }
 else
 {
-    @switch (ArticleElement)
+    @switch (Note)
     {
         case BasicNote basicNote:
             <EditBasicNote StartingBasicNote="@basicNote" @bind-Editing="@editing" />
@@ -59,7 +59,7 @@ else
 
 @code {
     [Parameter]
-    public IArticleElement ArticleElement { get; set; } = null!;
+    public INote Note { get; set; } = null!;
 
     private bool editing = false;
 
@@ -70,16 +70,16 @@ else
 
     private async Task DeleteElement()
     {
-        await ApiService.DeleteArticleElement(ArticleElement);
+        await ApiService.DeleteNote(Note);
 
-        OrderedElementsContainer.Remove(ArticleElement);
+        OrderedElementsContainer.Remove(Note);
         await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
     }
 
     protected void HandleDrag()
     {
         logger.LogInformation("drag");
-        dragState.DraggedElement = ArticleElement;
+        dragState.DraggedElement = Note;
     }
 
     protected void HandleDragEnd()
@@ -92,20 +92,20 @@ else
 
     protected void HandleDragEnter()
     {
-        IArticleElement? draggedElement = dragState.DraggedElement;
+        IOrderedElement? draggedElement = dragState.DraggedElement;
 
         if (draggedElement == null) return;
-        if (draggedElement == ArticleElement) return;
+        if (draggedElement == Note) return;
         logger.LogInformation("dragenter");
         nestedDragLevels += 1;
     }
 
     protected void HandleDragLeave()
     {
-        IArticleElement? draggedElement = dragState.DraggedElement;
+        IOrderedElement? draggedElement = dragState.DraggedElement;
 
         if (draggedElement == null) return;
-        if (draggedElement == ArticleElement) return;
+        if (draggedElement == Note) return;
         logger.LogInformation("dragleave");
 
         nestedDragLevels -= 1;
@@ -115,14 +115,15 @@ else
     {
         nestedDragLevels = 0;
         logger.LogInformation("drop");
-        IArticleElement? droppedElement = dragState.DraggedElement;
+        IOrderedElement? droppedElement = dragState.DraggedElement;
 
         if (droppedElement == null) return;
-        if (droppedElement == ArticleElement) return;
+        if (droppedElement == Note) return;
 
-        droppedElement.OrdinalPosition = ArticleElement.OrdinalPosition;
+        droppedElement.OrdinalPosition = Note.OrdinalPosition;
 
-        await ApiService.PutArticleElement(droppedElement);
+        // TODO: Fix drag and drop stuff
+        @* await ApiService.PutNote(droppedElement); *@
 
         OrderedElementsContainer.UpdatePosition(droppedElement);
         await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);

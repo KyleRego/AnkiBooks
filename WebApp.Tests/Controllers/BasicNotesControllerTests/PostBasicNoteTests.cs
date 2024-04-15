@@ -18,6 +18,11 @@ public class PostBasicNoteTests(TestServerFactory<Program> factory) : IClassFixt
         ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         Article article = new("Test article");
+        Section section = new("Test section")
+        {
+            Text = "Hello world"
+        };
+        article.Sections.Add(section);
         dbContext.Articles.Add(article);
         await dbContext.SaveChangesAsync();
 
@@ -26,7 +31,7 @@ public class PostBasicNoteTests(TestServerFactory<Program> factory) : IClassFixt
             Front = "Front",
             Back = "Back",
             OrdinalPosition = 0,
-            ArticleId = article.Id
+            SectionId = section.Id
         };
 
         HttpClient client = _factory.CreateClient();
@@ -43,6 +48,11 @@ public class PostBasicNoteTests(TestServerFactory<Program> factory) : IClassFixt
         ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         Article article = new("Test article");
+        Section section = new("Test section")
+        {
+            Text = "hello world"
+        };
+        article.Sections.Add(section);
         List<BasicNote> existingBasicNotes =
         [
             new() { Front = "Front", Back = "Back", OrdinalPosition = 0 },
@@ -50,7 +60,7 @@ public class PostBasicNoteTests(TestServerFactory<Program> factory) : IClassFixt
             new() { Front = "Front", Back = "Back", OrdinalPosition = 2 }
         ];
         
-        article.BasicNotes = existingBasicNotes;
+        section.BasicNotes = existingBasicNotes;
         dbContext.Articles.Add(article);
         await dbContext.SaveChangesAsync();
 
@@ -59,7 +69,7 @@ public class PostBasicNoteTests(TestServerFactory<Program> factory) : IClassFixt
             Front = "Front",
             Back = "Back",
             OrdinalPosition = 1,
-            ArticleId = article.Id
+            SectionId = section.Id
         };
 
         HttpClient client = _factory.CreateClient();
@@ -76,6 +86,11 @@ public class PostBasicNoteTests(TestServerFactory<Program> factory) : IClassFixt
         ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         Article article = new("Test article");
+        Section section = new("Test section")
+        {
+            Text = "hello world"
+        };
+        article.Sections.Add(section);
         List<BasicNote> existingBasicNotes =
         [
             new() { Front = "Front", Back = "Back", OrdinalPosition = 0 },
@@ -88,8 +103,8 @@ public class PostBasicNoteTests(TestServerFactory<Program> factory) : IClassFixt
             new() { Text = "b", OrdinalPosition = 3}
         ];
         
-        article.BasicNotes = existingBasicNotes;
-        article.ClozeNotes = existingClozeNotes;
+        section.BasicNotes = existingBasicNotes;
+        section.ClozeNotes = existingClozeNotes;
         dbContext.Articles.Add(article);
         await dbContext.SaveChangesAsync();
 
@@ -98,7 +113,7 @@ public class PostBasicNoteTests(TestServerFactory<Program> factory) : IClassFixt
             Front = "Front",
             Back = "Back",
             OrdinalPosition = 2,
-            ArticleId = article.Id
+            SectionId = section.Id
         };
 
         HttpClient client = _factory.CreateClient();

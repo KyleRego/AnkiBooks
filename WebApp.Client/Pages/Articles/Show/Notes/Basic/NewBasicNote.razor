@@ -12,8 +12,8 @@
                 ParentSubmitMethod="@SubmitForm" />
 
 @code {
-    [CascadingParameter(Name="ArticleId")]
-    public string ArticleId { get; set; } = null!;
+    [CascadingParameter(Name="SectionId")]
+    public string SectionId { get; set; } = null!;
 
     [Parameter]
     public int OrdinalPosition { get; set; }
@@ -28,7 +28,7 @@
     {
         return new()
         {
-            ArticleId = ArticleId
+            SectionId = SectionId
         };
     }
 
@@ -36,11 +36,11 @@
     {
         ArgumentNullException.ThrowIfNull(newBasicNote.Front);
         ArgumentNullException.ThrowIfNull(newBasicNote.Back);
-        ArgumentNullException.ThrowIfNull(newBasicNote.ArticleId);
+        ArgumentNullException.ThrowIfNull(newBasicNote.SectionId);
 
         newBasicNote.OrdinalPosition = OrdinalPosition;
 
-        BasicNote? createdBasicNote = (BasicNote?)await ApiService.PostArticleElement(newBasicNote);
+        BasicNote? createdBasicNote = (BasicNote?)await ApiService.PostNote(newBasicNote);
         ArgumentNullException.ThrowIfNull(createdBasicNote);
 
         OrderedElementsContainer.Add(createdBasicNote);

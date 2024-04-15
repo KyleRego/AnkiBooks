@@ -1,0 +1,60 @@
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Interfaces
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.Notes
+
+<CascadingValue Value="@Section.Id" Name="SectionId">
+@if (OrderedNotesContainer != null)
+{
+    List<IOrderedElement> notes = OrderedNotesContainer.OrderedElements;
+
+    <div class="d-flex">
+
+        <div class="flex-grow-2 min-w-2-3 mr-4">
+            <SectionContent Section="@Section"
+                            @bind-OrderedSectionsContainer:get="OrderedSectionsContainer"
+                            @bind-OrderedSectionsContainer:set="OrderedSectionsContainerChanged" />
+        </div>
+
+        <div class="flex-grow-1 min-w-1-3">
+            @if (notes.Count == 0)
+            {
+                <NewNote OrdinalPosition="@(0)" @bind-OrderedElementsContainer="@OrderedNotesContainer" />
+            }
+            else
+            {
+                @for (int i = 0; i < notes.Count; i++)
+                {
+                    IOrderedElement note = notes[i];
+
+                    if (note is INote note1)
+                    {
+                        <NoteElement @bind-OrderedElementsContainer="@OrderedNotesContainer" Note="@note1" />
+
+                        <NewNote OrdinalPosition="@(note.OrdinalPosition + 1)"
+                                @bind-OrderedElementsContainer="@OrderedNotesContainer"/>
+                    }
+                }
+            }
+        </div>
+    </div>
+}
+</CascadingValue>
+
+@code {
+    [Parameter]
+    public Section Section { get; set; } = null!;
+
+    [Parameter]
+    public OrderedElementsContainer OrderedSectionsContainer { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<OrderedElementsContainer> OrderedSectionsContainerChanged { get; set; }
+
+    [Parameter]
+    public OrderedElementsContainer? OrderedNotesContainer { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        OrderedNotesContainer = new(Section.OrderedElements());
+    }
+}

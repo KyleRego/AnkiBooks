@@ -8,7 +8,7 @@
 
 @code {
     [Parameter]
-    public string MarkdownText { get; set; } = null!;
+    public string Text { get; set; } = null!;
 
     private MarkdownPipeline pipeline = new MarkdownPipelineBuilder()
                                             .UseAdvancedExtensions()
@@ -17,7 +17,7 @@
 
     public MarkupString RenderIt()
     {
-        string html = Markdown.ToHtml(MarkdownText ?? "", pipeline);
+        string html = Markdown.ToHtml(Text ?? "", pipeline);
 
         string sanitizedHtml = sanitizer.Sanitize(html);
 
