@@ -15,24 +15,23 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         ApplicationRoleClaim, ApplicationUserToken>(options)
 {
     public DbSet<Article> Articles { get; set; } = null!;
-    public DbSet<ArticleContentBase> ArticleContents { get; set; } = null!;
-    public DbSet<ArticleNoteBase> ArticleNotes { get; set; } = null!;
+    public DbSet<NoteBase> Notes { get; set; } = null!;
     public DbSet<BasicNote> BasicNotes { get; set; } = null!;
     public DbSet<ClozeNote> ClozeNotes { get; set; } = null!;
-    public DbSet<MarkdownContent> MarkdownContents { get; set; } = null!;
+    public DbSet<Section> Sections { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
         builder
-            .Entity<ArticleContentBase>()
+            .Entity<Section>()
             .ToTable(b => b.HasCheckConstraint(
                 "CK_ArticleElementOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0"
             ));
 
         builder
-            .Entity<ArticleNoteBase>()
+            .Entity<NoteBase>()
             .ToTable(b => b.HasCheckConstraint(
                 "CK_ArticleElementOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0"
             ));

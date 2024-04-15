@@ -3,13 +3,13 @@ using AnkiBooks.Infrastructure.Data;
 
 namespace AnkiBooks.Infrastructure.Tests.Helpers;
 
-public static class ArticleValidator
+public static class SectionValidator
 {
     public static bool CorrectElementsCountAndOrdinalPositions(
-        ApplicationDbContext dbContext, Article article, int expectedCount)
+        ApplicationDbContext dbContext, Section section, int expectedCount)
     {
-        List<ArticleNoteBase> elements = dbContext.ArticleNotes.Where(
-            e => e.ArticleId == article.Id
+        List<NoteBase> elements = dbContext.Notes.Where(
+            e => e.SectionId == section.Id
         ).OrderBy(e => e.OrdinalPosition).ToList();
 
         if (elements.Count != expectedCount)
@@ -18,7 +18,7 @@ public static class ArticleValidator
         }
 
         List<int> ordinalPositions = [];
-        foreach (ArticleNoteBase element in elements)
+        foreach (NoteBase element in elements)
         {
             ordinalPositions.Add(element.OrdinalPosition);
         }

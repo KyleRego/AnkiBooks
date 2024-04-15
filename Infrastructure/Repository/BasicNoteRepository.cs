@@ -7,8 +7,18 @@ using Microsoft.EntityFrameworkCore;
 namespace AnkiBooks.Infrastructure.Repository;
 
 public class BasicNoteRepository(ApplicationDbContext dbContext)
-                            : ArticleNoteRepository(dbContext), IBasicNoteRepository
+                            : NoteRepositoryBase<BasicNote>(dbContext), IBasicNoteRepository
 {
+    protected override void AddElementToDbContext(BasicNote element)
+    {
+        _dbContext.BasicNotes.Add(element);
+    }
+
+    protected override void RemoveElementFromDbContext(BasicNote element)
+    {
+        _dbContext.BasicNotes.Remove(element);
+    }
+
     public async Task<List<BasicNote>> GetBasicNotesAsync()
     {
         return await _dbContext.BasicNotes.ToListAsync();
@@ -19,8 +29,8 @@ public class BasicNoteRepository(ApplicationDbContext dbContext)
         return await _dbContext.BasicNotes.FirstOrDefaultAsync(bn => bn.Id == basicNoteId);
     }
 
-    public async Task<bool> BasicNoteExists(string BasicNoteId)
+    public async Task<bool> BasicNoteExists(string basicNoteId)
     {
-        return await _dbContext.BasicNotes.AnyAsync(bn => bn.Id == BasicNoteId);
+        return await _dbContext.BasicNotes.AnyAsync(bn => bn.Id == basicNoteId);
     }
 }

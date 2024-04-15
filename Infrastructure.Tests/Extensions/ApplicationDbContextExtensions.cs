@@ -5,21 +5,27 @@ namespace AnkiBooks.Infrastructure.Tests.Extensions;
 
 public static class ApplicationDbContextExtensions
 {
-    public static async Task<Article> CreateArticleWithOneBasicNote(this ApplicationDbContext dbContext)
+    public static async Task<Section> CreateSectionWithOneBasicNote(this ApplicationDbContext dbContext)
     {
-        Article article = new("Test article with one basic note")
+        Article article = new("Test article");
+        dbContext.Articles.Add(article);
+        Section section = new("Test section with one basic note")
         {
+            Text = "Hello world",
             BasicNotes = [ new() { Front = "Basic note front", Back = "Basic note back" } ]
         };
-        dbContext.Articles.Add(article);
+        article.Sections.Add(section);
         await dbContext.SaveChangesAsync();
-        return article;
+        return section;
     }
 
-    public static async Task<Article> CreateArticleWithTenAlternatingBasicAndClozeNotes(this ApplicationDbContext dbContext)
+    public static async Task<Section> CreateSectionWithTenAlternatingBasicAndClozeNotes(this ApplicationDbContext dbContext)
     {
-        Article article = new("Test article")
+        Article article = new("Test article");
+        dbContext.Articles.Add(article);
+        Section section = new("Test section")
         {
+            Text = "Hello world",
             BasicNotes =
             [
                 new() { Front = "basic0", Back = "b", OrdinalPosition = 0 },
@@ -38,9 +44,9 @@ public static class ApplicationDbContextExtensions
             ]
         };
 
-        dbContext.Articles.Add(article);
+        article.Sections.Add(section);
         await dbContext.SaveChangesAsync();
 
-        return article;
+        return section;
     }
 }

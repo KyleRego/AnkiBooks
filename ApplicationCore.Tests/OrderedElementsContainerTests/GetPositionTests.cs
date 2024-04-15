@@ -15,7 +15,7 @@ public class GetPositionTests
         ClozeNote n3 = new() { Text="b", OrdinalPosition=2 };
         BasicNote n4 = new() { Front="a", Back="b", OrdinalPosition=3 };
         BasicNote n5 = new() { Front="a", Back="b", OrdinalPosition=4 };
-        Article article = new("Test article")
+        Section section = new("Test section")
         {
             BasicNotes =
             [
@@ -30,7 +30,7 @@ public class GetPositionTests
             ]
         };
 
-        OrderedElementsContainer container = new(article.OrderedElements());
+        OrderedElementsContainer container = new(section.OrderedElements());
 
         Assert.Equal(0, container.GetPosition(n1));
         Assert.Equal(1, container.GetPosition(n2));

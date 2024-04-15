@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AnkiBooks.Infrastructure.Tests.RepositoryTests.BasicNoteRepositoryTests;
 
-public class InsertArticleElementAsyncTests : RepositoryTestBase
+public class InsertOrderedElementAsyncTests : RepositoryTestBase
 {
     [Fact]
     public async Task InvalidBasicNoteOrdinalPositionsThrowAnException()
     {
         using var dbContext = InMemoryDbContext();
         dbContext.Database.EnsureCreated();
-        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
+        Section section = await dbContext.CreateSectionWithTenAlternatingBasicAndClozeNotes();
 
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
@@ -27,10 +27,10 @@ public class InsertArticleElementAsyncTests : RepositoryTestBase
                 Front = "World2",
                 Back = "Hello2",
                 OrdinalPosition = -1,
-                ArticleId = article.Id
+                SectionId = section.Id
             };
         
-            await basicNoteRepository.InsertArticleElementAsync(basicNote);
+            await basicNoteRepository.InsertOrderedElementAsync(basicNote);
         });
 
         await Assert.ThrowsAsync<OrdinalPositionException>(async () => {
@@ -39,10 +39,10 @@ public class InsertArticleElementAsyncTests : RepositoryTestBase
                 Front = "World2",
                 Back = "Hello2",
                 OrdinalPosition = 11,
-                ArticleId = article.Id
+                SectionId = section.Id
             };
 
-            await basicNoteRepository.InsertArticleElementAsync(basicNote);
+            await basicNoteRepository.InsertOrderedElementAsync(basicNote);
         });
     }
 
@@ -51,24 +51,24 @@ public class InsertArticleElementAsyncTests : RepositoryTestBase
     {
         using var dbContext = InMemoryDbContext();
 
-        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
+        Section section = await dbContext.CreateSectionWithTenAlternatingBasicAndClozeNotes();
 
         BasicNote basicNote = new()
         {
             Front = "World2",
             Back = "Hello2",
             OrdinalPosition = 0,
-            ArticleId = article.Id
+            SectionId = section.Id
         };
         
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
-        await basicNoteRepository.InsertArticleElementAsync(basicNote);
+        await basicNoteRepository.InsertOrderedElementAsync(basicNote);
 
         BasicNote updatedBasicNote = dbContext.BasicNotes.First(bn => bn.Id == basicNote.Id);
         Assert.Equal("World2", updatedBasicNote.Front);
         Assert.Equal("Hello2", updatedBasicNote.Back);
-        Assert.True(ArticleValidator.CorrectElementsCountAndOrdinalPositions(dbContext, article, 11));
+        Assert.True(SectionValidator.CorrectElementsCountAndOrdinalPositions(dbContext, section, 11));
     }
 
     [Fact]
@@ -76,24 +76,24 @@ public class InsertArticleElementAsyncTests : RepositoryTestBase
     {
         using var dbContext = InMemoryDbContext();
 
-        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
+        Section section = await dbContext.CreateSectionWithTenAlternatingBasicAndClozeNotes();
 
         BasicNote basicNote = new()
         {
             Front = "World2",
             Back = "Hello2",
             OrdinalPosition = 10,
-            ArticleId = article.Id
+            SectionId = section.Id
         };
         
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
-        await basicNoteRepository.InsertArticleElementAsync(basicNote);
+        await basicNoteRepository.InsertOrderedElementAsync(basicNote);
 
         BasicNote updatedBasicNote = dbContext.BasicNotes.First(bn => bn.Id == basicNote.Id);
         Assert.Equal("World2", updatedBasicNote.Front);
         Assert.Equal("Hello2", updatedBasicNote.Back);
-        Assert.True(ArticleValidator.CorrectElementsCountAndOrdinalPositions(dbContext, article, 11));
+        Assert.True(SectionValidator.CorrectElementsCountAndOrdinalPositions(dbContext, section, 11));
     }
 
     [Fact]
@@ -101,23 +101,23 @@ public class InsertArticleElementAsyncTests : RepositoryTestBase
     {
         using var dbContext = InMemoryDbContext();
 
-        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
+        Section section = await dbContext.CreateSectionWithTenAlternatingBasicAndClozeNotes();
 
         BasicNote basicNote = new()
         {
             Front = "World2",
             Back = "Hello2",
             OrdinalPosition = 3,
-            ArticleId = article.Id
+            SectionId = section.Id
         };
 
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
-        await basicNoteRepository.InsertArticleElementAsync(basicNote);
+        await basicNoteRepository.InsertOrderedElementAsync(basicNote);
 
         BasicNote updatedBasicNote = dbContext.BasicNotes.First(bn => bn.Id == basicNote.Id);
         Assert.Equal("World2", updatedBasicNote.Front);
         Assert.Equal("Hello2", updatedBasicNote.Back);
-        Assert.True(ArticleValidator.CorrectElementsCountAndOrdinalPositions(dbContext, article, 11));
+        Assert.True(SectionValidator.CorrectElementsCountAndOrdinalPositions(dbContext, section, 11));
     }
 }

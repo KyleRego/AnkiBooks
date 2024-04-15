@@ -10,28 +10,28 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AnkiBooks.Infrastructure.Tests.RepositoryTests.ClozeNoteRepositoryTests;
 
-public class InsertArticleElementAsyncTests : RepositoryTestBase
+public class InsertOrderedElementAsyncTests : RepositoryTestBase
 {
     [Fact]
     public async Task ClozeNoteIsInsertedInMiddleOfArticleWithNotes()
     {
         using var dbContext = InMemoryDbContext();
 
-        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
+        Section section = await dbContext.CreateSectionWithTenAlternatingBasicAndClozeNotes();
 
         ClozeNote clozeNote = new()
         {
             Text = "World2Cloze",
             OrdinalPosition = 6,
-            ArticleId = article.Id
+            SectionId = section.Id
         };
 
         ClozeNoteRepository clozeNoteRepository = new(dbContext);
 
-        await clozeNoteRepository.InsertArticleElementAsync(clozeNote);
+        await clozeNoteRepository.InsertOrderedElementAsync(clozeNote);
 
         ClozeNote updatedClozeNote = dbContext.ClozeNotes.First(cn => cn.Id == clozeNote.Id);
         Assert.Equal("World2Cloze", updatedClozeNote.Text);
-        Assert.True(ArticleValidator.CorrectElementsCountAndOrdinalPositions(dbContext, article, 11));
+        Assert.True(SectionValidator.CorrectElementsCountAndOrdinalPositions(dbContext, section, 11));
     }
 }

@@ -7,50 +7,54 @@ namespace AnkiBooks.WebApp.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class MarkdownContentsController(IMarkdownContentRepository markdownContentRepository,
-                                        ILogger<MarkdownContentsController> logger) : ControllerBase
+public class SectionsController(ISectionRepository sectionRepository) : ControllerBase
 {
-    private readonly IMarkdownContentRepository _markdownContentRepository = markdownContentRepository;
-    private readonly ILogger<MarkdownContentsController> _logger = logger;
+    private readonly ISectionRepository _sectionRepository = sectionRepository;
 
-    // GET: api/MarkdownContents
+    // GET: api/Sections
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MarkdownContent>>> GetMarkdownContents()
+    public async Task<ActionResult<IEnumerable<Section>>> GetSections()
     {
-        return await _markdownContentRepository.GetMarkdownContentsAsync();
+        return await _sectionRepository.GetSectionsAsync();
     }
 
-    // GET: api/MarkdownContents/5
+    // GET: api/Sections/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<MarkdownContent>> GetMarkdownContent(string id)
+    public async Task<ActionResult<Section>> GetSection(string id)
     {
-        MarkdownContent? markdownContent = await _markdownContentRepository.GetMarkdownContentAsync(id);
+        Section? section = await _sectionRepository.GetSectionAsync(id);
 
-        if (markdownContent == null)
+        if (section == null)
         {
             return NotFound();
         }
 
-        return markdownContent;
+        return section;
     }
 
-    // PUT: api/MarkdownContents/5
+    // PUT: api/Sections/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
-    public async Task<ActionResult<MarkdownContent>> PutMarkdownContent(string id, MarkdownContent markdownContent)
+    public async Task<ActionResult<Section>> PutSection(string id, Section section)
     {
-        if (id != markdownContent.Id)
+        if (id != section.Id)
         {
             return BadRequest();
+        }
+        Section? currentContent = await _sectionRepository.GetSectionAsync(id);
+
+        if (currentContent == null)
+        {
+            return NotFound();
         }
 
         try
         {
-            return (MarkdownContent)await _markdownContentRepository.UpdateArticleElementAsync(markdownContent);
+            return await _sectionRepository.UpdateOrderedElementAsync(currentContent, section);
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!await MarkdownContentExists(id))
+            if (!await SectionExists(id))
             {
                 return NotFound();
             }
@@ -61,18 +65,18 @@ public class MarkdownContentsController(IMarkdownContentRepository markdownConte
         }
     }
 
-    // POST: api/MarkdownContents
+    // POST: api/Sections
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<MarkdownContent>> PostMarkdownContent(MarkdownContent markdownContent)
+    public async Task<ActionResult<Section>> PostSection(Section section)
     {
         try
         {
-            await _markdownContentRepository.InsertArticleElementAsync(markdownContent);
+            await _sectionRepository.InsertOrderedElementAsync(section);
         }
         catch (DbUpdateException)
         {
-            if (await MarkdownContentExists(markdownContent.Id))
+            if (await SectionExists(section.Id))
             {
                 return Conflict();
             }
@@ -82,26 +86,26 @@ public class MarkdownContentsController(IMarkdownContentRepository markdownConte
             }
         }
 
-        return CreatedAtAction("GetMarkdownContent", new { id = markdownContent.Id }, markdownContent);
+        return CreatedAtAction("GetSection", new { id = section.Id }, section);
     }
 
-    // DELETE: api/MarkdownContents/5
+    // DELETE: api/Sections/5
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteMarkdownContent(string id)
+    public async Task<IActionResult> DeleteSection(string id)
     {
-        MarkdownContent? markdownContent = await _markdownContentRepository.GetMarkdownContentAsync(id);
-        if (markdownContent == null)
+        Section? section = await _sectionRepository.GetSectionAsync(id);
+        if (section == null)
         {
             return NotFound();
         }
 
-        await _markdownContentRepository.DeleteArticleElementAsync(markdownContent);
+        await _sectionRepository.DeleteOrderedElementAsync(section);
 
         return NoContent();
     }
 
-    private async Task<bool> MarkdownContentExists(string id)
+    private async Task<bool> SectionExists(string id)
     {
-        return await _markdownContentRepository.MarkdownContentExists(id);
+        return await _sectionRepository.SectionExists(id);
     }
 }

@@ -2,7 +2,7 @@ using AnkiBooks.ApplicationCore.Entities;
 
 namespace AnkiBooks.ApplicationCore.Interfaces;
 
-public interface IBasicNoteRepository : IArticleElementRepository<ArticleNoteBase>
+public interface IBasicNoteRepository : IOrderedElementRepository<BasicNote>
 {
     Task<List<BasicNote>> GetBasicNotesAsync();
     Task<BasicNote?> GetBasicNoteAsync(string BasicNoteId);

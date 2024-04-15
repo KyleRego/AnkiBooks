@@ -9,30 +9,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AnkiBooks.Infrastructure.Tests.RepositoryTests.ClozeNoteRepositoryTests;
 
-public class UpdateArticleElementAsyncTests : RepositoryTestBase
+public class UpdateOrderedElementAsyncTests : RepositoryTestBase
 {
     [Fact]
     public async Task LastElementIsMovedToFirstPosition()
     {
         using var dbContext = InMemoryDbContext();
 
-        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
-        ClozeNote noteToUpdate = article.ClozeNotes.First(bn => bn.OrdinalPosition == 9);
+        Section section = await dbContext.CreateSectionWithTenAlternatingBasicAndClozeNotes();
+        ClozeNote currentNote = section.ClozeNotes.First(bn => bn.OrdinalPosition == 9);
 
         ClozeNote clozeNote = new()
         {
-            Id = noteToUpdate.Id,
+            Id = currentNote.Id,
             Text = "4321",
             OrdinalPosition = 0,
-            ArticleId = article.Id
+            SectionId = section.Id
         };
         ClozeNoteRepository clozeNoteRepository = new(dbContext);
 
-        await clozeNoteRepository.UpdateArticleElementAsync(clozeNote);
+        await clozeNoteRepository.UpdateOrderedElementAsync(currentNote, clozeNote);
 
         ClozeNote updatedClozeNote = dbContext.ClozeNotes.First(cn => cn.Id == clozeNote.Id);
         Assert.Equal("4321", updatedClozeNote.Text);
         Assert.Equal(0, updatedClozeNote.OrdinalPosition);
-        Assert.True(ArticleValidator.CorrectElementsCountAndOrdinalPositions(dbContext, article, 10));
+        Assert.True(SectionValidator.CorrectElementsCountAndOrdinalPositions(dbContext, section, 10));
     }
 }

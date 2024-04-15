@@ -3,11 +3,11 @@ using AnkiBooks.ApplicationCore.Interfaces;
 
 namespace AnkiBooks.ApplicationCore;
 
-public class OrderedElementsContainer(List<IArticleElement> orderedElements)
+public class OrderedElementsContainer(List<IOrderedElement> orderedElements)
 {
-    public List<IArticleElement> OrderedElements { get; } = orderedElements;
+    public List<IOrderedElement> OrderedElements { get; } = orderedElements;
 
-    public int GetPosition(IArticleElement element)
+    public int GetPosition(IOrderedElement element)
     {
         for (int i = 0; i < OrderedElements.Count; i++)
         {
@@ -20,7 +20,7 @@ public class OrderedElementsContainer(List<IArticleElement> orderedElements)
         throw new ApplicationException();
     }
 
-    public IArticleElement ElementAtPosition(int position)
+    public IOrderedElement ElementAtPosition(int position)
     {
         return OrderedElements[position];
     }
@@ -30,25 +30,25 @@ public class OrderedElementsContainer(List<IArticleElement> orderedElements)
         return OrderedElements.Count;
     }
 
-    public void Add(IArticleElement element)
+    public void Add(IOrderedElement element)
     {
-        foreach (IArticleElement el in OrderedElements.Where(el => el.OrdinalPosition >= element.OrdinalPosition))
+        foreach (IOrderedElement el in OrderedElements.Where(el => el.OrdinalPosition >= element.OrdinalPosition))
         {
             el.OrdinalPosition += 1;
         }
         OrderedElements.Insert(element.OrdinalPosition, element);
     }
 
-    public void Remove(IArticleElement element)
+    public void Remove(IOrderedElement element)
     {
         OrderedElements.Remove(element);
-        foreach (IArticleElement el in OrderedElements.Where(el => el.OrdinalPosition >= element.OrdinalPosition))
+        foreach (IOrderedElement el in OrderedElements.Where(el => el.OrdinalPosition >= element.OrdinalPosition))
         {
             el.OrdinalPosition -= 1;
         }
     }
 
-    public void UpdatePosition(IArticleElement element)
+    public void UpdatePosition(IOrderedElement element)
     {
         // TODO: This can be done in a better way
         int newPosition = element.OrdinalPosition;
@@ -58,31 +58,5 @@ public class OrderedElementsContainer(List<IArticleElement> orderedElements)
         Remove(element);
         element.OrdinalPosition = newPosition;
         Add(element);
-    }
-
-    public List<IArticleContent> OrderedContents()
-    {
-        List<IArticleContent> result = [];
-        foreach (IArticleElement element in OrderedElements)
-        {
-            if (element is IArticleContent content)
-            {
-                result.Add(content);
-            }
-        }
-        return result;
-    }
-
-    public List<IArticleNote> OrderedNotes()
-    {
-        List<IArticleNote> result = [];
-        foreach (IArticleElement element in OrderedElements)
-        {
-            if (element is IArticleNote note)
-            {
-                result.Add(note);
-            }
-        }
-        return result;
     }
 }

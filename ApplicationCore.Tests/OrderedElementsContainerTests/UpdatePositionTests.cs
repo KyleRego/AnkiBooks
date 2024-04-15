@@ -13,7 +13,7 @@ public class AdjustElementPositionTests
         ClozeNote n3 = new() { Text="b", OrdinalPosition=2 };
         BasicNote n4 = new() { Front="a", Back="b", OrdinalPosition=3 };
         BasicNote n5 = new() { Front="a", Back="b", OrdinalPosition=4 };
-        Article article = new("Test article")
+        Section section = new("Test section")
         {
             BasicNotes =
             [
@@ -28,19 +28,19 @@ public class AdjustElementPositionTests
             ]
         };
 
-        OrderedElementsContainer container = new(article.OrderedElements());
+        OrderedElementsContainer container = new(section.OrderedElements());
 
         n2.OrdinalPosition = 0;
         container.UpdatePosition(n2);
 
-        IArticleElement elementAtZero = container.ElementAtPosition(0);
+        IOrderedElement elementAtZero = container.ElementAtPosition(0);
         Assert.Equal(n2, elementAtZero);
         container.ExpectElementsAreOrdered();
 
         n5.OrdinalPosition = 0;
         container.UpdatePosition(n5);
 
-        IArticleElement elementAtFour = container.ElementAtPosition(4);
+        IOrderedElement elementAtFour = container.ElementAtPosition(4);
         Assert.Equal(n4, elementAtFour);
         container.ExpectElementsAreOrdered();
     }
@@ -53,7 +53,7 @@ public class AdjustElementPositionTests
         ClozeNote n3 = new() { Text="b", OrdinalPosition=2 };
         BasicNote n4 = new() { Front="a", Back="b", OrdinalPosition=3 };
         BasicNote n5 = new() { Front="a", Back="b", OrdinalPosition=4 };
-        Article article = new("Test article")
+        Section section = new("Test section")
         {
             BasicNotes =
             [
@@ -68,19 +68,19 @@ public class AdjustElementPositionTests
             ]
         };
 
-        OrderedElementsContainer container = new(article.OrderedElements());
+        OrderedElementsContainer container = new(section.OrderedElements());
 
         n1.OrdinalPosition = 3;
         container.UpdatePosition(n1);
 
-        IArticleElement elementAtThree = container.ElementAtPosition(3);
+        IOrderedElement elementAtThree = container.ElementAtPosition(3);
         Assert.Equal(n1, elementAtThree);
         container.ExpectElementsAreOrdered();
 
         n2.OrdinalPosition = 4;
         container.UpdatePosition(n2);
 
-        IArticleElement elementAtFour = container.ElementAtPosition(4);
+        IOrderedElement elementAtFour = container.ElementAtPosition(4);
         Assert.Equal(n2, elementAtFour);
         container.ExpectElementsAreOrdered();
     }

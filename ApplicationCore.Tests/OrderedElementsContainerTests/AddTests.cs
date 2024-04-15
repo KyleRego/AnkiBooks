@@ -10,7 +10,7 @@ public class AddTests
     [Fact]
     public void TestAddWithTwoElementsAlready()
     {
-        Article article = new("Test article")
+        Section section = new("Test article")
         {
             BasicNotes = [],
             ClozeNotes =
@@ -20,13 +20,13 @@ public class AddTests
             ]
         };
 
-        OrderedElementsContainer container = new(article.OrderedElements());
+        OrderedElementsContainer container = new(section.OrderedElements());
         BasicNote noteToAdd = new() { Front="a", Back="b", OrdinalPosition=1 };
         container.Add(noteToAdd);
         container.ExpectElementsCountIs(3);
         container.ExpectElementsAreOrdered();
 
-        IArticleElement element = container.OrderedElements.First(el => el.OrdinalPosition == 1);
+        IOrderedElement element = container.OrderedElements.First(el => el.OrdinalPosition == 1);
         Assert.Equal(noteToAdd, element);
     }
 }

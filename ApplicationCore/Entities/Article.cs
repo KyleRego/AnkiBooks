@@ -3,7 +3,7 @@ using AnkiBooks.ApplicationCore.Interfaces;
 
 namespace AnkiBooks.ApplicationCore.Entities;
 
-public class Article(string title) : EntityBase
+public class Article(string title) : EntityBase, IOrderedElementsParent
 {
     [Required]
     public string Title { get; set; } = title;
@@ -14,17 +14,11 @@ public class Article(string title) : EntityBase
     public string? ParentArticleId { get; set; }
     public Article? ParentArticle { get; set; }
 
-    public List<BasicNote> BasicNotes { get; set; } = [];
+    public List<Section> Sections { get; set; } = [];
 
-    public List<ClozeNote> ClozeNotes { get; set; } = [];
-
-    public List<MarkdownContent> MarkdownContents { get; set; } = [];
-
-    public List<IArticleElement> OrderedElements()
+    public List<IOrderedElement> OrderedElements()
     {
-        return BasicNotes.Cast<IArticleElement>()
-            .Concat(ClozeNotes.Cast<IArticleElement>())
-            .Concat(MarkdownContents.Cast<IArticleElement>())
+        return Sections.Cast<IOrderedElement>()
             .OrderBy(item => item.OrdinalPosition)
             .ToList();
     }

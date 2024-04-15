@@ -7,8 +7,18 @@ using Microsoft.EntityFrameworkCore;
 namespace AnkiBooks.Infrastructure.Repository;
 
 public class ClozeNoteRepository(ApplicationDbContext dbContext)
-            : ArticleNoteRepository(dbContext), IClozeNoteRepository
+                    : NoteRepositoryBase<ClozeNote>(dbContext), IClozeNoteRepository
 {
+    protected override void AddElementToDbContext(ClozeNote element)
+    {
+        _dbContext.ClozeNotes.Add(element);
+    }
+
+    protected override void RemoveElementFromDbContext(ClozeNote element)
+    {
+        _dbContext.ClozeNotes.Remove(element);
+    }
+
     public async Task<List<ClozeNote>> GetClozeNotesAsync()
     {
         return await _dbContext.ClozeNotes.ToListAsync();

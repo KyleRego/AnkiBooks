@@ -11,7 +11,7 @@ public static class OrderedElementsContainerTestExtensions
 
     public static void ExpectElementsAreOrdered(this OrderedElementsContainer elementsContainer)
     {
-        List<IArticleElement> elements = elementsContainer.OrderedElements;
+        List<IOrderedElement> elements = elementsContainer.OrderedElements;
 
         for (int i = 0; i < elements.Count; i++)
         {

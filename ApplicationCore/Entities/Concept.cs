@@ -12,8 +12,6 @@ public class Concept : EntityBase
     [Required]
     public bool Public { get; set; } = false;
 
-    public ICollection<IArticleElement> Elements { get; } = [];
-
     [Required]
     public string? ApplicationUserId { get; set; }
     public ApplicationUser? ApplicationUser { get; set; }

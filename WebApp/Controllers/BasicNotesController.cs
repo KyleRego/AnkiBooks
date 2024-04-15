@@ -7,10 +7,9 @@ namespace AnkiBooks.WebApp.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class BasicNotesController(IBasicNoteRepository basicNoteRepository, ILogger<BasicNotesController> logger) : ControllerBase
+public class BasicNotesController(IBasicNoteRepository basicNoteRepository) : ControllerBase
 {
     private readonly IBasicNoteRepository _basicNoteRepository = basicNoteRepository;
-    private readonly ILogger<BasicNotesController> _logger = logger;
 
     // GET: api/BasicNotes
     [HttpGet]
@@ -42,10 +41,16 @@ public class BasicNotesController(IBasicNoteRepository basicNoteRepository, ILog
         {
             return BadRequest();
         }
+        BasicNote? currentBasicNote = await _basicNoteRepository.GetBasicNoteAsync(id);
+
+        if (currentBasicNote == null)
+        {
+            return NotFound();
+        }
 
         try
         {
-            return (BasicNote)await _basicNoteRepository.UpdateArticleElementAsync(basicNote);
+            return await _basicNoteRepository.UpdateOrderedElementAsync(currentBasicNote, basicNote);
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -67,7 +72,7 @@ public class BasicNotesController(IBasicNoteRepository basicNoteRepository, ILog
     {
         try
         {
-            await _basicNoteRepository.InsertArticleElementAsync(basicNote);
+            await _basicNoteRepository.InsertOrderedElementAsync(basicNote);
         }
         catch (DbUpdateException)
         {
@@ -94,7 +99,7 @@ public class BasicNotesController(IBasicNoteRepository basicNoteRepository, ILog
             return NotFound();
         }
 
-        await _basicNoteRepository.DeleteArticleElementAsync(basicNote);
+        await _basicNoteRepository.DeleteOrderedElementAsync(basicNote);
 
         return NoContent();
     }

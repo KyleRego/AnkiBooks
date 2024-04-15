@@ -8,21 +8,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AnkiBooks.Infrastructure.Tests.RepositoryTests.BasicNoteRepositoryTests;
 
-public class DeleteArticleElementAsyncTests : RepositoryTestBase
+public class DeleteOrderedElementAsyncTests : RepositoryTestBase
 {
     [Fact]
     public async Task BasicNoteInMiddleIsDeletedAndElementsAreShiftedDown()
     {
         using var dbContext = InMemoryDbContext();
 
-        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
-        BasicNote noteToDelete = article.BasicNotes.First(bn => bn.OrdinalPosition == 4);
+        Section section = await dbContext.CreateSectionWithTenAlternatingBasicAndClozeNotes();
+        BasicNote noteToDelete = section.BasicNotes.First(bn => bn.OrdinalPosition == 4);
 
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
-        await basicNoteRepository.DeleteArticleElementAsync(noteToDelete);
+        await basicNoteRepository.DeleteOrderedElementAsync(noteToDelete);
 
         Assert.Null(dbContext.BasicNotes.FirstOrDefault(bn => bn.Id == noteToDelete.Id));
-        Assert.True(ArticleValidator.CorrectElementsCountAndOrdinalPositions(dbContext, article, 9));
+        Assert.True(SectionValidator.CorrectElementsCountAndOrdinalPositions(dbContext, section, 9));
     }
 }
