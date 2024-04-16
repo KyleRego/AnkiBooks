@@ -18,10 +18,7 @@ public class PostBasicNoteTests(TestServerFactory<Program> factory) : IClassFixt
         ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         Article article = new("Test article");
-        Section section = new("Test section")
-        {
-            Text = "Hello world"
-        };
+        Section section = new();
         article.Sections.Add(section);
         dbContext.Articles.Add(article);
         await dbContext.SaveChangesAsync();
@@ -48,10 +45,7 @@ public class PostBasicNoteTests(TestServerFactory<Program> factory) : IClassFixt
         ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         Article article = new("Test article");
-        Section section = new("Test section")
-        {
-            Text = "hello world"
-        };
+        Section section = new();
         article.Sections.Add(section);
         List<BasicNote> existingBasicNotes =
         [
@@ -86,10 +80,7 @@ public class PostBasicNoteTests(TestServerFactory<Program> factory) : IClassFixt
         ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         Article article = new("Test article");
-        Section section = new("Test section")
-        {
-            Text = "hello world"
-        };
+        Section section = new();
         article.Sections.Add(section);
         List<BasicNote> existingBasicNotes =
         [

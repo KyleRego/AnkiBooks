@@ -10,7 +10,7 @@ public class AddTests
     [Fact]
     public void TestAddWithTwoElementsAlready()
     {
-        Section section = new("Test article")
+        Section section = new()
         {
             BasicNotes = [],
             ClozeNotes =

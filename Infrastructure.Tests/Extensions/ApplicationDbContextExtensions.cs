@@ -9,7 +9,7 @@ public static class ApplicationDbContextExtensions
     {
         Article article = new("Test article");
         dbContext.Articles.Add(article);
-        Section section = new("Test section with one basic note")
+        Section section = new()
         {
             BasicNotes = [ new() { Front = "Basic note front", Back = "Basic note back" } ]
         };
@@ -22,7 +22,7 @@ public static class ApplicationDbContextExtensions
     {
         Article article = new("Test article");
         dbContext.Articles.Add(article);
-        Section section = new("Test section")
+        Section section = new()
         {
             BasicNotes =
             [

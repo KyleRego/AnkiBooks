@@ -13,7 +13,7 @@ public class GetArticleAsyncTests : RepositoryTestBase
         using var dbContext = InMemoryDbContext();
 
         Article art = new("Test article with basic notes, cloze notes, and markdown contents");
-        Section sec = new("Section with basic notes, cloze notes, and markdown contents");
+        Section sec = new() { OrdinalPosition=0 } ;
         BasicNote bn = new() { Front="a", Back="b", OrdinalPosition=0 };
         ClozeNote cn = new() { Text="aaa", OrdinalPosition=1 };
         MarkdownContent mdC = new() { Text="adfj", OrdinalPosition=0 };

@@ -18,10 +18,7 @@ public class PutBasicNoteTests(TestServerFactory<Program> factory) : IClassFixtu
         ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         Article article = new("Test article");
-        Section section = new("Test section")
-        {
-            Text = "hello world"
-        };
+        Section section = new();
         article.Sections.Add(section);
         BasicNote basicNote = new() { Front = "Hello", Back = "World", OrdinalPosition = 0 };
         section.BasicNotes.Add(basicNote);

@@ -2,7 +2,7 @@ using AnkiBooks.ApplicationCore.Interfaces;
 
 namespace AnkiBooks.WebApp.Client.Services;
 
-public class DragStateService
+public class DraggedItemHolder<T>
 {
-    public INote? DraggedElement { get; set; }
+    public T DraggedItem { get; set; }
 }

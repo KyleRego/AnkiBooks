@@ -10,7 +10,7 @@ public class RemoveTests
     [Fact]
     public void RemoveRemovesElementAndLeavesOrdinalPositionsValid()
     {
-        Section section = new("Test article")
+        Section section = new()
         {
             BasicNotes = [
                 new() { Front="a", Back="b", OrdinalPosition=2},

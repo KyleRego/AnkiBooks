@@ -14,7 +14,7 @@ public class ArticleFactory
         {
             Sections =
             [
-                new("Test section")
+                new()
                 {
                     BasicNotes =
                     [

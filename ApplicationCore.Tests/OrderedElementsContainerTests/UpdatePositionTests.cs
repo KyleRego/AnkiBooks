@@ -13,7 +13,7 @@ public class AdjustElementPositionTests
         ClozeNote n3 = new() { Text="b", OrdinalPosition=2 };
         BasicNote n4 = new() { Front="a", Back="b", OrdinalPosition=3 };
         BasicNote n5 = new() { Front="a", Back="b", OrdinalPosition=4 };
-        Section section = new("Test section")
+        Section section = new()
         {
             BasicNotes =
             [
@@ -53,7 +53,7 @@ public class AdjustElementPositionTests
         ClozeNote n3 = new() { Text="b", OrdinalPosition=2 };
         BasicNote n4 = new() { Front="a", Back="b", OrdinalPosition=3 };
         BasicNote n5 = new() { Front="a", Back="b", OrdinalPosition=4 };
-        Section section = new("Test section")
+        Section section = new()
         {
             BasicNotes =
             [

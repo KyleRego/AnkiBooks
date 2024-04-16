@@ -7,7 +7,7 @@
 @using AnkiBooks.WebApp.Client.Shared.Heroicons
 @inject IAnkiBooksApiService ApiService
 @inject ILogger<NoteElement> logger
-@inject DragStateService dragState
+@inject DraggedItemHolder<INote> draggedItemHolder
 
 @if (editing == false)
 {
@@ -84,33 +84,33 @@ else
     protected void HandleDrag()
     {
         logger.LogInformation("drag");
-        dragState.DraggedElement = Note;
+        draggedItemHolder.DraggedItem = Note;
     }
 
     protected void HandleDragEnd()
     {
         logger.LogInformation("dragend");
-        dragState.DraggedElement = null;
+        draggedItemHolder.DraggedItem = null;
     }
 
     protected int nestedDragLevels = 0;
 
     protected void HandleDragEnter()
     {
-        INote? draggedElement = dragState.DraggedElement;
+        INote? draggedItem = draggedItemHolder.DraggedItem;
 
-        if (draggedElement == null) return;
-        if (draggedElement == Note) return;
+        if (draggedItem == null) return;
+        if (draggedItem == Note) return;
         logger.LogInformation("dragenter");
         nestedDragLevels += 1;
     }
 
     protected void HandleDragLeave()
     {
-        INote? draggedElement = dragState.DraggedElement;
+        INote? draggedItem = draggedItemHolder.DraggedItem;
 
-        if (draggedElement == null) return;
-        if (draggedElement == Note) return;
+        if (draggedItem == null) return;
+        if (draggedItem == Note) return;
         logger.LogInformation("dragleave");
 
         nestedDragLevels -= 1;
@@ -120,15 +120,14 @@ else
     {
         nestedDragLevels = 0;
         logger.LogInformation("drop");
-        INote? droppedElement = dragState.DraggedElement;
+        INote? droppedElement = draggedItemHolder.DraggedItem;
 
         if (droppedElement == null) return;
         if (droppedElement == Note) return;
 
         droppedElement.OrdinalPosition = Note.OrdinalPosition;
 
-        // TODO: Fix drag and drop stuff
-        @* await ApiService.PutNote(droppedElement); *@
+        await ApiService.PutNote(droppedElement);
 
         NotesContainer.UpdatePosition(droppedElement);
         await NotesContainerChanged.InvokeAsync(NotesContainer);

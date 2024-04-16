@@ -1,4 +1,5 @@
 using AnkiBooks.WebApp.Client.Services;
+using AnkiBooks.ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 namespace AnkiBooks.WebApp.Client;
@@ -13,6 +14,6 @@ public static class CommonServices
     {
         services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(configuration["AppUrl"]!) });
         services.AddScoped<IAnkiBooksApiService, AnkiBooksApiService>();
-        services.AddScoped<DragStateService>();
+        services.AddScoped<DraggedItemHolder<INote>>();
     }
 }
