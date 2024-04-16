@@ -28,6 +28,7 @@ public class ArticleRepository(ApplicationDbContext dbContext) : IArticleReposit
 
     public async Task<Article> InsertArticleAsync(Article article)
     {
+        article.Sections = [ new() { OrdinalPosition = 0} ];
         _dbContext.Articles.Add(article);
         await _dbContext.SaveChangesAsync();
         return article;

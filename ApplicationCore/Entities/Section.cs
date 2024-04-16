@@ -5,11 +5,8 @@ using Microsoft.EntityFrameworkCore;
 namespace AnkiBooks.ApplicationCore.Entities;
 
 [Index(nameof(ArticleId), nameof(OrdinalPosition), IsUnique=true)]
-public class Section(string title) : EntityBase, IOrdinalChild
+public class Section : EntityBase, IOrdinalChild
 {
-    [Required]
-    public string Title { get; set; } = title;
-
     [Required]
     public string? ArticleId { get; set; }
 
