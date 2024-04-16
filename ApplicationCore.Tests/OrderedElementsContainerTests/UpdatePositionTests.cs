@@ -28,21 +28,21 @@ public class AdjustElementPositionTests
             ]
         };
 
-        OrderedElementsContainer container = new(section.OrderedNotes().Cast<IOrdinalChild>().ToList());
+        OrderedElementsContainer<INote> container = new(section.OrderedNotes());
 
         n2.OrdinalPosition = 0;
         container.UpdatePosition(n2);
 
         IOrdinalChild elementAtZero = container.ElementAtPosition(0);
         Assert.Equal(n2, elementAtZero);
-        container.ExpectElementsAreOrdered();
+        container.AssertNotesAreOrdered();
 
         n5.OrdinalPosition = 0;
         container.UpdatePosition(n5);
 
         IOrdinalChild elementAtFour = container.ElementAtPosition(4);
         Assert.Equal(n4, elementAtFour);
-        container.ExpectElementsAreOrdered();
+        container.AssertNotesAreOrdered();
     }
 
     [Fact]
@@ -68,20 +68,20 @@ public class AdjustElementPositionTests
             ]
         };
 
-        OrderedElementsContainer container = new(section.OrderedNotes().Cast<IOrdinalChild>().ToList());
+        OrderedElementsContainer<INote> container = new(section.OrderedNotes());
 
         n1.OrdinalPosition = 3;
         container.UpdatePosition(n1);
 
         IOrdinalChild elementAtThree = container.ElementAtPosition(3);
         Assert.Equal(n1, elementAtThree);
-        container.ExpectElementsAreOrdered();
+        container.AssertNotesAreOrdered();
 
         n2.OrdinalPosition = 4;
         container.UpdatePosition(n2);
 
         IOrdinalChild elementAtFour = container.ElementAtPosition(4);
         Assert.Equal(n2, elementAtFour);
-        container.ExpectElementsAreOrdered();
+        container.AssertNotesAreOrdered();
     }
 }

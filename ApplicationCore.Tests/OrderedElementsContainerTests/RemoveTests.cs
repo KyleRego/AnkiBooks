@@ -24,15 +24,15 @@ public class RemoveTests
             ]
         };
 
-        OrderedElementsContainer container = new(section.OrderedNotes().Cast<IOrdinalChild>().ToList());
-        IOrdinalChild firstElementToRemove = container.ElementAtPosition(2);
+        OrderedElementsContainer<INote> container = new(section.OrderedNotes());
+        INote firstElementToRemove = container.ElementAtPosition(2);
         container.Remove(firstElementToRemove);
-        container.ExpectElementsCountIs(4);
-        container.ExpectElementsAreOrdered();
+        container.AssertNotesCountIs(4);
+        container.AssertNotesAreOrdered();
 
-        IOrdinalChild secondElementToRemove = container.ElementAtPosition(0);
+        INote secondElementToRemove = container.ElementAtPosition(0);
         container.Remove(secondElementToRemove);
-        container.ExpectElementsCountIs(3);
-        container.ExpectElementsAreOrdered();
+        container.AssertNotesCountIs(3);
+        container.AssertNotesAreOrdered();
     }
 }

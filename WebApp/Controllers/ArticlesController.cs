@@ -2,12 +2,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AnkiBooks.ApplicationCore.Interfaces;
 using AnkiBooks.ApplicationCore.Entities;
+using System.Text.Json;
 
 namespace AnkiBooks.WebApp.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ArticlesController(IArticleRepository articleRepository) : ControllerBase
+public class ArticlesController(IArticleRepository articleRepository,
+                                ILogger<ArticlesController> logger) : ControllerBase
 {
     private readonly IArticleRepository _articleRepository = articleRepository;
 
@@ -23,8 +25,8 @@ public class ArticlesController(IArticleRepository articleRepository) : Controll
     [HttpGet("{id}")]
     public async Task<ActionResult<Article>> GetArticle(string id)
     {
-        Article? article = await _articleRepository.GetArticleWithOrderedElementsAsync(id);
-
+        Article? article = await _articleRepository.GetArticleAsync(id);
+        logger.LogInformation(JsonSerializer.Serialize(article));
         if (article == null)
         {
             return NotFound();

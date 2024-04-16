@@ -16,14 +16,14 @@ public class ArticleRepository(ApplicationDbContext dbContext) : IArticleReposit
 
     public async Task<Article?> GetArticleAsync(string articleId)
     {
-        return await _dbContext.Articles.FirstOrDefaultAsync(a => a.Id == articleId);
-    }
-
-    public async Task<Article?> GetArticleWithOrderedElementsAsync(string articleId)
-    {
         return await _dbContext.Articles
-                            .Include(a => a.Sections.OrderBy(mc => mc.OrdinalPosition))
-                            .FirstOrDefaultAsync(a => a.Id == articleId);
+                    .Include(a => a.Sections)
+                    .ThenInclude(sec => sec.BasicNotes)
+                    .Include(a => a.Sections)
+                    .ThenInclude(sec => sec.ClozeNotes)
+                    .Include(a => a.Sections)
+                    .ThenInclude(sec => sec.MarkdownContents)
+                    .FirstOrDefaultAsync(a => a.Id == articleId);
     }
 
     public async Task<Article> InsertArticleAsync(Article article)

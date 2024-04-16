@@ -3,11 +3,11 @@ using AnkiBooks.ApplicationCore.Interfaces;
 
 namespace AnkiBooks.ApplicationCore;
 
-public class OrderedElementsContainer(List<IOrdinalChild> orderedElements)
+public class OrderedElementsContainer<T>(List<T> orderedElements) where T : IOrdinalChild
 {
-    public List<IOrdinalChild> OrderedElements { get; } = orderedElements;
+    public List<T> OrderedElements { get; } = orderedElements;
 
-    public int GetPosition(IOrdinalChild element)
+    public int GetPosition(T element)
     {
         for (int i = 0; i < OrderedElements.Count; i++)
         {
@@ -20,7 +20,7 @@ public class OrderedElementsContainer(List<IOrdinalChild> orderedElements)
         throw new ApplicationException();
     }
 
-    public IOrdinalChild ElementAtPosition(int position)
+    public T ElementAtPosition(int position)
     {
         return OrderedElements[position];
     }
@@ -30,25 +30,25 @@ public class OrderedElementsContainer(List<IOrdinalChild> orderedElements)
         return OrderedElements.Count;
     }
 
-    public void Add(IOrdinalChild element)
+    public void Add(T element)
     {
-        foreach (IOrdinalChild el in OrderedElements.Where(el => el.OrdinalPosition >= element.OrdinalPosition))
+        foreach (T el in OrderedElements.Where(el => el.OrdinalPosition >= element.OrdinalPosition))
         {
             el.OrdinalPosition += 1;
         }
         OrderedElements.Insert(element.OrdinalPosition, element);
     }
 
-    public void Remove(IOrdinalChild element)
+    public void Remove(T element)
     {
         OrderedElements.Remove(element);
-        foreach (IOrdinalChild el in OrderedElements.Where(el => el.OrdinalPosition >= element.OrdinalPosition))
+        foreach (T el in OrderedElements.Where(el => el.OrdinalPosition >= element.OrdinalPosition))
         {
             el.OrdinalPosition -= 1;
         }
     }
 
-    public void UpdatePosition(IOrdinalChild element)
+    public void UpdatePosition(T element)
     {
         // TODO: This can be done in a better way
         int newPosition = element.OrdinalPosition;

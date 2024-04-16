@@ -1,4 +1,3 @@
-@inherits ChangesOrderedElementsContainerBase
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Enums
 @using AnkiBooks.ApplicationCore.Interfaces
@@ -20,14 +19,14 @@ else
     @switch (dropDownItemSelected)
     {
         case NoteType.BasicNote:
-            <NewBasicNote   @bind-OrderedElementsContainer:get="OrderedElementsContainer"
-                            @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
+            <NewBasicNote   @bind-NotesContainer:get="NotesContainer"
+                            @bind-NotesContainer:set="NotesContainerChanged"
                             @bind-DropDownItemSelected="dropDownItemSelected"
                             OrdinalPosition="@OrdinalPosition" />
             break;
         case NoteType.ClozeNote:
-            <NewClozeNote   @bind-OrderedElementsContainer:get="OrderedElementsContainer"
-                            @bind-OrderedElementsContainer:set="OrderedElementsContainerChanged"
+            <NewClozeNote   @bind-NotesContainer:get="NotesContainer"
+                            @bind-NotesContainer:set="NotesContainerChanged"
                             @bind-DropDownItemSelected="dropDownItemSelected"
                             OrdinalPosition="@OrdinalPosition" />
             break;
@@ -39,6 +38,12 @@ else
 }
 
 @code {
+[Parameter]
+    public OrderedElementsContainer<INote> NotesContainer { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<OrderedElementsContainer<INote>> NotesContainerChanged { get; set; }
+
     [Parameter]
     public int OrdinalPosition { get; set; }
 

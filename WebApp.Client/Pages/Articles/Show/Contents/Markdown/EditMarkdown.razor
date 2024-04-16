@@ -1,0 +1,37 @@
+@using System.ComponentModel.DataAnnotations
+@using System.Text.Json
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Enums
+@using AnkiBooks.ApplicationCore.Interfaces
+@inject IAnkiBooksApiService ApiService
+
+<MarkdownForm  StartingMarkdown="@StartingMarkdown"
+                EditingExisting="true"
+                ParentSubmitMethod="@SubmitForm" />
+
+@code {
+    [Parameter]
+    public OrderedElementsContainer<IContent> ContentsContainer { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<OrderedElementsContainer<IContent>> ContentsContainerChanged { get; set; }
+
+    [Parameter]
+    public MarkdownContent StartingMarkdown { get; set; } = null!;
+
+    [Parameter]
+    public bool Editing { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> EditingChanged { get; set; }
+
+    private async Task SubmitForm(MarkdownContent newMarkdownContent)
+    {
+        ArgumentNullException.ThrowIfNull(newMarkdownContent.Text);
+        MarkdownContent? updatedMdContent = await ApiService.PutMarkdownContent(newMarkdownContent);
+        ArgumentNullException.ThrowIfNull(updatedMdContent);
+
+        Editing = false;
+        await EditingChanged.InvokeAsync(Editing);
+    }
+}

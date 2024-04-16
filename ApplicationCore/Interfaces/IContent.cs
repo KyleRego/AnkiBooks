@@ -1,8 +1,6 @@
 namespace AnkiBooks.ApplicationCore.Interfaces;
 
-public interface IContent : IEntityBase
+public interface IContent : IEntityBase, IOrdinalChild
 {
     public string? SectionId { get; set; }
-
-    public int OrdinalPosition { get; set; }
 }

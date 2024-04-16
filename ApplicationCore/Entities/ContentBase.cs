@@ -12,7 +12,6 @@ public abstract class ContentBase : EntityBase, IContent, IOrdinalChild
     public string? SectionId { get; set; }
 
     [JsonIgnore]
-    [ForeignKey("SectionId")]
     public Section? Section { get; set; }
 
     [Required]

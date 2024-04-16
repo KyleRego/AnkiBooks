@@ -1,42 +1,59 @@
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Interfaces
 @using AnkiBooks.WebApp.Client.Pages.Articles.Show.Notes
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.Contents
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.Contents.Markdown
 
 <CascadingValue Value="@Section.Id" Name="SectionId">
-@if (OrderedNotesContainer != null)
+@if (NotesContainer != null && ContentsContainer != null)
 {
-    List<IOrderedElement> notes = OrderedNotesContainer.OrderedElements;
+    List<INote> notes = NotesContainer.OrderedElements;
+    List<IContent> contents = ContentsContainer.OrderedElements;
 
-    <div class="d-flex">
+    <section class="d-flex">
 
         <div class="flex-grow-2 min-w-2-3 mr-4">
-            <SectionContent Section="@Section"
-                            @bind-OrderedSectionsContainer:get="OrderedSectionsContainer"
-                            @bind-OrderedSectionsContainer:set="OrderedSectionsContainerChanged" />
+            @if (contents.Count == 0)
+            {
+                <NewContent OrdinalPosition="@(0)" @bind-ContentsContainer="@ContentsContainer" />
+            }
+            else
+            {
+                for (int i = 0; i < contents.Count; i ++)
+                {
+                    IContent content = contents[i];
+
+                    switch (content)
+                    {
+                        case MarkdownContent mdContent:
+                            <RenderMarkdown Text="@mdContent.Text" />
+                            break;
+                    }
+
+                    <NewContent OrdinalPosition="@(i + 1)" @bind-ContentsContainer="@ContentsContainer" />
+                }
+            }
         </div>
 
         <div class="flex-grow-1 min-w-1-3">
             @if (notes.Count == 0)
             {
-                <NewNote OrdinalPosition="@(0)" @bind-OrderedElementsContainer="@OrderedNotesContainer" />
+                <NewNote OrdinalPosition="@(0)" @bind-NotesContainer="@NotesContainer" />
             }
             else
             {
                 @for (int i = 0; i < notes.Count; i++)
                 {
-                    IOrderedElement note = notes[i];
+                    INote note = notes[i];
 
-                    if (note is INote note1)
-                    {
-                        <NoteElement @bind-OrderedElementsContainer="@OrderedNotesContainer" Note="@note1" />
+                    <NoteElement @bind-NotesContainer="NotesContainer" Note="@note" />
 
-                        <NewNote OrdinalPosition="@(note.OrdinalPosition + 1)"
-                                @bind-OrderedElementsContainer="@OrderedNotesContainer"/>
-                    }
+                    <NewNote OrdinalPosition="@(i + 1)"
+                            @bind-NotesContainer="@NotesContainer"/>
                 }
             }
         </div>
-    </div>
+    </section>
 }
 </CascadingValue>
 
@@ -45,16 +62,17 @@
     public Section Section { get; set; } = null!;
 
     [Parameter]
-    public OrderedElementsContainer OrderedSectionsContainer { get; set; } = null!;
-
+    public OrderedElementsContainer<Section> SectionsContainer { get; set; } = null!;
+    
     [Parameter]
-    public EventCallback<OrderedElementsContainer> OrderedSectionsContainerChanged { get; set; }
-
-    [Parameter]
-    public OrderedElementsContainer? OrderedNotesContainer { get; set; }
+    public EventCallback<OrderedElementsContainer<Section>> SectionsContainerChanged { get; set; }
+    
+    public OrderedElementsContainer<INote>? NotesContainer { get; set; }
+    public OrderedElementsContainer<IContent>? ContentsContainer { get; set; }
 
     protected override void OnParametersSet()
     {
-        OrderedNotesContainer = new(Section.OrderedElements());
+        NotesContainer = new(Section.OrderedNotes());
+        ContentsContainer = new(Section.OrderedContents());
     }
 }

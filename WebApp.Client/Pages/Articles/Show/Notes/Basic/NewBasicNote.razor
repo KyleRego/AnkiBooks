@@ -1,4 +1,3 @@
-@inherits ChangesOrderedElementsContainerBase
 @using System.ComponentModel.DataAnnotations
 @using System.Text.Json
 @using AnkiBooks.ApplicationCore.Entities
@@ -12,6 +11,12 @@
                 ParentSubmitMethod="@SubmitForm" />
 
 @code {
+    [Parameter]
+    public OrderedElementsContainer<INote> NotesContainer { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<OrderedElementsContainer<INote>> NotesContainerChanged { get; set; }
+
     [CascadingParameter(Name="SectionId")]
     public string SectionId { get; set; } = null!;
 
@@ -43,8 +48,8 @@
         BasicNote? createdBasicNote = (BasicNote?)await ApiService.PostNote(newBasicNote);
         ArgumentNullException.ThrowIfNull(createdBasicNote);
 
-        OrderedElementsContainer.Add(createdBasicNote);
-        await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
+        NotesContainer.Add(createdBasicNote);
+        await NotesContainerChanged.InvokeAsync(NotesContainer);
 
         DropDownItemSelected = null;
         await DropDownItemSelectedChanged.InvokeAsync(DropDownItemSelected);

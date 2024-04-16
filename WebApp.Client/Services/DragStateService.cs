@@ -4,5 +4,5 @@ namespace AnkiBooks.WebApp.Client.Services;
 
 public class DragStateService
 {
-    public IOrderedElement? DraggedElement { get; set; }
+    public INote? DraggedElement { get; set; }
 }

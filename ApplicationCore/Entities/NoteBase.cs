@@ -12,7 +12,6 @@ public abstract class NoteBase : EntityBase, INote, IOrdinalChild
     public string? SectionId { get; set; }
 
     [JsonIgnore]
-    [ForeignKey("SectionId")]
     public Section? Section { get; set; }
 
     [Required]

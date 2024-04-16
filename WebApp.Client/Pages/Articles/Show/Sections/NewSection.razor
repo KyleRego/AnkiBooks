@@ -1,46 +1,60 @@
-@using System.ComponentModel.DataAnnotations
 @using System.Text.Json
 @using AnkiBooks.ApplicationCore.Entities
-@using AnkiBooks.ApplicationCore.Enums
-@using AnkiBooks.ApplicationCore.Interfaces
-@inject ILogger<NewSection> Logger
 @inject IAnkiBooksApiService ApiService
+@layout ArticlesLayout
 
-<SectionForm  StartingSection="@StartingSection()"
-                EditingExisting="false"
-                ParentSubmitMethod="@SubmitForm" />
+<div>
+    <EditForm   Model="Section"
+                OnValidSubmit="SubmitForm"
+                FormName="NewSection">
+
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label for="section-title">Title:</label>
+            <InputText @bind-Value="Section.Title" id="section-title" class="w-100" />
+        </div>
+
+        <button type="submit">Create</button>
+
+    </EditForm>
+</div>
 
 @code {
     [CascadingParameter(Name="ArticleId")]
-    public string ArticleId { get; set; } = null!;
+    public string? ArticleId { get; set; }
 
     [Parameter]
     public int OrdinalPosition { get; set; }
 
     [Parameter]
-    public OrderedElementsContainer OrderedSectionsContainer { get; set; } = null!;
+    public OrderedElementsContainer<Section> SectionsContainer { get; set; } = null!;
 
     [Parameter]
-    public EventCallback<OrderedElementsContainer?> OrderedSectionsContainerChanged { get; set; }
+    public EventCallback<OrderedElementsContainer<Section>> SectionsContainerChanged { get; set; }
 
-    private Section StartingSection()
+    [SupplyParameterFromForm]
+    private Section Section { get; set; } = new("");
+
+    protected override void OnParametersSet()
     {
-        return new("")
-        {
-            ArticleId = ArticleId
-        };
+        ArgumentNullException.ThrowIfNull(ArticleId);
+
+        Section.ArticleId = ArticleId;
+        Section.OrdinalPosition = OrdinalPosition;
     }
 
-    private async Task SubmitForm(Section newSection)
+    private async Task SubmitForm()
     {
-        ArgumentNullException.ThrowIfNull(newSection.Text);
+        ArgumentNullException.ThrowIfNull(Section);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(Section.Title);
+        ArgumentNullException.ThrowIfNull(Section.ArticleId);
+        Section.OrdinalPosition = OrdinalPosition;
 
-        newSection.OrdinalPosition = OrdinalPosition;
-
-        Section? createdContent = (Section?)await ApiService.PostSection(newSection);
-        ArgumentNullException.ThrowIfNull(createdContent);
-
-        OrderedSectionsContainer.Add(createdContent);
-        await OrderedSectionsContainerChanged.InvokeAsync(OrderedSectionsContainer);
+        Section? section = await ApiService.PostSection(Section);
+        ArgumentNullException.ThrowIfNull(section);
+        SectionsContainer.Add(section);
+        await SectionsContainerChanged.InvokeAsync(SectionsContainer);
     }
 }

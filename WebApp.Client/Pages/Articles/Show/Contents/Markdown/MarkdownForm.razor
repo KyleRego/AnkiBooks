@@ -1,14 +1,11 @@
 @using AnkiBooks.ApplicationCore.Entities
 @inject IJSRuntime JS
 
-<EditForm Model="Section" OnValidSubmit="SubmitForm">
+<EditForm Model="MarkdownContent" OnValidSubmit="SubmitForm">
 <DataAnnotationsValidator />
 <ValidationSummary />
 
 <div class="border-primary" id="@ContainerDomId">
-
-    <InputText @bind-Value="Section.Title" />
-
     <div class="border-bottom-primary p-2 d-flex justify-content-between">
         <div class="d-flex justify-content-start">
             <div role="button" class="markdown-bold-button mr-2" title="Bold">
@@ -50,7 +47,7 @@
 
     <div class="px-2 pt-2 pb-1">
         <div class="d-flex flex-column">
-            <InputTextArea  @bind-Value="Section.Text" class="p-2 mb-1" rows="20" />
+            <InputTextArea  @bind-Value="MarkdownContent.Text" class="p-2 mb-1" rows="20" />
 
             <div class="d-flex justify-content-center">
                 <button type="submit">
@@ -65,11 +62,11 @@
 
 @code {
     [Parameter]
-    public Section StartingSection { get; set; } = null!;
+    public MarkdownContent StartingMarkdown { get; set; } = null!;
 
     protected override void OnInitialized()
     {
-        Section = StartingSection;
+        MarkdownContent = StartingMarkdown;
     }
 
     [Parameter]
@@ -81,15 +78,15 @@
     }
 
     [Parameter]
-    public Func<Section, Task> ParentSubmitMethod { get; set; } = null!;
+    public Func<MarkdownContent, Task> ParentSubmitMethod { get; set; } = null!;
 
     public async Task SubmitForm()
     {
-        await ParentSubmitMethod.Invoke(Section);
+        await ParentSubmitMethod.Invoke(MarkdownContent);
     }
 
     [SupplyParameterFromForm]
-    public Section Section { get; set; } = null!;
+    public MarkdownContent MarkdownContent { get; set; } = null!;
 
     private IJSObjectReference? module;
     private string? result;
@@ -101,7 +98,7 @@
         if (firstRender)
         {
             module = await JS.InvokeAsync<IJSObjectReference>("import",
-                "./Pages/Articles/Show/Sections/SectionForm.razor.js");
+                "./Pages/Articles/Show/Contents/Markdown/MarkdownForm.razor.js");
             await module.InvokeVoidAsync("setupEventHandlers", ContainerDomId);
         }
     }

@@ -5,7 +5,6 @@
 @using AnkiBooks.WebApp.Client.Pages.Articles.Show.Notes.Basic
 @using AnkiBooks.WebApp.Client.Pages.Articles.Show.Notes.Cloze
 @using AnkiBooks.WebApp.Client.Shared.Heroicons
-@inherits ChangesOrderedElementsContainerBase
 @inject IAnkiBooksApiService ApiService
 @inject ILogger<NoteElement> logger
 @inject DragStateService dragState
@@ -58,6 +57,12 @@ else
 }
 
 @code {
+[Parameter]
+    public OrderedElementsContainer<INote> NotesContainer { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<OrderedElementsContainer<INote>> NotesContainerChanged { get; set; }
+    
     [Parameter]
     public INote Note { get; set; } = null!;
 
@@ -72,8 +77,8 @@ else
     {
         await ApiService.DeleteNote(Note);
 
-        OrderedElementsContainer.Remove(Note);
-        await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
+        NotesContainer.Remove(Note);
+        await NotesContainerChanged.InvokeAsync(NotesContainer);
     }
 
     protected void HandleDrag()
@@ -92,7 +97,7 @@ else
 
     protected void HandleDragEnter()
     {
-        IOrderedElement? draggedElement = dragState.DraggedElement;
+        INote? draggedElement = dragState.DraggedElement;
 
         if (draggedElement == null) return;
         if (draggedElement == Note) return;
@@ -102,7 +107,7 @@ else
 
     protected void HandleDragLeave()
     {
-        IOrderedElement? draggedElement = dragState.DraggedElement;
+        INote? draggedElement = dragState.DraggedElement;
 
         if (draggedElement == null) return;
         if (draggedElement == Note) return;
@@ -115,7 +120,7 @@ else
     {
         nestedDragLevels = 0;
         logger.LogInformation("drop");
-        IOrderedElement? droppedElement = dragState.DraggedElement;
+        INote? droppedElement = dragState.DraggedElement;
 
         if (droppedElement == null) return;
         if (droppedElement == Note) return;
@@ -125,7 +130,7 @@ else
         // TODO: Fix drag and drop stuff
         @* await ApiService.PutNote(droppedElement); *@
 
-        OrderedElementsContainer.UpdatePosition(droppedElement);
-        await OrderedElementsContainerChanged.InvokeAsync(OrderedElementsContainer);
+        NotesContainer.UpdatePosition(droppedElement);
+        await NotesContainerChanged.InvokeAsync(NotesContainer);
     }
 }
