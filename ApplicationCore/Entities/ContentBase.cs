@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AnkiBooks.ApplicationCore.Entities;
 
 [Index(nameof(SectionId), nameof(OrdinalPosition), IsUnique=true)]
-public abstract class NoteBase : EntityBase, INote, IOrdinalChild
+public abstract class ContentBase : EntityBase, IContent, IOrdinalChild
 {
     [Required]
     public string? SectionId { get; set; }

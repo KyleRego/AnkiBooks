@@ -1,6 +1,6 @@
 namespace AnkiBooks.ApplicationCore.Interfaces;
 
-public interface INote : IEntityBase
+public interface IContent : IEntityBase
 {
     public string? SectionId { get; set; }
 

@@ -19,6 +19,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<BasicNote> BasicNotes { get; set; } = null!;
     public DbSet<ClozeNote> ClozeNotes { get; set; } = null!;
     public DbSet<Section> Sections { get; set; } = null!;
+    public DbSet<ContentBase> Contents { get; set; } = null!;
+    public DbSet<MarkdownContent> MarkdownContents { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -27,13 +29,19 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder
             .Entity<Section>()
             .ToTable(b => b.HasCheckConstraint(
-                "CK_ArticleElementOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0"
+                "CK_SectionOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0"
             ));
 
         builder
             .Entity<NoteBase>()
             .ToTable(b => b.HasCheckConstraint(
-                "CK_ArticleElementOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0"
+                "CK_NoteOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0"
+            ));
+
+        builder
+            .Entity<ContentBase>()
+            .ToTable(b => b.HasCheckConstraint(
+                "CK_ContentOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0"
             ));
 
         builder.Entity<ApplicationUser>(b =>

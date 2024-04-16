@@ -20,13 +20,13 @@ public class AddTests
             ]
         };
 
-        OrderedElementsContainer container = new(section.OrderedElements());
+        OrderedElementsContainer container = new(section.OrderedNotes().Cast<IOrdinalChild>().ToList());
         BasicNote noteToAdd = new() { Front="a", Back="b", OrdinalPosition=1 };
         container.Add(noteToAdd);
         container.ExpectElementsCountIs(3);
         container.ExpectElementsAreOrdered();
 
-        IOrderedElement element = container.OrderedElements.First(el => el.OrdinalPosition == 1);
+        IOrdinalChild element = container.OrderedElements.First(el => el.OrdinalPosition == 1);
         Assert.Equal(noteToAdd, element);
     }
 }

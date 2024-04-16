@@ -7,8 +7,15 @@ using Microsoft.EntityFrameworkCore;
 namespace AnkiBooks.Infrastructure.Repository;
 
 public class ClozeNoteRepository(ApplicationDbContext dbContext)
-                    : NoteRepositoryBase<ClozeNote>(dbContext), IClozeNoteRepository
+                    : OrderedElementRepositoryBase<ClozeNote>(dbContext), IClozeNoteRepository
 {
+    protected override List<IOrdinalChild> GetAllOrdinalChildren(ClozeNote clozeNote)
+    {
+        return _dbContext.Notes.Where(
+            n => n.SectionId == clozeNote.SectionId
+        ).Cast<IOrdinalChild>().ToList();
+    }
+
     protected override void AddElementToDbContext(ClozeNote element)
     {
         _dbContext.ClozeNotes.Add(element);

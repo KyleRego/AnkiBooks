@@ -11,7 +11,6 @@ public static class ApplicationDbContextExtensions
         dbContext.Articles.Add(article);
         Section section = new("Test section with one basic note")
         {
-            Text = "Hello world",
             BasicNotes = [ new() { Front = "Basic note front", Back = "Basic note back" } ]
         };
         article.Sections.Add(section);
@@ -25,7 +24,6 @@ public static class ApplicationDbContextExtensions
         dbContext.Articles.Add(article);
         Section section = new("Test section")
         {
-            Text = "Hello world",
             BasicNotes =
             [
                 new() { Front = "basic0", Back = "b", OrdinalPosition = 0 },

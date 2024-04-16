@@ -7,11 +7,13 @@ using Microsoft.EntityFrameworkCore;
 namespace AnkiBooks.Infrastructure.Repository;
 
 public class SectionRepository(ApplicationDbContext dbContext)
-            : OrderedElementRepositoryBase<Article, Section>(dbContext), ISectionRepository
+            : OrderedElementRepositoryBase<Section>(dbContext), ISectionRepository
 {
-    protected override Article GetParent(string parentId)
+    protected override List<IOrdinalChild> GetAllOrdinalChildren(Section section)
     {
-        return _dbContext.Articles.First(article => article.Id == parentId);
+        return _dbContext.Sections.Where(
+            sec => sec.ArticleId == section.ArticleId
+        ).Cast<IOrdinalChild>().ToList();
     }
 
     protected override void AddElementToDbContext(Section section)

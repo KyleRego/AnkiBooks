@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace AnkiBooks.ApplicationCore.Entities;
 
 [Index(nameof(ArticleId), nameof(OrdinalPosition), IsUnique=true)]
-public class Section(string title) : EntityBase, IOrderedElement, IOrderedElementsParent
+public class Section(string title) : EntityBase, IOrdinalChild
 {
     [Required]
     public string Title { get; set; } = title;
@@ -19,23 +19,24 @@ public class Section(string title) : EntityBase, IOrderedElement, IOrderedElemen
     [Required]
     public int OrdinalPosition { get; set; }
 
+    public List<MarkdownContent> MarkdownContents { get; set; } = [];
+
+    public List<IContent> OrderedContents()
+    {
+        return MarkdownContents.Cast<IContent>()
+                .OrderBy(item => item.OrdinalPosition)
+                .ToList();
+    }
+
     public List<BasicNote> BasicNotes { get; set; } = [];
 
     public List<ClozeNote> ClozeNotes { get; set; } = [];
 
-    public string ParentId()
+    public List<INote> OrderedNotes()
     {
-        return ArticleId!;
-    }
-
-    public List<IOrderedElement> OrderedElements()
-    {
-        return BasicNotes.Cast<IOrderedElement>()
-            .Concat(ClozeNotes.Cast<IOrderedElement>())
+        return BasicNotes.Cast<INote>()
+            .Concat(ClozeNotes.Cast<INote>())
             .OrderBy(item => item.OrdinalPosition)
             .ToList();
     }
-
-    [Required]
-    public string? Text { get; set; }
 }

@@ -30,7 +30,7 @@ public class GetPositionTests
             ]
         };
 
-        OrderedElementsContainer container = new(section.OrderedElements());
+        OrderedElementsContainer container = new(section.OrderedNotes().Cast<IOrdinalChild>().ToList());
 
         Assert.Equal(0, container.GetPosition(n1));
         Assert.Equal(1, container.GetPosition(n2));
