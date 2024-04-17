@@ -2,6 +2,10 @@
     min-height: 100vh;
 }
 
+.min-h-20 {
+    min-height: 5rem;
+}
+
 .h-100 {
     height: 100%;
 }

@@ -26,7 +26,8 @@
                     switch (content)
                     {
                         case MarkdownContent mdContent:
-                            <RenderMarkdown Text="@mdContent.Text" />
+                            <ShowMarkdown MarkdownContent="@mdContent"
+                                            @bind-ContentsContainer="@ContentsContainer" />
                             break;
                     }
 

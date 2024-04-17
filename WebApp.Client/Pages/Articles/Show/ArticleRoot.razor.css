@@ -7,6 +7,6 @@
     color: var(--ab-color-primary-dark);
 }
 
-::deep .highlight-dropzone {
+::deep .dragover-highlight {
     background-color: rgb(72, 173, 255);
 }

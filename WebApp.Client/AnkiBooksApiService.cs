@@ -16,6 +16,8 @@ public interface IAnkiBooksApiService
     public Task<INote?> PutNote(INote element);
     public Task DeleteNote(INote element);
 
+    public Task<IContent?> PutContent(IContent content);
+
     public Task<MarkdownContent?> PostMarkdownContent(MarkdownContent mdContent);
     public Task<MarkdownContent?> PutMarkdownContent(MarkdownContent mdContent);
     public Task DeleteMarkdownContent(string mdContentId);
@@ -97,6 +99,19 @@ public class AnkiBooksApiService(HttpClient httpClient) : IAnkiBooksApiService
         else
         {
             throw new ApplicationException();
+        }
+    }
+
+    public async Task<IContent?> PutContent(IContent content)
+    {
+        switch(content)
+        {
+            case MarkdownContent mdContent:
+                MarkdownContent? updatedMdContent = await PutMarkdownContent(mdContent);
+                return updatedMdContent;
+
+            default:
+                throw new ApplicationException();
         }
     }
 

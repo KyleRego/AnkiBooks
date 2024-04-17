@@ -1,0 +1,109 @@
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Interfaces
+@using AnkiBooks.WebApp.Client.Services
+@using AnkiBooks.WebApp.Client.Shared.Heroicons
+@inject DraggedItemHolder<IContent> draggedItemHolder
+@inject IAnkiBooksApiService ApiService
+
+@if (Editing == true)
+{
+    <EditMarkdown StartingMarkdown="@MarkdownContent" @bind-Editing="@Editing" />
+}
+else
+{
+<div    class="d-flex @(nestedDragLevels != 0 ? "dragover-highlight" : "")"
+        @ondragenter="HandleDragEnter"
+        @ondragenter:preventDefault
+        ondragover="event.preventDefault();"
+        @ondragleave="HandleDragLeave"
+        @ondragleave:preventDefault
+        @ondrop="HandleDrop">
+    
+    <div class="flex-grow-1">
+        <RenderMarkdown Text="@MarkdownContent.Text" />
+    </div>
+
+    <div class="min-h-20 flex-grow-0 d-flex flex-column justify-content-between align-items-center">
+        <div class="w-5 h-5" role="button"
+            @onclick="BeginEditing">
+            <Edit />
+        </div>
+
+        <div class="w-6 h-6" role="button"
+            draggable="true"
+            @ondragstart="HandleDrag"
+            @ondragend="HandleDragEnd">
+            <Drag />
+        </div>
+
+        <div class="w-5 h-5" role="button">
+            <Delete />
+        </div>
+    </div>
+</div>
+}
+
+@code {
+    [Parameter]
+    public MarkdownContent MarkdownContent { get; set; } = null!;
+
+    [Parameter]
+    public OrderedElementsContainer<IContent> ContentsContainer { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<OrderedElementsContainer<IContent>> ContentsContainerChanged { get; set; }
+
+    public bool Editing { get; set; } = false;
+
+    private void BeginEditing()
+    {
+        Editing = true;
+    }
+
+    private void HandleDrag()
+    {
+        draggedItemHolder.DraggedItem = MarkdownContent;
+    }
+
+    private void HandleDragEnd()
+    {
+        draggedItemHolder.DraggedItem = null;
+    }
+
+    private int nestedDragLevels = 0;
+
+    private void HandleDragEnter()
+    {
+        IContent? draggedItem = draggedItemHolder.DraggedItem;
+
+        if (draggedItem == null) return;
+        if (draggedItem == MarkdownContent) return;
+        nestedDragLevels += 1;
+    }
+
+    private void HandleDragLeave()
+    {
+        IContent? draggedItem = draggedItemHolder.DraggedItem;
+
+        if (draggedItem == null) return;
+        if (draggedItem == MarkdownContent) return;
+        nestedDragLevels -= 1;
+    }
+
+    private async Task HandleDrop()
+    {
+        nestedDragLevels = 0;
+        IContent? droppedItem = draggedItemHolder.DraggedItem;
+
+        if (droppedItem == null) return;
+        if (droppedItem == MarkdownContent) return;
+
+        droppedItem.OrdinalPosition = MarkdownContent.OrdinalPosition;
+
+        IContent? updatedItem = await ApiService.PutContent(droppedItem);
+        ArgumentNullException.ThrowIfNull(updatedItem);
+
+        ContentsContainer.UpdatePosition(droppedItem);
+        await ContentsContainerChanged.InvokeAsync(ContentsContainer);
+    }
+}

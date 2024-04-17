@@ -20,7 +20,7 @@
                 <Delete />
             </div>
         </div>
-        <div class="border-top-primary @(nestedDragLevels != 0 ? "highlight-dropzone" : "")"
+        <div class="border-top-primary @(nestedDragLevels != 0 ? "dragover-highlight" : "")"
 
                     draggable="true"
                     @ondragstart="HandleDrag"
@@ -81,21 +81,21 @@ else
         await NotesContainerChanged.InvokeAsync(NotesContainer);
     }
 
-    protected void HandleDrag()
+    private void HandleDrag()
     {
         logger.LogInformation("drag");
         draggedItemHolder.DraggedItem = Note;
     }
 
-    protected void HandleDragEnd()
+    private void HandleDragEnd()
     {
         logger.LogInformation("dragend");
         draggedItemHolder.DraggedItem = null;
     }
 
-    protected int nestedDragLevels = 0;
+    private int nestedDragLevels = 0;
 
-    protected void HandleDragEnter()
+    private void HandleDragEnter()
     {
         INote? draggedItem = draggedItemHolder.DraggedItem;
 
@@ -105,7 +105,7 @@ else
         nestedDragLevels += 1;
     }
 
-    protected void HandleDragLeave()
+    private void HandleDragLeave()
     {
         INote? draggedItem = draggedItemHolder.DraggedItem;
 
@@ -116,7 +116,7 @@ else
         nestedDragLevels -= 1;
     }
 
-    protected async Task HandleDrop()
+    private async Task HandleDrop()
     {
         nestedDragLevels = 0;
         logger.LogInformation("drop");
