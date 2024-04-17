@@ -12,10 +12,13 @@
 
     <section class="d-flex">
 
-        <div class="flex-grow-2 min-w-2-3 mr-4">
+        <div class="flex-grow-2 min-w-2-3 mr-2">
             @if (contents.Count == 0)
             {
-                <NewContent OrdinalPosition="@(0)" @bind-ContentsContainer="@ContentsContainer" />
+                @if (ReadMode == false)
+                {
+                    <NewContent OrdinalPosition="@(0)" @bind-ContentsContainer="@ContentsContainer" />
+                }
             }
             else
             {
@@ -30,8 +33,10 @@
                                             @bind-ContentsContainer="@ContentsContainer" />
                             break;
                     }
-
-                    <NewContent OrdinalPosition="@(i + 1)" @bind-ContentsContainer="@ContentsContainer" />
+                    @if (ReadMode == false)
+                    {
+                        <NewContent OrdinalPosition="@(i + 1)" @bind-ContentsContainer="@ContentsContainer" />
+                    }
                 }
             }
         </div>
@@ -39,7 +44,10 @@
         <div class="flex-grow-1 min-w-1-3">
             @if (notes.Count == 0)
             {
-                <NewNote OrdinalPosition="@(0)" @bind-NotesContainer="@NotesContainer" />
+                @if (ReadMode == false)
+                {
+                    <NewNote OrdinalPosition="@(0)" @bind-NotesContainer="@NotesContainer" />
+                }
             }
             else
             {
@@ -48,9 +56,11 @@
                     INote note = notes[i];
 
                     <NoteElement @bind-NotesContainer="NotesContainer" Note="@note" />
-
-                    <NewNote OrdinalPosition="@(i + 1)"
-                            @bind-NotesContainer="@NotesContainer"/>
+                    
+                    @if (ReadMode == false)
+                    {
+                        <NewNote OrdinalPosition="@(i + 1)" @bind-NotesContainer="@NotesContainer"/>
+                    }
                 }
             }
         </div>
@@ -67,6 +77,9 @@
     
     [Parameter]
     public EventCallback<OrderedElementsContainer<Section>> SectionsContainerChanged { get; set; }
+
+    [CascadingParameter(Name="ReadMode")]
+    public bool ReadMode { get; set; }
     
     public OrderedElementsContainer<INote>? NotesContainer { get; set; }
     public OrderedElementsContainer<IContent>? ContentsContainer { get; set; }

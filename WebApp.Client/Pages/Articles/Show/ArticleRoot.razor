@@ -25,23 +25,39 @@ else
 
     <PageTitle>@article.Title</PageTitle>
 
-    <article>
-        <CascadingValue Value="@article.Id" Name="ArticleId">
-            @if (sections.Count == 0)
-            {
-                @* something went wrong  *@
-            }
-            else
-            {
-                @for (int i = 0; i < sections.Count; i++)
-                {
-                    Section section = sections[i];
+    <CascadingValue Value="@article.Id" Name="ArticleId">
+        <CascadingValue Value="@ReadMode" Name="ReadMode">
+            <article class="px-4">
+                <div class="w-100 py-2 d-flex justify-content-between">
+                    <span>@article.Title</span>
+                    
+                    @if (ReadMode == false)
+                    {
+                        <span role="button" @onclick="StartReadMode">Read mode</span>
+                    }
+                    else
+                    {
+                        <span role="button" @onclick="EndReadMode">Edit mode</span>
+                    }
+                </div>
+                <div>
+                    @if (sections.Count == 0)
+                    {
+                        @* something went wrong  *@
+                    }
+                    else
+                    {
+                        @for (int i = 0; i < sections.Count; i++)
+                        {
+                            Section section = sections[i];
 
-                    <SectionRoot Section="@(section)" @bind-SectionsContainer="SectionsContainer" />
-                }
-            }
+                            <SectionRoot Section="@(section)" @bind-SectionsContainer="SectionsContainer" />
+                        }
+                    }
+                </div>
+            </article>
         </CascadingValue>
-    </article>
+    </CascadingValue>
 }
 
 @code {
@@ -51,6 +67,18 @@ else
     private OrderedElementsContainer<Section>? SectionsContainer;
 
     private Article? article;
+
+    public bool ReadMode { get; set; } = false;
+
+    private void StartReadMode()
+    {
+        ReadMode = true;
+    }
+
+    private void EndReadMode()
+    {
+        ReadMode = false;
+    }
 
     private PersistingComponentStateSubscription persistingSubscription;
 

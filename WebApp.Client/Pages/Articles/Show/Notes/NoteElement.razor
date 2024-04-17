@@ -11,16 +11,19 @@
 
 @if (editing == false)
 {
-    <div class="border-primary">
-        <div class="d-flex justify-content-between p-1">
-            <div class="w-5 h-5" role="button" @onclick="BeginEditing">
-                <Edit />
+    <div class="border-primary mb-2">
+        @if (ReadMode == false)
+        {
+            <div class="border-bottom-primary d-flex justify-content-between p-1">
+                <div class="w-5 h-5" role="button" @onclick="BeginEditing">
+                    <Edit />
+                </div>
+                <div class="w-5 h-5" role="button" @onclick="DeleteElement">
+                    <Delete />
+                </div>
             </div>
-            <div class="w-5 h-5" role="button" @onclick="DeleteElement">
-                <Delete />
-            </div>
-        </div>
-        <div class="border-top-primary @(nestedDragLevels != 0 ? "dragover-highlight" : "")"
+        }
+        <div class="@(nestedDragLevels != 0 ? "dragover-highlight" : "")"
 
                     draggable="true"
                     @ondragstart="HandleDrag"
@@ -57,7 +60,7 @@ else
 }
 
 @code {
-[Parameter]
+    [Parameter]
     public OrderedElementsContainer<INote> NotesContainer { get; set; } = null!;
 
     [Parameter]
@@ -65,6 +68,9 @@ else
     
     [Parameter]
     public INote Note { get; set; } = null!;
+
+    [CascadingParameter(Name="ReadMode")]
+    public bool ReadMode { get; set; }
 
     private bool editing = false;
 

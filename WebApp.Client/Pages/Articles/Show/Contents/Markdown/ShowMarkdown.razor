@@ -23,23 +23,26 @@ else
         <RenderMarkdown Text="@MarkdownContent.Text" />
     </div>
 
-    <div class="min-h-20 flex-grow-0 d-flex flex-column justify-content-between align-items-center">
-        <div class="w-5 h-5" role="button"
-            @onclick="BeginEditing">
-            <Edit />
-        </div>
+    @if (ReadMode == false)
+    {
+        <div class="min-h-20 flex-grow-0 d-flex flex-column justify-content-between align-items-center">
+            <div class="w-5 h-5" role="button"
+                @onclick="BeginEditing">
+                <Edit />
+            </div>
 
-        <div class="w-6 h-6" role="button"
-            draggable="true"
-            @ondragstart="HandleDrag"
-            @ondragend="HandleDragEnd">
-            <Drag />
-        </div>
+            <div class="w-6 h-6" role="button"
+                draggable="true"
+                @ondragstart="HandleDrag"
+                @ondragend="HandleDragEnd">
+                <Drag />
+            </div>
 
-        <div class="w-5 h-5" role="button">
-            <Delete />
+            <div class="w-5 h-5" role="button">
+                <Delete />
+            </div>
         </div>
-    </div>
+    }
 </div>
 }
 
@@ -52,6 +55,9 @@ else
 
     [Parameter]
     public EventCallback<OrderedElementsContainer<IContent>> ContentsContainerChanged { get; set; }
+
+    [CascadingParameter(Name="ReadMode")]
+    public bool ReadMode { get; set; }
 
     public bool Editing { get; set; } = false;
 

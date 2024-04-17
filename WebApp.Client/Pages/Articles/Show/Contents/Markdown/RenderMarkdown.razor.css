@@ -5,3 +5,7 @@
 ::deep h2 {
     font-size: 32px;
 }
+
+::deep p {
+    margin: 0 0 1rem;
+}
