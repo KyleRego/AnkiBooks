@@ -32,7 +32,7 @@ a {
 
 /* TODO: Something else than this */
 a.active {
-    color: white;
+    color: rgb(103, 204, 255);
 }
 
 a:hover {

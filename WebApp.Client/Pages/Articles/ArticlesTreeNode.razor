@@ -1,0 +1,56 @@
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.WebApp.Client.Shared.Heroicons
+
+<li>
+    <div class="d-flex align-items-center">
+        @if (Expanded == false)
+        {
+            <div @onclick="Expand" class="w-4 h-4 flex-none">
+                <ChevronRight />
+            </div>
+        }
+        else
+        {
+            <div @onclick="Collapse" class="w-4 h-4 flex-none">
+                <ChevronDown />
+            </div>
+        }
+        <NavLink href="@($"articles/{Article.Id}")" class="word-break-all">@Article.Title</NavLink>
+    </div>
+
+    @if (Expanded == true)
+    {
+        <ul class="pl-4">
+            @foreach (Article article in Article.ChildArticles)
+            {
+                <ArticlesTreeNode Article="@article" @bind-Articles="@Articles" />
+            }
+            <li>
+                <NewArticle @bind-Articles="@Articles" ParentArticle="@Article" />
+            </li>
+        </ul>
+    }
+</li>
+
+@code {
+    [Parameter]
+    public Article Article { get; set; } = null!;
+
+    [Parameter]
+    public List<Article> Articles { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<List<Article>> ArticlesChanged { get; set; }
+
+    private bool Expanded = false;
+
+    private void Expand()
+    {
+        Expanded = true;
+    }
+
+    private void Collapse()
+    {
+        Expanded = false;
+    }
+}

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace AnkiBooks.ApplicationCore.Entities;
 
@@ -12,6 +13,8 @@ public class Article(string title) : EntityBase
 
     [ForeignKey(nameof(ParentArticle))]
     public string? ParentArticleId { get; set; }
+
+    [JsonIgnore]
     public Article? ParentArticle { get; set; }
 
     public List<Article> ChildArticles { get; set; } = [];

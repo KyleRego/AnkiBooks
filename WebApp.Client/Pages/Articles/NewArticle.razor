@@ -45,6 +45,9 @@
 
 @code {
     [Parameter]
+    public Article? ParentArticle { get; set; } = null!;
+
+    [Parameter]
     public List<Article> Articles { get; set; } = null!;
     
     [Parameter]
@@ -70,6 +73,7 @@
     {
         ArgumentNullException.ThrowIfNull(Article);
         ArgumentNullException.ThrowIfNullOrWhiteSpace(Article.Title);
+        Article.ParentArticleId = ParentArticle?.Id;
 
         Article? article = await ApiService.PostArticle(Article);
         ArgumentNullException.ThrowIfNull(article);
