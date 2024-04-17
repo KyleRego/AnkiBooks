@@ -16,7 +16,7 @@ export function setupEventHandlers(domContainerId) {
     const linkButton = containingElement.querySelector(".markdown-link-button");
 
     textArea.addEventListener("keydown", (event) => {
-        if (event.ctrlKey && event.key != "Control") {
+        if (event.ctrlKey && ["b", "i", "s"].includes(event.key)) {
             event.preventDefault();
 
             const keyName = event.key;
