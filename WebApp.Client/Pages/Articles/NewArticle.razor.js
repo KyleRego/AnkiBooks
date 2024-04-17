@@ -1,4 +1,4 @@
-export function setupEventHandlers(domContainerId) {
+export function setupDialog(domContainerId) {
     const containingElement = document.getElementById(domContainerId);
     const dialog = containingElement.querySelector("dialog");
     const showButton = containingElement.querySelector(".showDialogBtn");
@@ -11,4 +11,8 @@ export function setupEventHandlers(domContainerId) {
     closeButton.addEventListener("click", () => {
         dialog.close();
     });
+
+    // Using this setupDialog to also re-setup the dialog after a submit
+    // seems to play well with Blazor better than other things I tried
+    closeButton.click();
 }

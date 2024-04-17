@@ -9,7 +9,7 @@ namespace AnkiBooks.WebApp.Client;
 public interface IAnkiBooksApiService
 {
     public Task<Article?> GetArticle(string articleId);
-    public Task<Article[]?> GetArticles();
+    public Task<List<Article>?> GetArticles();
     public Task<Article?> PostArticle(Article articleData);
 
     public Task<INote?> PostNote(INote element);
@@ -41,9 +41,9 @@ public class AnkiBooksApiService(HttpClient httpClient) : IAnkiBooksApiService
         return await _httpClient.GetFromJsonAsync<Article>($"api/Articles/{articleId}");
     }
 
-    public async Task<Article[]?> GetArticles()
+    public async Task<List<Article>?> GetArticles()
     {
-        return await _httpClient.GetFromJsonAsync<Article[]>("api/Articles");
+        return await _httpClient.GetFromJsonAsync<List<Article>>("api/Articles");
     }
 
     public async Task<Article?> PostArticle(Article articleData)

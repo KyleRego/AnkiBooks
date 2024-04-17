@@ -9,7 +9,7 @@
 
 <div id="@ContainerDomId">
 
-    <button role="button" class="showDialogBtn">
+    <button type="button" class="showDialogBtn">
         New article
     </button>
 
@@ -44,6 +44,12 @@
 </div>
 
 @code {
+    [Parameter]
+    public List<Article> Articles { get; set; } = null!;
+    
+    [Parameter]
+    public EventCallback<List<Article>> ArticlesChanged { get; set; }
+
     private IJSObjectReference? module;
     private string ContainerDomId = Guid.NewGuid().ToString();
 
@@ -52,8 +58,8 @@
         if (firstRender)
         {
             module = await JS.InvokeAsync<IJSObjectReference>("import",
-                "./Pages/Articles/Index/NewArticle.razor.js");
-            await module.InvokeVoidAsync("setupEventHandlers", ContainerDomId);
+                "./Pages/Articles/NewArticle.razor.js");
+            await module.InvokeVoidAsync("setupDialog", ContainerDomId);
         }
     }
 
@@ -67,8 +73,13 @@
 
         Article? article = await ApiService.PostArticle(Article);
         ArgumentNullException.ThrowIfNull(article);
-
+        Articles.Add(article);
+        await ArticlesChanged.InvokeAsync(Articles);
         Navigation.NavigateTo($"articles/{article.Id}");
+
+        // Reset the dialog
+        Article = new("");
+        await module.InvokeVoidAsync("setupDialog", ContainerDomId);
     }
 
     private void LogInvalidSubmit()
