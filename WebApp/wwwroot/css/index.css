@@ -12,6 +12,7 @@
 @import "./utilities/width.css";
 @import "./utilities/word-break.css";
 @import "./vendor/preflight.css";
+@import "./dialog.css";
 @import "./forms.css";
 @import "./theme.css";
 
