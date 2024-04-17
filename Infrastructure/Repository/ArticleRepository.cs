@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.ApplicationCore.Interfaces;
 using AnkiBooks.Infrastructure.Data;
@@ -11,7 +12,13 @@ public class ArticleRepository(ApplicationDbContext dbContext) : IArticleReposit
 
     public async Task<List<Article>> GetArticlesAsync()
     {
-        return await _dbContext.Articles.ToListAsync();
+        // TODO: Look into a recursive way of doing this
+        return await _dbContext.Articles
+                            .Include(a => a.ChildArticles)
+                            .ThenInclude(ca => ca.ChildArticles)
+                            .ThenInclude(cca => cca.ChildArticles)
+                            .Where(a => a.ParentArticleId == null)
+                            .ToListAsync();
     }
 
     public async Task<Article?> GetArticleAsync(string articleId)

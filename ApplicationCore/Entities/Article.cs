@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using AnkiBooks.ApplicationCore.Interfaces;
 
 namespace AnkiBooks.ApplicationCore.Entities;
 
@@ -11,8 +10,11 @@ public class Article(string title) : EntityBase
     [Required]
     public bool Public { get; set; } = false;
 
+    [ForeignKey(nameof(ParentArticle))]
     public string? ParentArticleId { get; set; }
     public Article? ParentArticle { get; set; }
+
+    public List<Article> ChildArticles { get; set; } = [];
 
     public List<Section> Sections { get; set; } = [];
 

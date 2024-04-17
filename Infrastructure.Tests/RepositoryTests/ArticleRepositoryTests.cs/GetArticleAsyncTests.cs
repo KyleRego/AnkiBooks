@@ -21,7 +21,7 @@ public class GetArticleAsyncTests : RepositoryTestBase
         sec.BasicNotes.Add(bn);
         sec.ClozeNotes.Add(cn);
         sec.MarkdownContents.Add(mdC);
-        dbContext.Add(art);
+        dbContext.Articles.Add(art);
 
         await dbContext.SaveChangesAsync();
 
