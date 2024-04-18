@@ -34,6 +34,12 @@
     flex-direction: column;
 }
 
+@media (max-width: 640px) {
+    .sm-flex-column {
+        flex-direction: column;
+    }
+}
+
 .justify-content-around {
     justify-content: space-around;
 }
