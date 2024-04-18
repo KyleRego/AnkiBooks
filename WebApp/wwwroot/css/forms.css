@@ -3,6 +3,14 @@ input, textarea, select {
     background-color: #343434;
 }
 
+input, textarea {
+    padding: 0.25rem;
+}
+
 option {
     color: black;
+}
+
+:focus-visible {
+    outline: none;
 }
