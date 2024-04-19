@@ -11,38 +11,38 @@
 }
 else
 {
-<div    class="d-flex @(nestedDragLevels != 0 ? "dragover-highlight" : "")"
+<div    class="@(nestedDragLevels != 0 ? "dragover-highlight" : "")"
         @ondragenter="HandleDragEnter"
         @ondragenter:preventDefault
         ondragover="event.preventDefault();"
         @ondragleave="HandleDragLeave"
         @ondragleave:preventDefault
         @ondrop="HandleDrop">
-    
-    <div class="flex-grow-1">
-        <RenderMarkdown Text="@MarkdownContent.Text" />
-    </div>
 
     @if (ReadMode == false)
     {
-        <div class="min-h-20 flex-grow-0 d-flex flex-column justify-content-between align-items-center">
+    <div class="float-right">
+        <div class="m-1 p-1 border-primary-thin d-flex flex-row justify-content-between align-items-center">
             <div class="w-5 h-5" role="button"
                 @onclick="BeginEditing">
                 <Edit />
             </div>
 
-            <div class="w-6 h-6" role="button"
+            <div class="w-6 h-6 ml-2" role="button"
                 draggable="true"
                 @ondragstart="HandleDrag"
                 @ondragend="HandleDragEnd">
                 <Drag />
             </div>
 
-            <div class="w-5 h-5" role="button">
+            <div class="w-5 h-5 ml-2" role="button">
                 <Delete />
             </div>
         </div>
+    </div>
     }
+
+    <RenderMarkdown Text="@MarkdownContent.Text" />
 </div>
 }
 
