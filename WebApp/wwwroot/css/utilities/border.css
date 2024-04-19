@@ -4,6 +4,12 @@
     border-style: solid;
 }
 
+.border-primary-thin {
+    border: 1px;
+    border-color: var(--ab-border-primary-dark);
+    border-style: solid;
+}
+
 .border-top-primary {
     border-top: 2px;
     border-color: var(--ab-border-primary-dark);
@@ -16,8 +22,20 @@
     border-style: solid;
 }
 
+.border-bottom-primary-thin {
+    border-bottom: 1px;
+    border-color: var(--ab-border-primary-dark);
+    border-style: solid;
+}
+
 .border-right-primary {
     border-right: 2px;
+    border-color: var(--ab-border-primary-dark);
+    border-style: solid;
+}
+
+.border-left-primary-thin {
+    border-left: 1px;
     border-color: var(--ab-border-primary-dark);
     border-style: solid;
 }
