@@ -1,9 +1,7 @@
-@page "/articles/{id}"
 @using System.Text.Json
 @using AnkiBooks.ApplicationCore
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Interfaces
-@layout ArticlesLayout
 @inject IConfiguration Config
 @inject IAnkiBooksApiService ApiService
 @inject ILogger<ArticleRoot> Logger
@@ -11,6 +9,8 @@
 @implements IDisposable
 
 @rendermode InteractiveWebAssembly
+
+<PageTitle>@article.Title</PageTitle>
 
 @if (article == null || SectionsContainer == null)
 {
@@ -22,40 +22,24 @@ else
 {
     List<Section> sections = SectionsContainer.OrderedElements;
 
-    <PageTitle>@article.Title</PageTitle>
-
     <CascadingValue Value="@article.Id" Name="ArticleId">
-        <CascadingValue Value="@ReadMode" Name="ReadMode">
-            <article class="px-4">
-                <div class="w-100 py-2 d-flex justify-content-between">
-                    <span>@article.Title</span>
-                    
-                    @if (ReadMode == false)
+        <article class="px-4">
+            <div>
+                @if (sections.Count == 0)
+                {
+                    @* something went wrong  *@
+                }
+                else
+                {
+                    @for (int i = 0; i < sections.Count; i++)
                     {
-                        <span role="button" @onclick="StartReadMode">Read mode</span>
-                    }
-                    else
-                    {
-                        <span role="button" @onclick="EndReadMode">Edit mode</span>
-                    }
-                </div>
-                <div>
-                    @if (sections.Count == 0)
-                    {
-                        @* something went wrong  *@
-                    }
-                    else
-                    {
-                        @for (int i = 0; i < sections.Count; i++)
-                        {
-                            Section section = sections[i];
+                        Section section = sections[i];
 
-                            <SectionRoot Section="@(section)" @bind-SectionsContainer="SectionsContainer" />
-                        }
+                        <SectionRoot Section="@(section)" @bind-SectionsContainer="SectionsContainer" />
                     }
-                </div>
-            </article>
-        </CascadingValue>
+                }
+            </div>
+        </article>
     </CascadingValue>
 }
 
@@ -66,18 +50,6 @@ else
     private OrderedElementsContainer<Section>? SectionsContainer;
 
     private Article? article;
-
-    public bool ReadMode { get; set; } = false;
-
-    private void StartReadMode()
-    {
-        ReadMode = true;
-    }
-
-    private void EndReadMode()
-    {
-        ReadMode = false;
-    }
 
     private PersistingComponentStateSubscription persistingSubscription;
 

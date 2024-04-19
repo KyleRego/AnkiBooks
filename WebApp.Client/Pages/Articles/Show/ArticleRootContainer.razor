@@ -1,0 +1,53 @@
+@page "/articles/{id}"
+@layout MainLayout
+@using AnkiBooks.WebApp.Client.Shared.Heroicons
+
+<div class="d-flex h-100">
+    <div class="@(ShowArticleTree == true ? "flex-grow-1-5 min-w-1-5 sm-min-w-40 p-4 border-right-primary" : "d-none")">
+        <ArticlesTree />
+    </div>
+    <div class="@(ShowArticleTree == true ? "flex-grow-4-5 min-w-4-5" : "w-100")">
+        <div class="w-100 pt-4 pb-2 px-4 d-flex justify-content-between align-items-center">
+
+            <div class="w-6 h-6" role="button" @onclick="ToggleArticlesTree">
+                <BookOpen />
+            </div>
+
+            @if (ReadMode == false)
+            {
+                <span role="button" @onclick="StartReadMode">Read mode</span>
+            }
+            else
+            {
+                <span role="button" @onclick="EndReadMode">Edit mode</span>
+            }
+        </div>
+        <CascadingValue Value="@ReadMode" Name="ReadMode">
+            <ArticleRoot Id="@Id" />
+        </CascadingValue>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+
+    public bool ReadMode { get; set; } = false;
+
+    private void StartReadMode()
+    {
+        ReadMode = true;
+    }
+
+    private void EndReadMode()
+    {
+        ReadMode = false;
+    }
+
+    private bool ShowArticleTree = true;
+
+    private void ToggleArticlesTree()
+    {
+        ShowArticleTree = !ShowArticleTree;
+    }
+}

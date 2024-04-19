@@ -9,3 +9,7 @@
 .d-inline {
     display: inline;
 }
+
+.d-none {
+    display: none;
+}

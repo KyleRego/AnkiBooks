@@ -28,6 +28,10 @@
     padding-top: 0.5rem;
 }
 
+.pb-2 {
+    padding-bottom: 0.5rem;
+}
+
 .px-4 {
     padding-left: 1rem;
     padding-right: 1rem;
@@ -39,6 +43,10 @@
 
 .pl-4 {
     padding-left: 1rem;
+}
+
+.pt-4 {
+    padding-top: 1rem;
 }
 
 .p-4 {
