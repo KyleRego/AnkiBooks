@@ -1,6 +1,6 @@
 input, textarea, select {
     color: rgb(255, 255, 255);
-    background-color: #343434;
+    background-color: var(--ab-bg-tertiary-dark);
 }
 
 input, textarea {

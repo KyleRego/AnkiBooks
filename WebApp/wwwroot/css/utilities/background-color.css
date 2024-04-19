@@ -5,3 +5,7 @@
 .bg-secondary {
     background: var(--ab-bg-secondary-dark);
 }
+
+.bg-tertiary {
+    background: var(--ab-bg-tertiary-dark)
+}
