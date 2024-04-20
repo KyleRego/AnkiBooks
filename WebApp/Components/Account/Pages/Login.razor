@@ -13,8 +13,8 @@
 <PageTitle>Log in</PageTitle>
 
 <h1>Log in</h1>
-<div class="row">
-    <div class="col-md-4">
+<div class="d-flex">
+    <div class="flex-grow-1 pr-4">
         <section>
             <StatusMessage Message="@errorMessage" />
             <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
@@ -38,8 +38,8 @@
                         Remember me
                     </label>
                 </div>
-                <div>
-                    <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-lg btn-primary">Log in</button>
                 </div>
                 <div>
                     <p>
@@ -55,7 +55,7 @@
             </EditForm>
         </section>
     </div>
-    <div class="col-md-6 col-md-offset-2">
+    <div class="flex-grow-1">
         <section>
             <h3>Use another service to log in.</h3>
             <hr />
@@ -93,7 +93,14 @@
         if (result.Succeeded)
         {
             Logger.LogInformation("User logged in.");
-            RedirectManager.RedirectTo(ReturnUrl);
+            if (!String.IsNullOrWhiteSpace(ReturnUrl))
+            {
+                RedirectManager.RedirectTo(ReturnUrl);
+            }
+            else
+            {
+                RedirectManager.RedirectTo("articles");
+            }
         }
         else if (result.RequiresTwoFactor)
         {
