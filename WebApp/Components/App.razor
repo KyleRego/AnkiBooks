@@ -27,7 +27,11 @@
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
 
-    private IComponentRenderMode? RenderModeForPage => HttpContext.Request.Path.StartsWithSegments("/Account")
-        ? null
-        : InteractiveWebAssembly;
+    private IComponentRenderMode? RenderModeForPage => ShouldUseStaticRendering(HttpContext.Request.Path)
+                                                        ? null : InteractiveWebAssembly;
+
+    private bool ShouldUseStaticRendering(PathString pathString)
+    {
+        return pathString.Equals("/") || pathString.StartsWithSegments("/Account");
+    }
 }

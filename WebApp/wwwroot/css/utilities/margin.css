@@ -44,6 +44,10 @@
     margin-bottom: 0.75rem;
 }
 
+.m-4 {
+    margin: 1rem;
+}
+
 .ml-4 {
     margin-left: 1rem;
 }

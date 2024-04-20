@@ -8,7 +8,6 @@ using AnkiBooks.ApplicationCore.Identity;
 using AnkiBooks.ApplicationCore.Interfaces;
 using AnkiBooks.Infrastructure.Repository;
 using AnkiBooks.WebApp.Client;
-using AnkiBooks.WebApp.Client.Services;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -48,7 +47,7 @@ builder.Services.AddScoped<IMarkdownContentRepository, MarkdownContentRepository
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
