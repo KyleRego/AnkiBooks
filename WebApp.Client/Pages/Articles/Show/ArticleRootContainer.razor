@@ -3,14 +3,23 @@
 @using AnkiBooks.WebApp.Client.Shared.Heroicons
 
 <div class="d-flex h-100">
-    <div class="@(ShowArticleTree == true ? "flex-grow-1-5 min-w-1-5 sm-min-w-40 p-4 border-right-primary" : "d-none")">
-        <ArticlesTree />
-    </div>
-    <div class="@(ShowArticleTree == true ? "flex-grow-4-5 min-w-4-5" : "w-100")">
-        <div class="w-100 pt-4 pb-2 px-4 d-flex justify-content-between align-items-center">
-
-            <div class="w-6 h-6" role="button" @onclick="ToggleArticlesTree">
+    <div class="p-4 border-right-primary @(ShowArticleTree == true ? "" : "d-none")"
+                style="min-width: 200px;">
+        <div class="d-flex justify-content-center">
+            <div class="w-6 h-6 mb-4" role="button" @onclick="ToggleArticlesTree">
                 <BookOpen />
+            </div>
+        </div>
+        
+        <ArticlesTree />
+        
+    </div>
+    <div class="">
+        <div class="w-100 p-4 d-flex justify-content-between align-items-center">
+            <div class="@(ShowArticleTree == true ? "visibility-hidden" : "")">
+                <div class="w-6 h-6" role="button" @onclick="ToggleArticlesTree">
+                    <BookOpen />
+                </div>
             </div>
 
             @if (ReadMode == false)
