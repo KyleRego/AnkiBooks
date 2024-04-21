@@ -1,0 +1,3 @@
+.hover-bg-primary:hover {
+    background-color: var(--ab-hover-color-dark);
+}
