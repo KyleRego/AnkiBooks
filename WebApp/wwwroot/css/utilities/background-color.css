@@ -2,6 +2,10 @@
     background-color: var(--ab-bg-primary-dark);
 }
 
+.hover\:bg-primary-light:hover {
+    background-color: var(--ab-bg-primary-light);
+}
+
 .bg-secondary {
     background: var(--ab-bg-secondary-dark);
 }
