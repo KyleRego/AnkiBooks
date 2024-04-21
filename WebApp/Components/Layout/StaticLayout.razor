@@ -5,7 +5,10 @@
 <div class="d-flex flex-column">
     <header class="border-bottom-primary d-flex flex-row justify-content-between align-items-center py-4 px-8">
         <div>
-            <NavLink href="" Match="NavLinkMatch.All">Anki Books</NavLink>
+            <NavLink class="d-none lg:d-block" href="" Match="NavLinkMatch.All">Anki Books</NavLink>
+            <div class="lg:d-none w-5 h-5" id="sidebar-toggle">
+                <Hamburger />
+            </div>
         </div>
         <div class="d-flex">
             <AuthorizeView>
@@ -30,7 +33,8 @@
     </header>
 
     <div class="d-flex flex-row">
-        <div class="flex-shrink-0 position-sticky left-0 top-0 bottom-0 h-screen w-64 border-right-primary">
+        <div id="sidebar"
+                class="d-none lg:d-block flex-shrink-0 position-sticky left-0 top-0 bottom-0 h-screen w-64 border-right-primary">
             <ul class="d-flex flex-column">
                 <li>
                     <a href="articles" class="d-flex align-items-center px-7 py-4 hover-bg-primary">
@@ -83,3 +87,14 @@
         </div>
     </div>
 </div>
+
+<script>
+    const sidebar = document.getElementById("sidebar");
+    const sidebarToggle = document.getElementById("sidebar-toggle");
+
+    sidebarToggle.addEventListener("click", () => toggleSidebar());
+
+    function toggleSidebar() {
+        sidebar.classList.toggle("d-none");
+    }
+</script>
