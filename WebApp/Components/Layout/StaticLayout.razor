@@ -6,7 +6,7 @@
     <header class="border-bottom-primary d-flex flex-row justify-content-between align-items-center py-4 px-8">
         <div>
             <NavLink class="d-none lg:d-block" href="" Match="NavLinkMatch.All">Anki Books</NavLink>
-            <div class="lg:d-none w-5 h-5" id="sidebar-toggle">
+            <div class="lg:d-none w-6 h-6 cursor-pointer" role="button" id="sidebar-toggle">
                 <Hamburger />
             </div>
         </div>
@@ -35,13 +35,12 @@
     <div class="d-flex flex-row">
         <div id="sidebar"
                 class="d-none lg:d-block flex-shrink-0 position-sticky left-0 top-0 bottom-0 h-screen w-64 border-right-primary">
-            <ul class="d-flex flex-column">
-                <li>
-                    <NavLink class="d-flex lg:d-none px-7 py-4 hover:bg-primary-light" href="" Match="NavLinkMatch.All">
-                        Anki Books
-                    </NavLink>
-                </li>
 
+            <NavLink class="d-flex lg:d-none px-7 py-4 hover:bg-primary-light" href="" Match="NavLinkMatch.All">
+                Anki Books
+            </NavLink>
+
+            <ul class="d-flex flex-column">
                 <li>
                     <a href="articles" class="d-flex align-items-center px-7 py-4 hover:bg-primary-light">
                         <div class="w-5 h-5 mr-2">
