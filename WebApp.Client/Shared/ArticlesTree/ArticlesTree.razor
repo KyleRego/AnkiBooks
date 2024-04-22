@@ -14,7 +14,8 @@
     }
     else
     {
-        <input type="search" class="w-100 p-1 mb-2" placeholder="Filter articles:" />
+        <input type="search" class="p-1 w-100" placeholder="Filter articles:" />
+
         <ul>
         @for(int i = 0; i < articles.Count; i++)
         {
@@ -22,10 +23,9 @@
 
             <ArticlesTreeNode @bind-Articles="@articles" Article="@article" />
         }
-            <li>
-                <NewArticle @bind-Articles="@articles" ParentArticle="@(null)" />
-            </li>
         </ul>
+
+        <NewArticle @bind-Articles="@articles" ParentArticle="@(null)" />
     }
 </div>
 

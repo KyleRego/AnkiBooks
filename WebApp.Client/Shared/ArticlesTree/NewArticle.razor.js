@@ -1,8 +1,8 @@
 export function setupDialog(domContainerId) {
     const containingElement = document.getElementById(domContainerId);
     const dialog = containingElement.querySelector("dialog");
-    const showButton = containingElement.querySelector(".showDialogBtn");
-    const closeButton = containingElement.querySelector(".closeDialogBtn");
+    const showButton = containingElement.querySelector(".show-dialog-button");
+    const closeButton = containingElement.querySelector(".close-dialog-button");
 
     showButton.addEventListener("click", () => {
         dialog.showModal();

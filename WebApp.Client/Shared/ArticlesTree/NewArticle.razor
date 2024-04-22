@@ -9,9 +9,15 @@
 
 <div id="@ContainerDomId">
 
-    <button type="button" class="showDialogBtn">
-        New article
-    </button>
+    <div class="d-flex px-4 py-2 hover:bg-primary-light align-items-center
+                    show-dialog-button" role="button">
+        <div class="w-5 h-5 flex-none mr-2">
+            <Plus />
+        </div>
+        <div>
+            New article
+        </div>
+    </div>
 
     <dialog class="p-2 border-primary">
         <EditForm   Model="Article"
@@ -22,7 +28,7 @@
             <DataAnnotationsValidator />
             <div>
                 <div class="d-flex justify-content-end mb-3">
-                    <div class="w-5 h-5 closeDialogBtn" role="button">
+                    <div class="w-5 h-5 close-dialog-button" role="button">
                         <Close />
                     </div>
                 </div>
@@ -61,7 +67,7 @@
         if (firstRender)
         {
             module = await JS.InvokeAsync<IJSObjectReference>("import",
-                "./Pages/Articles/NewArticle.razor.js");
+                "./Shared/ArticlesTree/NewArticle.razor.js");
             await module.InvokeVoidAsync("setupDialog", ContainerDomId);
         }
     }
