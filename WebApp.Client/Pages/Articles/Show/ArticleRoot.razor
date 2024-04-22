@@ -9,10 +9,8 @@
 @inject PersistentComponentState ApplicationState
 @implements IDisposable
 
-@rendermode InteractiveWebAssembly
-
-<div class="w-100 p-4 d-flex justify-content-between align-items-center">
-
+<CascadingValue Value="@ReadMode" Name="ReadMode">
+<div class="w-100 p-4 d-flex justify-content-end align-items-center">
     @if (ReadMode == false)
     {
         <span role="button" @onclick="StartReadMode">Read mode</span>
@@ -36,6 +34,7 @@ else
     List<Section> sections = SectionsContainer.OrderedElements;
 
     <CascadingValue Value="@article.Id" Name="ArticleId">
+    
         <article class="px-4">
             <div>
                 @if (sections.Count == 0)
@@ -55,6 +54,7 @@ else
         </article>
     </CascadingValue>
 }
+</CascadingValue>
 
 @code {
     [Parameter]
@@ -62,15 +62,9 @@ else
 
     public bool ReadMode { get; set; } = false;
 
-    private void StartReadMode()
-    {
-        ReadMode = true;
-    }
+    private void StartReadMode() => ReadMode = true;
 
-    private void EndReadMode()
-    {
-        ReadMode = false;
-    }
+    private void EndReadMode() => ReadMode = false;
 
     private OrderedElementsContainer<Section>? SectionsContainer;
 

@@ -89,7 +89,7 @@
 
         // Reset the dialog
         Article = new("");
-        await module.InvokeVoidAsync("setupDialog", ContainerDomId);
+        await module!.InvokeVoidAsync("setupDialog", ContainerDomId);
     }
 
     private void LogInvalidSubmit()
