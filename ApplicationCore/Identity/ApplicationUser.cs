@@ -10,5 +10,5 @@ public class ApplicationUser : IdentityUser
     public virtual ICollection<ApplicationUserToken> Tokens { get; set; } = null!;
     public virtual ICollection<ApplicationUserRole> UserRoles { get; set; } = null!;
 
-    public ICollection<Concept> Concepts { get; } = [];
+    public List<Article> Articles { get; set; } = [];
 }

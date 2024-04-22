@@ -3,7 +3,7 @@ using AnkiBooks.Infrastructure.Repository;
 using AnkiBooks.Infrastructure.Tests.Extensions;
 using AnkiBooks.Infrastructure.Tests.Helpers;
 
-namespace AnkiBooks.Infrastructure.Tests.RepositoryTests.ArticleRepositoryTests;
+namespace AnkiBooks.Infrastructure.Tests.RepositoryTests.UserArticleRepositoryTests;
 
 public class UpdateArticleAsyncTests : RepositoryTestBase
 {
@@ -22,7 +22,7 @@ public class UpdateArticleAsyncTests : RepositoryTestBase
 
         dbContext.ChangeTracker.Clear();
 
-        ArticleRepository articleRepository = new(dbContext);
+        UserArticleRepository articleRepository = new(dbContext);
         child.ParentArticleId = parent.Id;
 
         await articleRepository.UpdateArticleAsync(child);

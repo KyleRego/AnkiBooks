@@ -32,49 +32,16 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ParentArticleId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Articles");
-                });
-
-            modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.Concept", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("Public")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.ToTable("Concept");
-                });
-
-            modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.ConceptName", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ConceptId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConceptId");
-
-                    b.ToTable("ConceptName");
                 });
 
             modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.ContentBase", b =>
@@ -414,29 +381,13 @@ namespace Infrastructure.Migrations
                         .WithMany("ChildArticles")
                         .HasForeignKey("ParentArticleId");
 
+                    b.HasOne("AnkiBooks.ApplicationCore.Identity.ApplicationUser", "User")
+                        .WithMany("Articles")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("ParentArticle");
-                });
 
-            modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.Concept", b =>
-                {
-                    b.HasOne("AnkiBooks.ApplicationCore.Identity.ApplicationUser", "ApplicationUser")
-                        .WithMany("Concepts")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-                });
-
-            modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.ConceptName", b =>
-                {
-                    b.HasOne("AnkiBooks.ApplicationCore.Entities.Concept", "Concept")
-                        .WithMany("Names")
-                        .HasForeignKey("ConceptId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Concept");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.Section", b =>
@@ -553,11 +504,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Sections");
                 });
 
-            modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.Concept", b =>
-                {
-                    b.Navigation("Names");
-                });
-
             modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.Section", b =>
                 {
                     b.Navigation("BasicNotes");
@@ -576,9 +522,9 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("AnkiBooks.ApplicationCore.Identity.ApplicationUser", b =>
                 {
-                    b.Navigation("Claims");
+                    b.Navigation("Articles");
 
-                    b.Navigation("Concepts");
+                    b.Navigation("Claims");
 
                     b.Navigation("Logins");
 
