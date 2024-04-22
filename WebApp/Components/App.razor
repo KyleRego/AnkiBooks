@@ -32,6 +32,6 @@
 
     private bool ShouldUseStaticRendering(PathString pathString)
     {
-        return pathString.Equals("/") || pathString.StartsWithSegments("/Account");
+        return pathString.StartsWithSegments("/Account");
     }
 }

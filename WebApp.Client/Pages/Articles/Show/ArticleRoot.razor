@@ -1,3 +1,4 @@
+@page "/articles/{id}"
 @using System.Text.Json
 @using AnkiBooks.ApplicationCore
 @using AnkiBooks.ApplicationCore.Entities
@@ -10,7 +11,17 @@
 
 @rendermode InteractiveWebAssembly
 
-<PageTitle>@article.Title</PageTitle>
+<div class="w-100 p-4 d-flex justify-content-between align-items-center">
+
+    @if (ReadMode == false)
+    {
+        <span role="button" @onclick="StartReadMode">Read mode</span>
+    }
+    else
+    {
+        <span role="button" @onclick="EndReadMode">Edit mode</span>
+    }
+</div>
 
 @if (article == null || SectionsContainer == null)
 {
@@ -20,6 +31,8 @@
 }
 else
 {
+    <PageTitle>@article.Title</PageTitle>
+
     List<Section> sections = SectionsContainer.OrderedElements;
 
     <CascadingValue Value="@article.Id" Name="ArticleId">
@@ -46,6 +59,18 @@ else
 @code {
     [Parameter]
     public string? Id { get; set; }
+
+    public bool ReadMode { get; set; } = false;
+
+    private void StartReadMode()
+    {
+        ReadMode = true;
+    }
+
+    private void EndReadMode()
+    {
+        ReadMode = false;
+    }
 
     private OrderedElementsContainer<Section>? SectionsContainer;
 

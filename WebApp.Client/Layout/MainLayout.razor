@@ -1,17 +1,126 @@
 ﻿@inherits LayoutComponentBase
 
-<Sidebar    @bind-SidebarExpanded="sidebarExpanded"
-            @bind-SidebarHasBeenCollapsed="sidebarHasBeenCollapsed" />
+@using AnkiBooks.WebApp.Client.Shared.Heroicons
+@using AnkiBooks.WebApp.Client.Shared.ArticlesTree
 
-<div class="d-flex flex-column min-vh-100">
-    <Header @bind-SidebarExpanded="sidebarExpanded" />
+<div class="d-flex flex-column">
+    <header class="border-bottom-primary d-flex flex-row justify-content-between align-items-center py-4 px-8">
+        <div class="d-flex">
+            <div class="w-6 h-6 cursor-pointer" role="button" @onclick="ToggleSidebar" id="sidebar-toggle">
+                <Hamburger />
+            </div>
 
-    <main class="flex-grow-1">
-        @Body
-    </main>
+            <AuthorizeView><Authorized>
+                <div class="ml-4 w-6 h-6 cursor-pointer" role="button" @onclick="ToggleArticlesSidebar">
+                    <BookOpen />
+                </div>
+            </Authorized></AuthorizeView>
+
+        </div>
+        <div class="d-flex">
+            <AuthorizeView>
+                <Authorized>
+                    <a class="mr-4" href="Account/Manage">@context.User.Identity?.Name</a>
+
+                    <span>
+                        <form action="Account/Logout" method="post">
+                            <AntiforgeryToken />
+                            <input type="hidden" name="ReturnUrl" value="" />
+                            <button type="submit" class="nav-link">Logout</button>
+                        </form>
+                    </span>
+                </Authorized>
+                <NotAuthorized>
+                    <a class="mr-4" href="Account/Register">Register</a>
+
+                    <a href="Account/Login">Sign in</a>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+    </header>
+
+    <div class="d-flex flex-row">
+        <div id="sidebar" class="flex-shrink-0 position-sticky left-0 top-0 bottom-0
+                                h-screen w-64 border-right-primary
+                                @(sidebarExpanded == false ? "d-none" : "d-block" )">
+
+            <NavLink class="d-flex px-7 py-4 hover:bg-primary-light" href="" Match="NavLinkMatch.All">
+                About Anki Books
+            </NavLink>
+
+            <ul class="d-flex flex-column">
+                <li>
+                    <a href="articles" class="d-flex align-items-center px-7 py-4 hover:bg-primary-light">
+                        <div class="w-5 h-5 mr-2">
+                            <RectangleStack />
+                        </div>
+                        <div>
+                            Articles
+                        </div>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="" class="d-flex align-items-center px-7 py-4 hover:bg-primary-light">
+                        <div class="w-5 h-5 mr-2">
+                            <BookOpen />
+                        </div>
+                        <div>
+                            Books
+                        </div>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="" class="d-flex align-items-center px-7 py-4 hover:bg-primary-light">
+                        <div class="w-5 h-5 mr-2">
+                            <ChainLink />
+                        </div>
+                        <div>
+                            Concepts
+                        </div>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="" class="d-flex align-items-center px-7 py-4 hover:bg-primary-light">
+                        <div class="w-5 h-5 mr-2">
+                            <Users />
+                        </div>
+                        <div>
+                            Groups
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <AuthorizeView><Authorized>
+            <div id="articles-sidebar" class="flex-shrink-0 position-sticky left-0 top-0 bottom-0
+                                h-screen w-64 border-right-primary
+                                @(articlesSidebarExpanded == false ? "d-none" : "d-block" )">
+                <ArticlesTree />
+            </div>
+        </Authorized></AuthorizeView>
+
+        <div class="w-100">
+            @Body
+        </div>
+    </div>
 </div>
 
 @code {
-    bool sidebarExpanded = false;
-    bool sidebarHasBeenCollapsed = false;
+    private void ToggleSidebar()
+    {
+        sidebarExpanded = !sidebarExpanded;
+    }
+
+    private bool sidebarExpanded = false;
+
+    private void ToggleArticlesSidebar()
+    {
+        articlesSidebarExpanded = !articlesSidebarExpanded;
+    }
+
+    private bool articlesSidebarExpanded = false;
 }
