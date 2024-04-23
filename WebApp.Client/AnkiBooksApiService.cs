@@ -9,10 +9,6 @@ namespace AnkiBooks.WebApp.Client;
 
 public interface IAnkiBooksApiService
 {
-    public Task<Article?> GetUserArticle(string articleId);
-    public Task<List<Article>?> GetUserArticles(string? userId);
-    public Task<Article?> PostUserArticle(Article articleData);
-
     public Task<INote?> PostNote(INote element);
     public Task<INote?> PutNote(INote element);
     public Task DeleteNote(INote element);
@@ -28,7 +24,7 @@ public interface IAnkiBooksApiService
     public Task DeleteSection(string sectionId);
 }
 
-public class AnkiBooksApiService(HttpClient httpClient, ILogger<AnkiBooksApiService> logger) : IAnkiBooksApiService, INewAnkiBooksApiService
+public class AnkiBooksApiService(HttpClient httpClient, ILogger<AnkiBooksApiService> logger) : IAnkiBooksApiService
 {
     private readonly HttpClient _httpClient = httpClient;
     private readonly ILogger<AnkiBooksApiService> _logger = logger;
@@ -37,49 +33,6 @@ public class AnkiBooksApiService(HttpClient httpClient, ILogger<AnkiBooksApiServ
         {
             PropertyNameCaseInsensitive = true
         };
-
-    public async Task<Article?> GetUserArticle(string articleId)
-    {
-        HttpRequestMessage request = new(HttpMethod.Get, $"api/user/Articles/{articleId}");
-        request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
-
-        HttpResponseMessage response = await _httpClient.SendAsync(request);
-        response.EnsureSuccessStatusCode();
-
-        string responseBody = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<Article>(responseBody, _jsonOptions);
-    }
-
-    public async Task<List<Article>?> GetUserArticles(string? userId)
-    {
-        // TODO: This has userId in the API but it's only needed in the 
-        // server side impl.; look into later
-        HttpRequestMessage request = new(HttpMethod.Get, $"api/user/Articles");
-        request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
-
-        HttpResponseMessage response = await _httpClient.SendAsync(request);
-        response.EnsureSuccessStatusCode();
-
-        string responseBody = await response.Content.ReadAsStringAsync();
-        _logger.LogInformation(responseBody);
-        return JsonSerializer.Deserialize<List<Article>>(responseBody, _jsonOptions);
-    }
-
-    public async Task<Article?> PostUserArticle(Article articleData)
-    {
-        HttpRequestMessage request = new(HttpMethod.Post, $"api/user/Articles")
-        {
-            Content = new StringContent(JsonSerializer.Serialize(articleData),
-                                        new MediaTypeHeaderValue("application/json"))
-        };
-        request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
-
-        HttpResponseMessage response = await _httpClient.SendAsync(request);
-        response.EnsureSuccessStatusCode();
-
-        string responseBody = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<Article>(responseBody, _jsonOptions);
-    }
 
     public async Task<INote?> PostNote(INote element)
     {

@@ -21,6 +21,7 @@ public class Article(string title) : EntityBase
     [ForeignKey(nameof(User))]
     public string? UserId { get; set; }
 
+    [JsonIgnore]
     public ApplicationUser? User { get; set; }
 
     public List<Article> ChildArticles { get; set; } = [];

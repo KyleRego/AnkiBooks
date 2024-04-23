@@ -1,7 +1,10 @@
 @using System.Text.Json
 @using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Interfaces.Services
 @using AnkiBooks.WebApp.Client.Shared.Heroicons
-@inject IAnkiBooksApiService ApiService
+@using System.Security.Claims
+
+@inject IUserArticleService UserArticleService
 @inject NavigationManager Navigation
 @inject IConfiguration Config
 @inject ILogger<NewArticle> Logger
@@ -81,7 +84,7 @@
         ArgumentNullException.ThrowIfNullOrWhiteSpace(Article.Title);
         Article.ParentArticleId = ParentArticle?.Id;
 
-        Article? article = await ApiService.PostUserArticle(Article);
+        Article? article = await UserArticleService.PostUserArticle(Article);
         ArgumentNullException.ThrowIfNull(article);
         Articles.Add(article);
         await ArticlesChanged.InvokeAsync(Articles);

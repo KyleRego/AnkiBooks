@@ -8,6 +8,8 @@ using AnkiBooks.ApplicationCore.Identity;
 using AnkiBooks.ApplicationCore.Interfaces;
 using AnkiBooks.Infrastructure.Repository;
 using AnkiBooks.WebApp.Client;
+using AnkiBooks.WebApp.Services;
+using AnkiBooks.ApplicationCore.Interfaces.Services;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -46,7 +48,7 @@ builder.Services.AddScoped<IBasicNoteRepository, BasicNoteRepository>();
 builder.Services.AddScoped<IClozeNoteRepository, ClozeNoteRepository>();
 builder.Services.AddScoped<ISectionRepository, SectionRepository>();
 builder.Services.AddScoped<IMarkdownContentRepository, MarkdownContentRepository>();
-builder.Services.AddScoped<INewAnkiBooksApiService, AnkiBooks.WebApp.ServerApiService>();
+builder.Services.AddScoped<IUserArticleService, ServerUserArticleService>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

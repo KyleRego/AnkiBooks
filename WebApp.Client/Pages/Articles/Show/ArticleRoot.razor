@@ -1,13 +1,18 @@
 @page "/articles/{id}"
+@implements IDisposable
+
 @using System.Text.Json
 @using AnkiBooks.ApplicationCore
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Interfaces
+@using AnkiBooks.ApplicationCore.Interfaces.Services
+@using System.Security.Claims
+
 @inject IConfiguration Config
-@inject IAnkiBooksApiService ApiService
+@inject IUserArticleService UserArticleService
 @inject ILogger<ArticleRoot> Logger
 @inject PersistentComponentState ApplicationState
-@implements IDisposable
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <CascadingValue Value="@ReadMode" Name="ReadMode">
 <div class="w-100 p-4 d-flex justify-content-end align-items-center">
@@ -80,7 +85,9 @@ else
 
         if (!ApplicationState.TryTakeFromJson<Article>(nameof(article), out var restored))
         {
-            article = await ApiService.GetUserArticle(Id);
+            string? userId = (await AuthenticationStateProvider.GetAuthenticationStateAsync())
+                                .User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            article = await UserArticleService.GetUserArticle(Id, userId);
             Logger.LogInformation(JsonSerializer.Serialize(article));
         }
         else

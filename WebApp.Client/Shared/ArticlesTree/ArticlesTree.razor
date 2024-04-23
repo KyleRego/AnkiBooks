@@ -5,9 +5,10 @@
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Interfaces
 @using System.Security.Claims
+@using AnkiBooks.ApplicationCore.Interfaces.Services
 
 @inject IConfiguration Config
-@inject INewAnkiBooksApiService ApiService
+@inject IUserArticleService UserArticleService
 @inject ILogger<ArticlesTree> Logger
 @inject PersistentComponentState ApplicationState
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -45,7 +46,7 @@
         {
             string? userId = (await AuthenticationStateProvider.GetAuthenticationStateAsync())
                                 .User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            articles = await ApiService.GetUserArticles(userId);
+            articles = await UserArticleService.GetUserArticles(userId);
         }
         else
         {
