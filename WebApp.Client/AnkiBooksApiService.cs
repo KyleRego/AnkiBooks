@@ -1,16 +1,17 @@
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.ApplicationCore.Interfaces;
-using Markdig;
+using Microsoft.AspNetCore.Components.WebAssembly.Http;
 
 namespace AnkiBooks.WebApp.Client;
 
 public interface IAnkiBooksApiService
 {
-    public Task<Article?> GetArticle(string articleId);
-    public Task<List<Article>?> GetArticles();
-    public Task<Article?> PostArticle(Article articleData);
+    public Task<Article?> GetUserArticle(string articleId);
+    public Task<List<Article>?> GetUserArticles(string? userId);
+    public Task<Article?> PostUserArticle(Article articleData);
 
     public Task<INote?> PostNote(INote element);
     public Task<INote?> PutNote(INote element);
@@ -27,29 +28,55 @@ public interface IAnkiBooksApiService
     public Task DeleteSection(string sectionId);
 }
 
-public class AnkiBooksApiService(HttpClient httpClient) : IAnkiBooksApiService
+public class AnkiBooksApiService(HttpClient httpClient, ILogger<AnkiBooksApiService> logger) : IAnkiBooksApiService, INewAnkiBooksApiService
 {
     private readonly HttpClient _httpClient = httpClient;
+    private readonly ILogger<AnkiBooksApiService> _logger = logger;
 
     private readonly JsonSerializerOptions _jsonOptions = new()
         {
             PropertyNameCaseInsensitive = true
         };
 
-    public async Task<Article?> GetArticle(string articleId)
+    public async Task<Article?> GetUserArticle(string articleId)
     {
-        return await _httpClient.GetFromJsonAsync<Article>($"api/Articles/{articleId}");
-    }
+        HttpRequestMessage request = new(HttpMethod.Get, $"api/user/Articles/{articleId}");
+        request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
 
-    public async Task<List<Article>?> GetArticles()
-    {
-        return await _httpClient.GetFromJsonAsync<List<Article>>("api/Articles");
-    }
-
-    public async Task<Article?> PostArticle(Article articleData)
-    {
-        HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/Articles", articleData);
+        HttpResponseMessage response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
+
+        string responseBody = await response.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<Article>(responseBody, _jsonOptions);
+    }
+
+    public async Task<List<Article>?> GetUserArticles(string? userId)
+    {
+        // TODO: This has userId in the API but it's only needed in the 
+        // server side impl.; look into later
+        HttpRequestMessage request = new(HttpMethod.Get, $"api/user/Articles");
+        request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
+
+        HttpResponseMessage response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+
+        string responseBody = await response.Content.ReadAsStringAsync();
+        _logger.LogInformation(responseBody);
+        return JsonSerializer.Deserialize<List<Article>>(responseBody, _jsonOptions);
+    }
+
+    public async Task<Article?> PostUserArticle(Article articleData)
+    {
+        HttpRequestMessage request = new(HttpMethod.Post, $"api/user/Articles")
+        {
+            Content = new StringContent(JsonSerializer.Serialize(articleData),
+                                        new MediaTypeHeaderValue("application/json"))
+        };
+        request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
+
+        HttpResponseMessage response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+
         string responseBody = await response.Content.ReadAsStringAsync();
         return JsonSerializer.Deserialize<Article>(responseBody, _jsonOptions);
     }

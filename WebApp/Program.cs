@@ -19,9 +19,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddRazorComponents().AddInteractiveWebAssemblyComponents();
 
 builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<AuthenticationStateProvider, PersistingServerAuthenticationStateProvider>();
+
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
-builder.Services.AddScoped<AuthenticationStateProvider, PersistingServerAuthenticationStateProvider>();
 
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(options =>
@@ -45,6 +46,7 @@ builder.Services.AddScoped<IBasicNoteRepository, BasicNoteRepository>();
 builder.Services.AddScoped<IClozeNoteRepository, ClozeNoteRepository>();
 builder.Services.AddScoped<ISectionRepository, SectionRepository>();
 builder.Services.AddScoped<IMarkdownContentRepository, MarkdownContentRepository>();
+builder.Services.AddScoped<INewAnkiBooksApiService, AnkiBooks.WebApp.ServerApiService>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -106,11 +108,12 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
+app.MapControllers();
+
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(AnkiBooks.WebApp.Client._Imports).Assembly);
 app.MapAdditionalIdentityEndpoints();
-app.MapControllers();
 
 app.Run();
 

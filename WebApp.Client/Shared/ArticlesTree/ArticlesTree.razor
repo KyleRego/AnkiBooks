@@ -1,11 +1,16 @@
+@implements IDisposable
+
 @using System.Text.Json
 @using System.Text.Json.Serialization
 @using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Interfaces
+@using System.Security.Claims
+
 @inject IConfiguration Config
-@inject IAnkiBooksApiService ApiService
+@inject INewAnkiBooksApiService ApiService
 @inject ILogger<ArticlesTree> Logger
-@implements IDisposable
 @inject PersistentComponentState ApplicationState
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <div>
     @if (articles == null)
@@ -38,7 +43,9 @@
 
         if (!ApplicationState.TryTakeFromJson<List<Article>>(nameof(articles), out var restored))
         {
-            articles = await ApiService.GetArticles();
+            string? userId = (await AuthenticationStateProvider.GetAuthenticationStateAsync())
+                                .User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            articles = await ApiService.GetUserArticles(userId);
         }
         else
         {

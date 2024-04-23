@@ -80,7 +80,7 @@ else
 
         if (!ApplicationState.TryTakeFromJson<Article>(nameof(article), out var restored))
         {
-            article = await ApiService.GetArticle(Id);
+            article = await ApiService.GetUserArticle(Id);
             Logger.LogInformation(JsonSerializer.Serialize(article));
         }
         else

@@ -26,11 +26,13 @@ public class UserArticlesController(IUserArticleRepository repository,
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Article>>> GetArticles()
     {
+        _logger.LogCritical("made it here");
         string? userId = CurrentUserId();
-        logger.LogInformation("Made it inside here after userId");
         if (userId == null) return BadRequest("User ID not in claims");
+        _logger.LogInformation("What the heck");
 
         List<Article> articles = await _repository.GetArticlesAsync(userId);
+        _logger.LogInformation(articles.ToString());
         return articles;
     }
 
@@ -101,7 +103,7 @@ public class UserArticlesController(IUserArticleRepository repository,
             }
         }
 
-        return CreatedAtAction("GetArticle", new { id = article.Id }, article);
+        return CreatedAtAction(nameof(GetArticle), new { articleId = article.Id }, article);
     }
 
     // DELETE: api/user/Articles/5

@@ -81,7 +81,7 @@
         ArgumentNullException.ThrowIfNullOrWhiteSpace(Article.Title);
         Article.ParentArticleId = ParentArticle?.Id;
 
-        Article? article = await ApiService.PostArticle(Article);
+        Article? article = await ApiService.PostUserArticle(Article);
         ArgumentNullException.ThrowIfNull(article);
         Articles.Add(article);
         await ArticlesChanged.InvokeAsync(Articles);
