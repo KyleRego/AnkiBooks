@@ -85,9 +85,7 @@ else
 
         if (!ApplicationState.TryTakeFromJson<Article>(nameof(article), out var restored))
         {
-            string? userId = (await AuthenticationStateProvider.GetAuthenticationStateAsync())
-                                .User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            article = await UserArticleService.GetUserArticle(Id, userId);
+            article = await UserArticleService.GetUserArticle(Id);
             Logger.LogInformation(JsonSerializer.Serialize(article));
         }
         else

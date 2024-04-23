@@ -11,7 +11,6 @@
 @inject IUserArticleService UserArticleService
 @inject ILogger<ArticlesTree> Logger
 @inject PersistentComponentState ApplicationState
-@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <div>
     @if (articles == null)
@@ -44,9 +43,7 @@
 
         if (!ApplicationState.TryTakeFromJson<List<Article>>(nameof(articles), out var restored))
         {
-            string? userId = (await AuthenticationStateProvider.GetAuthenticationStateAsync())
-                                .User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            articles = await UserArticleService.GetUserArticles(userId);
+            articles = await UserArticleService.GetUserArticles();
         }
         else
         {

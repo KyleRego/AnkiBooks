@@ -15,7 +15,7 @@ public class ClientUserArticleService(HttpClient httpClient) : IUserArticleServi
             PropertyNameCaseInsensitive = true
         };
 
-    public async Task<Article?> GetUserArticle(string articleId, string? userId)
+    public async Task<Article?> GetUserArticle(string articleId)
     {
         HttpRequestMessage request = new(HttpMethod.Get, $"api/user/Articles/{articleId}");
         request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
@@ -27,7 +27,7 @@ public class ClientUserArticleService(HttpClient httpClient) : IUserArticleServi
         return JsonSerializer.Deserialize<Article>(responseBody, _jsonOptions);
     }
 
-    public async Task<List<Article>?> GetUserArticles(string? userId)
+    public async Task<List<Article>?> GetUserArticles()
     {
         HttpRequestMessage request = new(HttpMethod.Get, $"api/user/Articles");
         request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
