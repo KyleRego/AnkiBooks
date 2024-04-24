@@ -16,14 +16,14 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
     {
         using var dbContext = InMemoryDbContext();
 
-        Section section = await dbContext.CreateSectionWithOneBasicNote();
+        Article article = await dbContext.CreateArticleWithOneBasicNote();
 
-        BasicNote currentBasicNote = section.BasicNotes.First();
+        BasicNote currentBasicNote = article.BasicNotes.First();
         
         BasicNote updateNote = new()
         {
             Id = currentBasicNote.Id,
-            SectionId = currentBasicNote.SectionId,
+            ArticleId = currentBasicNote.ArticleId,
             Front = "World2",
             Back = "Hello2"
         };
@@ -42,8 +42,8 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
     {
         using var dbContext = InMemoryDbContext();
 
-        Section section = await dbContext.CreateSectionWithTenAlternatingBasicAndClozeNotes();
-        BasicNote currentNote = section.BasicNotes.First(bn => bn.OrdinalPosition == 2);  
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
+        BasicNote currentNote = article.BasicNotes.First(bn => bn.OrdinalPosition == 2);  
 
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
@@ -54,7 +54,7 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
                 Front = "World2",
                 Back = "Hello2",
                 OrdinalPosition = -1,
-                SectionId = section.Id
+                ArticleId = article.Id
             };
         
             await basicNoteRepository.UpdateOrderedElementAsync(currentNote, basicNote);
@@ -67,7 +67,7 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
                 Front = "World2",
                 Back = "Hello2",
                 OrdinalPosition = 10,
-                SectionId = section.Id
+                ArticleId = article.Id
             };
 
             await basicNoteRepository.UpdateOrderedElementAsync(currentNote, basicNote);
@@ -79,8 +79,8 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
     {
         using var dbContext = InMemoryDbContext();
 
-        Section section = await dbContext.CreateSectionWithTenAlternatingBasicAndClozeNotes();
-        BasicNote currentNote = section.BasicNotes.First(bn => bn.OrdinalPosition == 2);
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
+        BasicNote currentNote = article.BasicNotes.First(bn => bn.OrdinalPosition == 2);
 
         BasicNote basicNote = new()
         {
@@ -88,7 +88,7 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
             Front = "World33",
             Back = "Hello33",
             OrdinalPosition = 5,
-            SectionId = section.Id
+            ArticleId = article.Id
         };
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
@@ -98,7 +98,7 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
         Assert.Equal("World33", updatedBasicNote.Front);
         Assert.Equal("Hello33", updatedBasicNote.Back);
         Assert.Equal(5, updatedBasicNote.OrdinalPosition);
-        Assert.True(SectionValidator.CorrectElementsCountAndOrdinalPositions(dbContext, section, 10));
+        Assert.True(ArticleValidator.CorrectElementsCountAndOrdinalPositions(dbContext, article, 10));
     }
 
     [Fact]
@@ -106,8 +106,8 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
     {
         using var dbContext = InMemoryDbContext();
 
-        Section section = await dbContext.CreateSectionWithTenAlternatingBasicAndClozeNotes();
-        BasicNote currentNote = section.BasicNotes.First(bn => bn.OrdinalPosition == 4);
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
+        BasicNote currentNote = article.BasicNotes.First(bn => bn.OrdinalPosition == 4);
 
         BasicNote basicNote = new()
         {
@@ -115,7 +115,7 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
             Front = "World334",
             Back = "Hello334",
             OrdinalPosition = 1,
-            SectionId = section.Id
+            ArticleId = article.Id
         };
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
@@ -125,7 +125,7 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
         Assert.Equal("World334", updatedBasicNote.Front);
         Assert.Equal("Hello334", updatedBasicNote.Back);
         Assert.Equal(1, updatedBasicNote.OrdinalPosition);
-        Assert.True(SectionValidator.CorrectElementsCountAndOrdinalPositions(dbContext, section, 10));
+        Assert.True(ArticleValidator.CorrectElementsCountAndOrdinalPositions(dbContext, article, 10));
     }
 
     [Fact]
@@ -133,8 +133,8 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
     {
         using var dbContext = InMemoryDbContext();
 
-        Section section = await dbContext.CreateSectionWithTenAlternatingBasicAndClozeNotes();
-        BasicNote currentNote = section.BasicNotes.First(bn => bn.OrdinalPosition == 0);
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
+        BasicNote currentNote = article.BasicNotes.First(bn => bn.OrdinalPosition == 0);
 
         BasicNote basicNote = new()
         {
@@ -142,7 +142,7 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
             Front = "4321",
             Back = "1234",
             OrdinalPosition = 9,
-            SectionId = section.Id
+            ArticleId = article.Id
         };
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
@@ -152,6 +152,6 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
         Assert.Equal("4321", updatedBasicNote.Front);
         Assert.Equal("1234", updatedBasicNote.Back);
         Assert.Equal(9, updatedBasicNote.OrdinalPosition);
-        Assert.True(SectionValidator.CorrectElementsCountAndOrdinalPositions(dbContext, section, 10));
+        Assert.True(ArticleValidator.CorrectElementsCountAndOrdinalPositions(dbContext, article, 10));
     }
 }

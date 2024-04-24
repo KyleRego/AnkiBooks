@@ -11,10 +11,10 @@
 
 @code {
     [Parameter]
-    public OrderedElementsContainer<IContent> ContentsContainer { get; set; } = null!;
+    public OrderedElementsContainer<ArticleElement> ElementsContainer { get; set; } = null!;
 
     [Parameter]
-    public EventCallback<OrderedElementsContainer<IContent>> ContentsContainerChanged { get; set; }
+    public EventCallback<OrderedElementsContainer<ArticleElement>> ElementsContainerChanged { get; set; }
 
     [Parameter]
     public MarkdownContent StartingMarkdown { get; set; } = null!;
@@ -28,7 +28,7 @@
     private async Task SubmitForm(MarkdownContent newMarkdownContent)
     {
         ArgumentNullException.ThrowIfNull(newMarkdownContent.Text);
-        MarkdownContent? updatedMdContent = await ApiService.PutMarkdownContent(newMarkdownContent);
+        MarkdownContent? updatedMdContent = (MarkdownContent?)await ApiService.PutElement(newMarkdownContent);
         ArgumentNullException.ThrowIfNull(updatedMdContent);
 
         Editing = false;

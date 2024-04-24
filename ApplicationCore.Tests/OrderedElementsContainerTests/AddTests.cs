@@ -10,17 +10,13 @@ public class AddTests
     [Fact]
     public void TestAddWithTwoElementsAlready()
     {
-        Section section = new()
-        {
-            BasicNotes = [],
-            ClozeNotes =
-            [
-                new() { Text="a", OrdinalPosition=0 },
-                new() { Text="b", OrdinalPosition=1 }
-            ]
-        };
+        List<ArticleElement> notes =
+        [
+            new ClozeNote() { Text="a", OrdinalPosition=0 },
+            new ClozeNote() { Text="b", OrdinalPosition=1 }
+        ];
 
-        OrderedElementsContainer<INote> container = new(section.OrderedNotes());
+        OrderedElementsContainer<ArticleElement> container = new(notes);
         BasicNote noteToAdd = new() { Front="a", Back="b", OrdinalPosition=1 };
         container.Add(noteToAdd);
         container.AssertNotesCountIs(3);

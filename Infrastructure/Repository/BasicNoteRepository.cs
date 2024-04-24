@@ -11,8 +11,8 @@ public class BasicNoteRepository(ApplicationDbContext dbContext)
 {
     protected override List<IOrdinalChild> GetAllOrdinalChildren(BasicNote basicNote)
     {
-        return _dbContext.Notes.Where(
-            n => n.SectionId == basicNote.SectionId
+        return _dbContext.ArticleElements.Where(
+            el => el.ArticleId == basicNote.ArticleId
         ).Cast<IOrdinalChild>().ToList();
     }
 

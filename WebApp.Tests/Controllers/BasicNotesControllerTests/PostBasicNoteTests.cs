@@ -18,8 +18,6 @@ public class PostBasicNoteTests(TestServerFactory<Program> factory) : IClassFixt
         ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         Article article = new("Test article");
-        Section section = new();
-        article.Sections.Add(section);
         dbContext.Articles.Add(article);
         await dbContext.SaveChangesAsync();
 
@@ -28,7 +26,7 @@ public class PostBasicNoteTests(TestServerFactory<Program> factory) : IClassFixt
             Front = "Front",
             Back = "Back",
             OrdinalPosition = 0,
-            SectionId = section.Id
+            ArticleId = article.Id
         };
 
         HttpClient client = _factory.CreateClient();
@@ -44,17 +42,15 @@ public class PostBasicNoteTests(TestServerFactory<Program> factory) : IClassFixt
         using IServiceScope scope = _factory.Services.CreateScope();
         ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        Article article = new("Test article");
-        Section section = new();
-        article.Sections.Add(section);
-        List<BasicNote> existingBasicNotes =
-        [
-            new() { Front = "Front", Back = "Back", OrdinalPosition = 0 },
-            new() { Front = "Front", Back = "Back", OrdinalPosition = 1 },
-            new() { Front = "Front", Back = "Back", OrdinalPosition = 2 }
-        ];
-        
-        section.BasicNotes = existingBasicNotes;
+        Article article = new("Test article")
+        {
+            BasicNotes =
+            [
+                new() { Front = "Front", Back = "Back", OrdinalPosition = 0 },
+                new() { Front = "Front", Back = "Back", OrdinalPosition = 1 },
+                new() { Front = "Front", Back = "Back", OrdinalPosition = 2 }
+            ]
+        };
         dbContext.Articles.Add(article);
         await dbContext.SaveChangesAsync();
 
@@ -63,7 +59,7 @@ public class PostBasicNoteTests(TestServerFactory<Program> factory) : IClassFixt
             Front = "Front",
             Back = "Back",
             OrdinalPosition = 1,
-            SectionId = section.Id
+            ArticleId = article.Id
         };
 
         HttpClient client = _factory.CreateClient();
@@ -79,23 +75,20 @@ public class PostBasicNoteTests(TestServerFactory<Program> factory) : IClassFixt
         using IServiceScope scope = _factory.Services.CreateScope();
         ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        Article article = new("Test article");
-        Section section = new();
-        article.Sections.Add(section);
-        List<BasicNote> existingBasicNotes =
-        [
-            new() { Front = "Front", Back = "Back", OrdinalPosition = 0 },
-            new() { Front = "Front", Back = "Back", OrdinalPosition = 2 },
-            new() { Front = "Front", Back = "Back", OrdinalPosition = 4 }
-        ];
-        List<ClozeNote> existingClozeNotes =
-        [
-            new() { Text = "a", OrdinalPosition = 1},
+        Article article = new("Test article")
+        {
+            BasicNotes =
+            [
+                new() { Front = "Front", Back = "Back", OrdinalPosition = 0 },
+                new() { Front = "Front", Back = "Back", OrdinalPosition = 2 },
+                new() { Front = "Front", Back = "Back", OrdinalPosition = 4 }
+            ],
+            ClozeNotes =
+            [
+                new() { Text = "a", OrdinalPosition = 1},
             new() { Text = "b", OrdinalPosition = 3}
-        ];
-        
-        section.BasicNotes = existingBasicNotes;
-        section.ClozeNotes = existingClozeNotes;
+            ]
+        };
         dbContext.Articles.Add(article);
         await dbContext.SaveChangesAsync();
 
@@ -104,7 +97,7 @@ public class PostBasicNoteTests(TestServerFactory<Program> factory) : IClassFixt
             Front = "Front",
             Back = "Back",
             OrdinalPosition = 2,
-            SectionId = section.Id
+            ArticleId = article.Id
         };
 
         HttpClient client = _factory.CreateClient();

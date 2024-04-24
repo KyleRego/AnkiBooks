@@ -15,51 +15,19 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         ApplicationRoleClaim, ApplicationUserToken>(options)
 {
     public DbSet<Article> Articles { get; set; } = null!;
-    public DbSet<NoteBase> Notes { get; set; } = null!;
+    public DbSet<ArticleElement> ArticleElements { get; set; } = null!;
     public DbSet<BasicNote> BasicNotes { get; set; } = null!;
     public DbSet<ClozeNote> ClozeNotes { get; set; } = null!;
-    public DbSet<ContentBase> Contents { get; set; } = null!;
     public DbSet<MarkdownContent> MarkdownContents { get; set; } = null!;
-    public DbSet<Section> Sections { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
         builder
-            .Entity<Section>()
-            .HasMany(e => e.BasicNotes)
-            .WithOne(e => e.Section)
-            .HasForeignKey(e => e.SectionId);
-
-        builder
-            .Entity<Section>()
-            .HasMany(e => e.ClozeNotes)
-            .WithOne(e => e.Section)
-            .HasForeignKey(e => e.SectionId);
-
-        builder
-            .Entity<Section>()
-            .HasMany(e => e.MarkdownContents)
-            .WithOne(e => e.Section)
-            .HasForeignKey(e => e.SectionId);
-
-        builder
-            .Entity<Section>()
+            .Entity<ArticleElement>()
             .ToTable(b => b.HasCheckConstraint(
                 "CK_SectionOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0"
-            ));
-
-        builder
-            .Entity<NoteBase>()
-            .ToTable(b => b.HasCheckConstraint(
-                "CK_NoteOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0"
-            ));
-
-        builder
-            .Entity<ContentBase>()
-            .ToTable(b => b.HasCheckConstraint(
-                "CK_ContentOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0"
             ));
 
         builder.Entity<ApplicationUser>(b =>

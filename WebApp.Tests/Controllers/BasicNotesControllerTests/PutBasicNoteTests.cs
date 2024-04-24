@@ -17,11 +17,11 @@ public class PutBasicNoteTests(TestServerFactory<Program> factory) : IClassFixtu
         using IServiceScope scope = _factory.Services.CreateScope();
         ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        Article article = new("Test article");
-        Section section = new();
-        article.Sections.Add(section);
         BasicNote basicNote = new() { Front = "Hello", Back = "World", OrdinalPosition = 0 };
-        section.BasicNotes.Add(basicNote);
+        Article article = new("Test article")
+        {
+            BasicNotes = [ basicNote ]
+        };
         dbContext.Articles.Add(article);
         await dbContext.SaveChangesAsync();
 
@@ -31,7 +31,7 @@ public class PutBasicNoteTests(TestServerFactory<Program> factory) : IClassFixtu
             Front = "Front",
             Back = "Back",
             OrdinalPosition = 0,
-            SectionId = section.Id
+            ArticleId = article.Id
         };
 
         HttpClient client = _factory.CreateClient();

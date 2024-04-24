@@ -25,11 +25,16 @@ public class Article(string title) : EntityBase
     public ApplicationUser? User { get; set; }
 
     public List<Article> ChildArticles { get; set; } = [];
+    public List<BasicNote> BasicNotes { get; set; } = [];
+    public List<ClozeNote> ClozeNotes { get; set; } = [];
+    public List<MarkdownContent> MarkdownContents { get; set; } = [];
 
-    public List<Section> Sections { get; set; } = [];
-
-    public List<Section> OrderedSections()
+    public List<ArticleElement> OrderedElements()
     {
-        return Sections.OrderBy(item => item.OrdinalPosition).ToList();
+        return BasicNotes.Cast<ArticleElement>()
+            .Concat(ClozeNotes.Cast<ArticleElement>())
+            .Concat(MarkdownContents.Cast<ArticleElement>())
+            .OrderBy(item => item.OrdinalPosition)
+            .ToList();
     }
 }

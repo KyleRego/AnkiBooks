@@ -17,7 +17,7 @@ public class InsertOrderedElementAsyncTests : RepositoryTestBase
     {
         using var dbContext = InMemoryDbContext();
         dbContext.Database.EnsureCreated();
-        Section section = await dbContext.CreateSectionWithTenAlternatingBasicAndClozeNotes();
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
 
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
@@ -27,7 +27,7 @@ public class InsertOrderedElementAsyncTests : RepositoryTestBase
                 Front = "World2",
                 Back = "Hello2",
                 OrdinalPosition = -1,
-                SectionId = section.Id
+                ArticleId = article.Id
             };
         
             await basicNoteRepository.InsertOrderedElementAsync(basicNote);
@@ -39,7 +39,7 @@ public class InsertOrderedElementAsyncTests : RepositoryTestBase
                 Front = "World2",
                 Back = "Hello2",
                 OrdinalPosition = 11,
-                SectionId = section.Id
+                ArticleId = article.Id
             };
 
             await basicNoteRepository.InsertOrderedElementAsync(basicNote);
@@ -51,14 +51,14 @@ public class InsertOrderedElementAsyncTests : RepositoryTestBase
     {
         using var dbContext = InMemoryDbContext();
 
-        Section section = await dbContext.CreateSectionWithTenAlternatingBasicAndClozeNotes();
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
 
         BasicNote basicNote = new()
         {
             Front = "World2",
             Back = "Hello2",
             OrdinalPosition = 0,
-            SectionId = section.Id
+            ArticleId = article.Id
         };
         
         BasicNoteRepository basicNoteRepository = new(dbContext);
@@ -68,7 +68,7 @@ public class InsertOrderedElementAsyncTests : RepositoryTestBase
         BasicNote updatedBasicNote = dbContext.BasicNotes.First(bn => bn.Id == basicNote.Id);
         Assert.Equal("World2", updatedBasicNote.Front);
         Assert.Equal("Hello2", updatedBasicNote.Back);
-        Assert.True(SectionValidator.CorrectElementsCountAndOrdinalPositions(dbContext, section, 11));
+        Assert.True(ArticleValidator.CorrectElementsCountAndOrdinalPositions(dbContext, article, 11));
     }
 
     [Fact]
@@ -76,14 +76,14 @@ public class InsertOrderedElementAsyncTests : RepositoryTestBase
     {
         using var dbContext = InMemoryDbContext();
 
-        Section section = await dbContext.CreateSectionWithTenAlternatingBasicAndClozeNotes();
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
 
         BasicNote basicNote = new()
         {
             Front = "World2",
             Back = "Hello2",
             OrdinalPosition = 10,
-            SectionId = section.Id
+            ArticleId = article.Id
         };
         
         BasicNoteRepository basicNoteRepository = new(dbContext);
@@ -93,7 +93,7 @@ public class InsertOrderedElementAsyncTests : RepositoryTestBase
         BasicNote updatedBasicNote = dbContext.BasicNotes.First(bn => bn.Id == basicNote.Id);
         Assert.Equal("World2", updatedBasicNote.Front);
         Assert.Equal("Hello2", updatedBasicNote.Back);
-        Assert.True(SectionValidator.CorrectElementsCountAndOrdinalPositions(dbContext, section, 11));
+        Assert.True(ArticleValidator.CorrectElementsCountAndOrdinalPositions(dbContext, article, 11));
     }
 
     [Fact]
@@ -101,14 +101,14 @@ public class InsertOrderedElementAsyncTests : RepositoryTestBase
     {
         using var dbContext = InMemoryDbContext();
 
-        Section section = await dbContext.CreateSectionWithTenAlternatingBasicAndClozeNotes();
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
 
         BasicNote basicNote = new()
         {
             Front = "World2",
             Back = "Hello2",
             OrdinalPosition = 3,
-            SectionId = section.Id
+            ArticleId = article.Id
         };
 
         BasicNoteRepository basicNoteRepository = new(dbContext);
@@ -118,6 +118,6 @@ public class InsertOrderedElementAsyncTests : RepositoryTestBase
         BasicNote updatedBasicNote = dbContext.BasicNotes.First(bn => bn.Id == basicNote.Id);
         Assert.Equal("World2", updatedBasicNote.Front);
         Assert.Equal("Hello2", updatedBasicNote.Back);
-        Assert.True(SectionValidator.CorrectElementsCountAndOrdinalPositions(dbContext, section, 11));
+        Assert.True(ArticleValidator.CorrectElementsCountAndOrdinalPositions(dbContext, article, 11));
     }
 }

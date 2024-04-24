@@ -24,19 +24,15 @@ public class UserArticleRepository(ApplicationDbContext dbContext) : IUserArticl
     public async Task<Article?> GetArticleAsync(string userId, string articleId)
     {
         return await _dbContext.Articles
-                    .Include(a => a.Sections)
-                    .ThenInclude(sec => sec.BasicNotes)
-                    .Include(a => a.Sections)
-                    .ThenInclude(sec => sec.ClozeNotes)
-                    .Include(a => a.Sections)
-                    .ThenInclude(sec => sec.MarkdownContents)
+                    .Include(sec => sec.BasicNotes)
+                    .Include(sec => sec.ClozeNotes)
+                    .Include(sec => sec.MarkdownContents)
                     .FirstOrDefaultAsync(a => a.Id == articleId && a.UserId == userId);
     }
 
     public async Task<Article> InsertArticleAsync(string userId, Article article)
     {
         article.UserId = userId;
-        article.Sections = [ new() { OrdinalPosition = 0} ];
         _dbContext.Articles.Add(article);
         await _dbContext.SaveChangesAsync();
         return article;

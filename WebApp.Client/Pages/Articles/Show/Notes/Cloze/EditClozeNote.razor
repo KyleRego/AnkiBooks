@@ -22,10 +22,10 @@
     private async Task SubmitForm(ClozeNote updatedClozeNote)
     {
         ArgumentNullException.ThrowIfNull(updatedClozeNote.Text);
-        ArgumentNullException.ThrowIfNull(updatedClozeNote.SectionId);
+        ArgumentNullException.ThrowIfNull(updatedClozeNote.ArticleId);
         ArgumentNullException.ThrowIfNull(updatedClozeNote.OrdinalPosition);
 
-        ClozeNote? clozeNote = (ClozeNote?)await ApiService.PutNote(updatedClozeNote);
+        ClozeNote? clozeNote = (ClozeNote?)await ApiService.PutElement(updatedClozeNote);
         ArgumentNullException.ThrowIfNull(clozeNote);
 
         Editing = false;

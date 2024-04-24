@@ -11,8 +11,8 @@ public class MarkdownContentRepository(ApplicationDbContext dbContext)
 {
     protected override List<IOrdinalChild> GetAllOrdinalChildren(MarkdownContent mdContent)
     {
-        return _dbContext.Contents.Where(
-            con => con.SectionId == mdContent.SectionId
+        return _dbContext.ArticleElements.Where(
+            el => el.ArticleId == mdContent.ArticleId
         ).Cast<IOrdinalChild>().ToList();
     }
 

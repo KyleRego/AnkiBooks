@@ -11,8 +11,8 @@ public class ClozeNoteRepository(ApplicationDbContext dbContext)
 {
     protected override List<IOrdinalChild> GetAllOrdinalChildren(ClozeNote clozeNote)
     {
-        return _dbContext.Notes.Where(
-            n => n.SectionId == clozeNote.SectionId
+        return _dbContext.ArticleElements.Where(
+            el => el.ArticleId == clozeNote.ArticleId
         ).Cast<IOrdinalChild>().ToList();
     }
 

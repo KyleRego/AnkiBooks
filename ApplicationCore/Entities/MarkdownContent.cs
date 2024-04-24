@@ -1,8 +1,6 @@
-using AnkiBooks.ApplicationCore.Interfaces;
-
 namespace AnkiBooks.ApplicationCore.Entities;
 
-public class MarkdownContent : ContentBase, IContent
+public class MarkdownContent : ArticleElement
 {
     [Required]
     public string? Text { get; set; }

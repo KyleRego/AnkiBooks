@@ -23,10 +23,10 @@
     {
         ArgumentNullException.ThrowIfNull(updatedBasicNote.Front);
         ArgumentNullException.ThrowIfNull(updatedBasicNote.Back);
-        ArgumentNullException.ThrowIfNull(updatedBasicNote.SectionId);
+        ArgumentNullException.ThrowIfNull(updatedBasicNote.ArticleId);
         ArgumentNullException.ThrowIfNull(updatedBasicNote.OrdinalPosition);
 
-        BasicNote? basicNote = (BasicNote?)await ApiService.PutNote(updatedBasicNote);
+        BasicNote? basicNote = (BasicNote?)await ApiService.PutElement(updatedBasicNote);
         ArgumentNullException.ThrowIfNull(basicNote);
 
         Editing = false;

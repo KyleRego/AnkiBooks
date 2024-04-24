@@ -13,22 +13,9 @@ public class AdjustElementPositionTests
         ClozeNote n3 = new() { Text="b", OrdinalPosition=2 };
         BasicNote n4 = new() { Front="a", Back="b", OrdinalPosition=3 };
         BasicNote n5 = new() { Front="a", Back="b", OrdinalPosition=4 };
-        Section section = new()
-        {
-            BasicNotes =
-            [
-                n2,
-                n4,
-                n5
-            ],
-                ClozeNotes =
-            [
-                n1,
-                n3
-            ]
-        };
+        List<ArticleElement> notes = [n1, n2, n3, n4, n5];
 
-        OrderedElementsContainer<INote> container = new(section.OrderedNotes());
+        OrderedElementsContainer<ArticleElement> container = new(notes);
 
         n2.OrdinalPosition = 0;
         container.UpdatePosition(n2);
@@ -53,22 +40,9 @@ public class AdjustElementPositionTests
         ClozeNote n3 = new() { Text="b", OrdinalPosition=2 };
         BasicNote n4 = new() { Front="a", Back="b", OrdinalPosition=3 };
         BasicNote n5 = new() { Front="a", Back="b", OrdinalPosition=4 };
-        Section section = new()
-        {
-            BasicNotes =
-            [
-                n2,
-                n4,
-                n5
-            ],
-                ClozeNotes =
-            [
-                n1,
-                n3
-            ]
-        };
+        List<ArticleElement> notes = [n1, n2, n3, n4, n5];
 
-        OrderedElementsContainer<INote> container = new(section.OrderedNotes());
+        OrderedElementsContainer<ArticleElement> container = new(notes);
 
         n1.OrdinalPosition = 3;
         container.UpdatePosition(n1);

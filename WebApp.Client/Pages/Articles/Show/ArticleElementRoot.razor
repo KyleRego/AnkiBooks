@@ -1,0 +1,44 @@
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Interfaces
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.Notes
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.Contents
+@using AnkiBooks.WebApp.Client.Pages.Articles.Show.Contents.Markdown
+
+@switch (Element)
+{
+    case MarkdownContent mdc:
+        <ShowMarkdown   MarkdownContent="@mdc"
+                        @bind-ElementsContainer:get="@ElementsContainer"
+                        @bind-ElementsContainer:set="@ElementsContainerChanged" />
+        break;
+
+    case BasicNote bn:
+        <NoteElement    Note="@bn"
+                        @bind-ElementsContainer:get="@ElementsContainer"
+                        @bind-ElementsContainer:set="@ElementsContainerChanged" />
+        break;
+
+    case ClozeNote cn:
+        <NoteElement    Note="@cn"
+                        @bind-ElementsContainer:get="@ElementsContainer"
+                        @bind-ElementsContainer:set="@ElementsContainerChanged" />
+        break;
+
+    default:
+        break;
+}
+
+@code {
+    [Parameter]
+    public ArticleElement Element { get; set; } = null!;
+
+    [Parameter]
+    public OrderedElementsContainer<ArticleElement> ElementsContainer { get; set; } = null!;
+    
+    [Parameter]
+    public EventCallback<OrderedElementsContainer<ArticleElement>> ElementsContainerChanged { get; set; }
+
+    [CascadingParameter(Name="ReadMode")]
+    public bool ReadMode { get; set; }
+
+}

@@ -15,14 +15,14 @@ public class DeleteOrderedElementAsyncTests : RepositoryTestBase
     {
         using var dbContext = InMemoryDbContext();
 
-        Section section = await dbContext.CreateSectionWithTenAlternatingBasicAndClozeNotes();
-        BasicNote noteToDelete = section.BasicNotes.First(bn => bn.OrdinalPosition == 4);
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
+        BasicNote noteToDelete = article.BasicNotes.First(bn => bn.OrdinalPosition == 4);
 
         BasicNoteRepository basicNoteRepository = new(dbContext);
 
         await basicNoteRepository.DeleteOrderedElementAsync(noteToDelete);
 
         Assert.Null(dbContext.BasicNotes.FirstOrDefault(bn => bn.Id == noteToDelete.Id));
-        Assert.True(SectionValidator.CorrectElementsCountAndOrdinalPositions(dbContext, section, 9));
+        Assert.True(ArticleValidator.CorrectElementsCountAndOrdinalPositions(dbContext, article, 9));
     }
 }

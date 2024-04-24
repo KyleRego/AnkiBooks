@@ -24,18 +24,14 @@ public class ArticleRepository(ApplicationDbContext dbContext) : IArticleReposit
     public async Task<Article?> GetArticleAsync(string articleId)
     {
         return await _dbContext.Articles
-                    .Include(a => a.Sections)
-                    .ThenInclude(sec => sec.BasicNotes)
-                    .Include(a => a.Sections)
-                    .ThenInclude(sec => sec.ClozeNotes)
-                    .Include(a => a.Sections)
-                    .ThenInclude(sec => sec.MarkdownContents)
+                    .Include(a => a.BasicNotes)
+                    .Include(a => a.ClozeNotes)
+                    .Include(a => a.MarkdownContents)
                     .FirstOrDefaultAsync(a => a.Id == articleId);
     }
 
     public async Task<Article> InsertArticleAsync(Article article)
     {
-        article.Sections = [ new() { OrdinalPosition = 0} ];
         _dbContext.Articles.Add(article);
         await _dbContext.SaveChangesAsync();
         return article;

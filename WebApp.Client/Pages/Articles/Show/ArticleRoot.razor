@@ -26,7 +26,7 @@
     }
 </div>
 
-@if (article == null || SectionsContainer == null)
+@if (article == null || ElementsContainer == null)
 {
     <PageTitle>Loading article...</PageTitle>
 
@@ -36,23 +36,31 @@ else
 {
     <PageTitle>@article.Title</PageTitle>
 
-    List<Section> sections = SectionsContainer.OrderedElements;
+    List<ArticleElement> elements = ElementsContainer.OrderedElements;
 
     <CascadingValue Value="@article.Id" Name="ArticleId">
     
         <article class="px-4">
             <div>
-                @if (sections.Count == 0)
+                @if (elements.Count == 0)
                 {
-                    @* something went wrong  *@
+                    @if (ReadMode == false)
+                    {
+                        <NewElement @bind-ElementsContainer="@ElementsContainer" OrdinalPosition="@(0)" />
+                    }
                 }
                 else
                 {
-                    @for (int i = 0; i < sections.Count; i++)
+                    @for (int i = 0; i < elements.Count; i++)
                     {
-                        Section section = sections[i];
+                        ArticleElement element = elements[i];
 
-                        <SectionRoot Section="@(section)" @bind-SectionsContainer="SectionsContainer" />
+                        <ArticleElementRoot Element="@element" @bind-ElementsContainer="@ElementsContainer" />
+
+                        @if (ReadMode == false)
+                        {
+                            <NewElement @bind-ElementsContainer="@ElementsContainer" OrdinalPosition="@(i)" />
+                        }
                     }
                 }
             </div>
@@ -71,7 +79,7 @@ else
 
     private void EndReadMode() => ReadMode = false;
 
-    private OrderedElementsContainer<Section>? SectionsContainer;
+    private OrderedElementsContainer<ArticleElement>? ElementsContainer;
 
     private Article? article;
 
@@ -86,7 +94,6 @@ else
         if (!ApplicationState.TryTakeFromJson<Article>(nameof(article), out var restored))
         {
             article = await UserArticleService.GetUserArticle(Id);
-            Logger.LogInformation(JsonSerializer.Serialize(article));
         }
         else
         {
@@ -94,7 +101,7 @@ else
         }
 
         ArgumentNullException.ThrowIfNull(article);
-        SectionsContainer = new(article.OrderedSections());
+        ElementsContainer = new(article.OrderedElements());
     }
 
     private Task PersistData()

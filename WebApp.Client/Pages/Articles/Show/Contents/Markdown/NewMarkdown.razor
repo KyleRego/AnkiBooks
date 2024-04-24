@@ -11,28 +11,29 @@
                 ParentSubmitMethod="@SubmitForm" />
 
 @code {
-    [CascadingParameter(Name="SectionId")]
-    public string SectionId { get; set; } = null!;
+    [CascadingParameter(Name="ArticleId")]
+    public string ArticleId { get; set; } = null!;
 
     [Parameter]
-    public ContentType? DropDownItemSelected { get; set; }
+    public ArticleElementType? DropDownItemSelected { get; set; }
+
     [Parameter]
-    public EventCallback<ContentType?> DropDownItemSelectedChanged { get; set; }
+    public EventCallback<ArticleElementType?> DropDownItemSelectedChanged { get; set; }
 
     [Parameter]
     public int OrdinalPosition { get; set; }
 
     [Parameter]
-    public OrderedElementsContainer<IContent> ContentsContainer { get; set; } = null!;
+    public OrderedElementsContainer<ArticleElement> ElementsContainer { get; set; } = null!;
 
     [Parameter]
-    public EventCallback<OrderedElementsContainer<IContent>?> ContentsContainerChanged { get; set; }
+    public EventCallback<OrderedElementsContainer<ArticleElement>?> ElementsContainerChanged { get; set; }
 
     private MarkdownContent StartingMarkdown()
     {
         return new()
         {
-            SectionId = SectionId
+            ArticleId = ArticleId
         };
     }
 
@@ -40,11 +41,11 @@
     {
         newMarkdownContent.OrdinalPosition = OrdinalPosition;
 
-        MarkdownContent? createdContent = await ApiService.PostMarkdownContent(newMarkdownContent);
+        MarkdownContent? createdContent = (MarkdownContent?)await ApiService.PostElement(newMarkdownContent);
         ArgumentNullException.ThrowIfNull(createdContent);
 
-        ContentsContainer.Add(createdContent);
-        await ContentsContainerChanged.InvokeAsync(ContentsContainer);
+        ElementsContainer.Add(createdContent);
+        await ElementsContainerChanged.InvokeAsync(ElementsContainer);
         DropDownItemSelected = null;
         await DropDownItemSelectedChanged.InvokeAsync(DropDownItemSelected);
     }

@@ -47,7 +47,6 @@ builder.Services.AddScoped<IUserArticleRepository, UserArticleRepository>();
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
 builder.Services.AddScoped<IBasicNoteRepository, BasicNoteRepository>();
 builder.Services.AddScoped<IClozeNoteRepository, ClozeNoteRepository>();
-builder.Services.AddScoped<ISectionRepository, SectionRepository>();
 builder.Services.AddScoped<IMarkdownContentRepository, MarkdownContentRepository>();
 builder.Services.AddScoped<IUserArticleService, ServerUserArticleService>();
 

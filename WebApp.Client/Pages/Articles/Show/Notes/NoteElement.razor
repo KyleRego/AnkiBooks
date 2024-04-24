@@ -7,7 +7,7 @@
 @using AnkiBooks.WebApp.Client.Shared.Heroicons
 @inject IAnkiBooksApiService ApiService
 @inject ILogger<NoteElement> logger
-@inject DraggedItemHolder<INote> draggedItemHolder
+@inject DraggedItemHolder<ArticleElement> draggedItemHolder
 
 @if (editing == false)
 {
@@ -61,13 +61,13 @@ else
 
 @code {
     [Parameter]
-    public OrderedElementsContainer<INote> NotesContainer { get; set; } = null!;
+    public OrderedElementsContainer<ArticleElement> ElementsContainer { get; set; } = null!;
 
     [Parameter]
-    public EventCallback<OrderedElementsContainer<INote>> NotesContainerChanged { get; set; }
+    public EventCallback<OrderedElementsContainer<ArticleElement>> ElementsContainerChanged { get; set; }
     
     [Parameter]
-    public INote Note { get; set; } = null!;
+    public ArticleElement Note { get; set; } = null!;
 
     [CascadingParameter(Name="ReadMode")]
     public bool ReadMode { get; set; }
@@ -81,10 +81,10 @@ else
 
     private async Task DeleteElement()
     {
-        await ApiService.DeleteNote(Note);
+        await ApiService.DeleteElement(Note);
 
-        NotesContainer.Remove(Note);
-        await NotesContainerChanged.InvokeAsync(NotesContainer);
+        ElementsContainer.Remove(Note);
+        await ElementsContainerChanged.InvokeAsync(ElementsContainer);
     }
 
     private void HandleDrag()
@@ -103,7 +103,7 @@ else
 
     private void HandleDragEnter()
     {
-        INote? draggedItem = draggedItemHolder.DraggedItem;
+        ArticleElement? draggedItem = draggedItemHolder.DraggedItem;
 
         if (draggedItem == null) return;
         if (draggedItem == Note) return;
@@ -113,7 +113,7 @@ else
 
     private void HandleDragLeave()
     {
-        INote? draggedItem = draggedItemHolder.DraggedItem;
+        ArticleElement? draggedItem = draggedItemHolder.DraggedItem;
 
         if (draggedItem == null) return;
         if (draggedItem == Note) return;
@@ -126,16 +126,16 @@ else
     {
         nestedDragLevels = 0;
         logger.LogInformation("drop");
-        INote? droppedElement = draggedItemHolder.DraggedItem;
+        ArticleElement? droppedElement = draggedItemHolder.DraggedItem;
 
         if (droppedElement == null) return;
         if (droppedElement == Note) return;
 
         droppedElement.OrdinalPosition = Note.OrdinalPosition;
 
-        await ApiService.PutNote(droppedElement);
+        await ApiService.PutElement(droppedElement);
 
-        NotesContainer.UpdatePosition(droppedElement);
-        await NotesContainerChanged.InvokeAsync(NotesContainer);
+        ElementsContainer.UpdatePosition(droppedElement);
+        await ElementsContainerChanged.InvokeAsync(ElementsContainer);
     }
 }

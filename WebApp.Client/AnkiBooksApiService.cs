@@ -9,19 +9,9 @@ namespace AnkiBooks.WebApp.Client;
 
 public interface IAnkiBooksApiService
 {
-    public Task<INote?> PostNote(INote element);
-    public Task<INote?> PutNote(INote element);
-    public Task DeleteNote(INote element);
-
-    public Task<IContent?> PutContent(IContent content);
-
-    public Task<MarkdownContent?> PostMarkdownContent(MarkdownContent mdContent);
-    public Task<MarkdownContent?> PutMarkdownContent(MarkdownContent mdContent);
-    public Task DeleteMarkdownContent(string mdContentId);
-
-    public Task<Section?> PostSection(Section section);
-    public Task<Section?> PutSection(Section section);
-    public Task DeleteSection(string sectionId);
+    public Task<ArticleElement?> PostElement(ArticleElement element);
+    public Task<ArticleElement?> PutElement(ArticleElement element);
+    public Task DeleteElement(ArticleElement element);
 }
 
 public class AnkiBooksApiService(HttpClient httpClient, ILogger<AnkiBooksApiService> logger) : IAnkiBooksApiService
@@ -34,68 +24,64 @@ public class AnkiBooksApiService(HttpClient httpClient, ILogger<AnkiBooksApiServ
             PropertyNameCaseInsensitive = true
         };
 
-    public async Task<INote?> PostNote(INote element)
+    public async Task<ArticleElement?> PostElement(ArticleElement element)
     {
-        if (element is BasicNote basicNote)
+        switch(element)
         {
-            return await PostBasicNote(basicNote);
-        }
-        else if (element is ClozeNote clozeNote)
-        {
-            return await PostClozeNote(clozeNote);
-        }
-        else
-        {
-            throw new ApplicationException();
-        }
-    }
+            case BasicNote bn:
+                return await PostBasicNote(bn);
 
-    public async Task<INote?> PutNote(INote element)
-    {
-        if (element is BasicNote basicNote)
-        {
-            return await PutBasicNote(basicNote);
-        }
-        else if (element is ClozeNote clozeNote)
-        {
-            return await PutClozeNote(clozeNote);
-        }
-        else
-        {
-            throw new ApplicationException();
-        }
-    }
+            case ClozeNote cn:
+                return await PostClozeNote(cn);
 
-    public async Task DeleteNote(INote element)
-    {
-        if (element is BasicNote basicNote)
-        {
-            await DeleteBasicNote(basicNote.Id);
-        }
-        else if (element is ClozeNote clozeNote)
-        {
-            await DeleteClozeNote(clozeNote.Id);
-        }
-        else
-        {
-            throw new ApplicationException();
-        }
-    }
-
-    public async Task<IContent?> PutContent(IContent content)
-    {
-        switch(content)
-        {
-            case MarkdownContent mdContent:
-                MarkdownContent? updatedMdContent = await PutMarkdownContent(mdContent);
-                return updatedMdContent;
+            case MarkdownContent mdc:
+                return await PostMarkdownContent(mdc);
 
             default:
                 throw new ApplicationException();
         }
     }
 
-    public async Task<MarkdownContent?> PostMarkdownContent(MarkdownContent mdContent)
+    public async Task<ArticleElement?> PutElement(ArticleElement element)
+    {
+        switch(element)
+        {
+            case BasicNote bn:
+                return await PutBasicNote(bn);
+
+            case ClozeNote cn:
+                return await PutClozeNote(cn);
+
+            case MarkdownContent mdc:
+                return await PutMarkdownContent(mdc);
+
+            default:
+                throw new ApplicationException();
+        }
+    }
+
+    public async Task DeleteElement(ArticleElement element)
+    {
+        switch(element)
+        {
+            case BasicNote bn:
+                await DeleteBasicNote(bn.Id);
+                break;
+
+            case ClozeNote cn:
+                await DeleteClozeNote(cn.Id);
+                break;
+
+            case MarkdownContent mdc:
+                await DeleteMarkdownContent(mdc.Id);
+                break;
+
+            default:
+                throw new ApplicationException();
+        }
+    }
+
+    private async Task<MarkdownContent?> PostMarkdownContent(MarkdownContent mdContent)
     {
         HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/MarkdownContents", mdContent);
         response.EnsureSuccessStatusCode();
@@ -103,7 +89,7 @@ public class AnkiBooksApiService(HttpClient httpClient, ILogger<AnkiBooksApiServ
         return JsonSerializer.Deserialize<MarkdownContent>(responseBody, _jsonOptions);
     }
 
-    public async Task<MarkdownContent?> PutMarkdownContent(MarkdownContent mdContent)
+    private async Task<MarkdownContent?> PutMarkdownContent(MarkdownContent mdContent)
     {
         HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"api/MarkdownContents/{mdContent.Id}", mdContent);
         response.EnsureSuccessStatusCode();
@@ -111,7 +97,7 @@ public class AnkiBooksApiService(HttpClient httpClient, ILogger<AnkiBooksApiServ
         return JsonSerializer.Deserialize<MarkdownContent>(responseBody, _jsonOptions);
     }
 
-    public async Task DeleteMarkdownContent(string mdContentId)
+    private async Task DeleteMarkdownContent(string mdContentId)
     {
         HttpResponseMessage response = await _httpClient.DeleteAsync($"api/MarkdownContents/{mdContentId}");
         response.EnsureSuccessStatusCode();
@@ -158,29 +144,6 @@ public class AnkiBooksApiService(HttpClient httpClient, ILogger<AnkiBooksApiServ
     private async Task DeleteClozeNote(string clozeNoteId)
     {
         HttpResponseMessage response = await _httpClient.DeleteAsync($"api/ClozeNotes/{clozeNoteId}");
-        response.EnsureSuccessStatusCode();
-    }
-
-    public async Task<Section?> PostSection(Section section)
-    {
-        HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/Sections", section);
-        response.EnsureSuccessStatusCode();
-        string responseBody = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<Section>(responseBody, _jsonOptions);        
-    }
-
-    public async Task<Section?> PutSection(Section section)
-    {
-        HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"api/Sections/{section.Id}",
-                                                                        section);
-        response.EnsureSuccessStatusCode();
-        string responseBody = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<Section>(responseBody, _jsonOptions);        
-    }
-
-    public async Task DeleteSection(string contentId)
-    {
-        HttpResponseMessage response = await _httpClient.DeleteAsync($"api/Sections/{contentId}");
         response.EnsureSuccessStatusCode();
     }
 }

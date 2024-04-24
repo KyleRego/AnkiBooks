@@ -2,7 +2,7 @@
 @using AnkiBooks.ApplicationCore.Interfaces
 @using AnkiBooks.WebApp.Client.Services
 @using AnkiBooks.WebApp.Client.Shared.Heroicons
-@inject DraggedItemHolder<IContent> draggedItemHolder
+@inject DraggedItemHolder<ArticleElement> draggedItemHolder
 @inject IAnkiBooksApiService ApiService
 
 @if (Editing == true)
@@ -51,10 +51,10 @@ else
     public MarkdownContent MarkdownContent { get; set; } = null!;
 
     [Parameter]
-    public OrderedElementsContainer<IContent> ContentsContainer { get; set; } = null!;
+    public OrderedElementsContainer<ArticleElement> ElementsContainer { get; set; } = null!;
 
     [Parameter]
-    public EventCallback<OrderedElementsContainer<IContent>> ContentsContainerChanged { get; set; }
+    public EventCallback<OrderedElementsContainer<ArticleElement>> ElementsContainerChanged { get; set; }
 
     [CascadingParameter(Name="ReadMode")]
     public bool ReadMode { get; set; }
@@ -80,7 +80,7 @@ else
 
     private void HandleDragEnter()
     {
-        IContent? draggedItem = draggedItemHolder.DraggedItem;
+        ArticleElement? draggedItem = draggedItemHolder.DraggedItem;
 
         if (draggedItem == null) return;
         if (draggedItem == MarkdownContent) return;
@@ -89,7 +89,7 @@ else
 
     private void HandleDragLeave()
     {
-        IContent? draggedItem = draggedItemHolder.DraggedItem;
+        ArticleElement? draggedItem = draggedItemHolder.DraggedItem;
 
         if (draggedItem == null) return;
         if (draggedItem == MarkdownContent) return;
@@ -99,17 +99,17 @@ else
     private async Task HandleDrop()
     {
         nestedDragLevels = 0;
-        IContent? droppedItem = draggedItemHolder.DraggedItem;
+        ArticleElement? droppedItem = draggedItemHolder.DraggedItem;
 
         if (droppedItem == null) return;
         if (droppedItem == MarkdownContent) return;
 
         droppedItem.OrdinalPosition = MarkdownContent.OrdinalPosition;
 
-        IContent? updatedItem = await ApiService.PutContent(droppedItem);
+        ArticleElement? updatedItem = await ApiService.PutElement(droppedItem);
         ArgumentNullException.ThrowIfNull(updatedItem);
 
-        ContentsContainer.UpdatePosition(droppedItem);
-        await ContentsContainerChanged.InvokeAsync(ContentsContainer);
+        ElementsContainer.UpdatePosition(droppedItem);
+        await ElementsContainerChanged.InvokeAsync(ElementsContainer);
     }
 }

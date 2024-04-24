@@ -16,15 +16,15 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
     {
         using var dbContext = InMemoryDbContext();
 
-        Section section = await dbContext.CreateSectionWithTenAlternatingBasicAndClozeNotes();
-        ClozeNote currentNote = section.ClozeNotes.First(bn => bn.OrdinalPosition == 9);
+        Article article = await dbContext.CreateArticleWithTenAlternatingBasicAndClozeNotes();
+        ClozeNote currentNote = article.ClozeNotes.First(bn => bn.OrdinalPosition == 9);
 
         ClozeNote clozeNote = new()
         {
             Id = currentNote.Id,
             Text = "4321",
             OrdinalPosition = 0,
-            SectionId = section.Id
+            ArticleId = article.Id
         };
         ClozeNoteRepository clozeNoteRepository = new(dbContext);
 
@@ -33,6 +33,6 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
         ClozeNote updatedClozeNote = dbContext.ClozeNotes.First(cn => cn.Id == clozeNote.Id);
         Assert.Equal("4321", updatedClozeNote.Text);
         Assert.Equal(0, updatedClozeNote.OrdinalPosition);
-        Assert.True(SectionValidator.CorrectElementsCountAndOrdinalPositions(dbContext, section, 10));
+        Assert.True(ArticleValidator.CorrectElementsCountAndOrdinalPositions(dbContext, article, 10));
     }
 }

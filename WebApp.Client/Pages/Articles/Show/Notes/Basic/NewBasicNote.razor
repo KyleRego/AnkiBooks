@@ -12,28 +12,28 @@
 
 @code {
     [Parameter]
-    public OrderedElementsContainer<INote> NotesContainer { get; set; } = null!;
+    public OrderedElementsContainer<ArticleElement> ElementsContainer { get; set; } = null!;
 
     [Parameter]
-    public EventCallback<OrderedElementsContainer<INote>> NotesContainerChanged { get; set; }
+    public EventCallback<OrderedElementsContainer<ArticleElement>> ElementsContainerChanged { get; set; }
 
-    [CascadingParameter(Name="SectionId")]
-    public string SectionId { get; set; } = null!;
+    [CascadingParameter(Name="ArticleId")]
+    public string ArticleId { get; set; } = null!;
 
     [Parameter]
     public int OrdinalPosition { get; set; }
 
     [Parameter]
-    public NoteType? DropDownItemSelected { get; set; }
+    public ArticleElementType? DropDownItemSelected { get; set; }
 
     [Parameter]
-    public EventCallback<NoteType?> DropDownItemSelectedChanged { get; set; }
+    public EventCallback<ArticleElementType?> DropDownItemSelectedChanged { get; set; }
 
     private BasicNote StartingBasicNote()
     {
         return new()
         {
-            SectionId = SectionId
+            ArticleId = ArticleId
         };
     }
 
@@ -41,15 +41,15 @@
     {
         ArgumentNullException.ThrowIfNull(newBasicNote.Front);
         ArgumentNullException.ThrowIfNull(newBasicNote.Back);
-        ArgumentNullException.ThrowIfNull(newBasicNote.SectionId);
+        ArgumentNullException.ThrowIfNull(newBasicNote.ArticleId);
 
         newBasicNote.OrdinalPosition = OrdinalPosition;
 
-        BasicNote? createdBasicNote = (BasicNote?)await ApiService.PostNote(newBasicNote);
+        BasicNote? createdBasicNote = (BasicNote?)await ApiService.PostElement(newBasicNote);
         ArgumentNullException.ThrowIfNull(createdBasicNote);
 
-        NotesContainer.Add(createdBasicNote);
-        await NotesContainerChanged.InvokeAsync(NotesContainer);
+        ElementsContainer.Add(createdBasicNote);
+        await ElementsContainerChanged.InvokeAsync(ElementsContainer);
 
         DropDownItemSelected = null;
         await DropDownItemSelectedChanged.InvokeAsync(DropDownItemSelected);
