@@ -4,22 +4,10 @@
 @using AnkiBooks.WebApp.Client.Pages.Articles.Show.Contents
 @using AnkiBooks.WebApp.Client.Pages.Articles.Show.Contents.Markdown
 
-@switch (Element)
+@switch (Content)
 {
     case MarkdownContent mdc:
         <ShowMarkdown   MarkdownContent="@mdc"
-                        @bind-ElementsContainer:get="@ElementsContainer"
-                        @bind-ElementsContainer:set="@ElementsContainerChanged" />
-        break;
-
-    case BasicNote bn:
-        <NoteElement    Note="@bn"
-                        @bind-ElementsContainer:get="@ElementsContainer"
-                        @bind-ElementsContainer:set="@ElementsContainerChanged" />
-        break;
-
-    case ClozeNote cn:
-        <NoteElement    Note="@cn"
                         @bind-ElementsContainer:get="@ElementsContainer"
                         @bind-ElementsContainer:set="@ElementsContainerChanged" />
         break;
@@ -30,7 +18,7 @@
 
 @code {
     [Parameter]
-    public ArticleElement Element { get; set; } = null!;
+    public IContent Content { get; set; } = null!;
 
     [Parameter]
     public OrderedElementsContainer<ArticleElement> ElementsContainer { get; set; } = null!;

@@ -9,10 +9,9 @@
 @inject ILogger<NoteElement> logger
 @inject DraggedItemHolder<ArticleElement> draggedItemHolder
 
-<div class="d-flex justify-content-center mb-4">
 @if (editing == false)
 {
-    <div class="border-primary-thin w-64">
+    <div class="border-primary-thin mb-4">
         @if (ReadMode == false)
         {
             <div class="border-bottom-primary-thin d-flex justify-content-between p-1">
@@ -59,17 +58,16 @@ else
             break;
     }
 }
-</div>
 
 @code {
+    [Parameter]
+    public INote Note { get; set; } = null!;
+
     [Parameter]
     public OrderedElementsContainer<ArticleElement> ElementsContainer { get; set; } = null!;
 
     [Parameter]
     public EventCallback<OrderedElementsContainer<ArticleElement>> ElementsContainerChanged { get; set; }
-    
-    [Parameter]
-    public ArticleElement Note { get; set; } = null!;
 
     [CascadingParameter(Name="ReadMode")]
     public bool ReadMode { get; set; }
@@ -83,16 +81,16 @@ else
 
     private async Task DeleteElement()
     {
-        await ApiService.DeleteElement(Note);
+        await ApiService.DeleteElement((ArticleElement)Note);
 
-        ElementsContainer.Remove(Note);
+        ElementsContainer.Remove((ArticleElement)Note);
         await ElementsContainerChanged.InvokeAsync(ElementsContainer);
     }
 
     private void HandleDrag()
     {
         logger.LogInformation("drag");
-        draggedItemHolder.DraggedItem = Note;
+        draggedItemHolder.DraggedItem = (ArticleElement)Note;
     }
 
     private void HandleDragEnd()
