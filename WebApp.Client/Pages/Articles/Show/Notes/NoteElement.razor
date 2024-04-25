@@ -9,9 +9,10 @@
 @inject ILogger<NoteElement> logger
 @inject DraggedItemHolder<ArticleElement> draggedItemHolder
 
+<div class="d-flex justify-content-center mb-4">
 @if (editing == false)
 {
-    <div class="border-primary-thin mb-2">
+    <div class="border-primary-thin w-64">
         @if (ReadMode == false)
         {
             <div class="border-bottom-primary-thin d-flex justify-content-between p-1">
@@ -58,6 +59,7 @@ else
             break;
     }
 }
+</div>
 
 @code {
     [Parameter]

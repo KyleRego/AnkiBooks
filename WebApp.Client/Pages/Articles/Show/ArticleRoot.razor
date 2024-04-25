@@ -59,7 +59,7 @@ else
 
                         @if (ReadMode == false)
                         {
-                            <NewElement @bind-ElementsContainer="@ElementsContainer" OrdinalPosition="@(i)" />
+                            <NewElement @bind-ElementsContainer="@ElementsContainer" OrdinalPosition="@(i + 1)" />
                         }
                     }
                 }
