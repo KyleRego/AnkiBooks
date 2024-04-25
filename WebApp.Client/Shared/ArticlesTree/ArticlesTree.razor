@@ -15,26 +15,32 @@
 <div>
     @if (articles == null)
     {
-        <p>Loading articles</p>
+        <p>Loading articles...</p>
     }
     else
     {
-        <input type="search" class="p-1 w-100" placeholder="Filter articles:" />
+        <div class="p-4">
+            <InputText @bind-Value="@articlesSearch" type="search" class="p-1 w-100" placeholder="Search articles:" />
+        </div>
 
+        <CascadingValue Value="@articlesSearch" Name="ArticlesSearch">
         <ul>
-        @for(int i = 0; i < articles.Count; i++)
-        {
-            Article article = articles[i];
+            @for(int i = 0; i < articles.Count; i++)
+            {
+                Article article = articles[i];
 
-            <ArticlesTreeNode @bind-Articles="@articles" Article="@article" />
-        }
+                <ArticlesTreeNode @bind-Articles="@articles" Article="@article" />
+            }
         </ul>
+        </CascadingValue>
 
         <NewArticle @bind-Articles="@articles" ParentArticle="@(null)" />
     }
 </div>
 
 @code {
+    public string articlesSearch = "";
+
     private List<Article>? articles;
     private PersistingComponentStateSubscription persistingSubscription;
     protected override async Task OnInitializedAsync()

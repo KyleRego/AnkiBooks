@@ -1,11 +1,15 @@
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.WebApp.Client.Shared.Heroicons
 
+@inject ILogger<object> logger
+
 <li>
     <div class="d-flex justify-content-between align-items-center">
-        <div class="flex-grow-1 d-flex px-4 py-2 hover:bg-primary-light align-items-center" @onclick="ExpandOrCollapse">
+        <div class="flex-grow-1 d-flex px-4 py-2
+                    @(searchTarget == true ? "border-highlight" : "")
+                    hover:bg-primary-light align-items-center" @onclick="ExpandOrCollapse">
             <div class="w-5 h-5 flex-none mr-2">
-            @if (Expanded == false)
+            @if (expanded == false)
             {
                 <ChevronRight />
             }
@@ -18,20 +22,35 @@
         </div>
     </div>
 
-    @if (Expanded == true)
-    {
-        <ul class="pl-4">
-            @foreach (Article article in Article.ChildArticles)
-            {
-                <ArticlesTreeNode Article="@article" @bind-Articles="@Articles" />
-            }
+    <ul class="pl-4 @(expanded==false ? "d-none" : "")">
+        @foreach (Article article in Article.ChildArticles)
+        {
+            <ArticlesTreeNode   Article="@article"
+                                @bind-Articles="@Articles"
+                                ParentExpand="@Expand" />
+        }
 
-            <NewArticle @bind-Articles="@Articles" ParentArticle="@Article" />
-        </ul>
-    }
+        <NewArticle @bind-Articles="@Articles" ParentArticle="@Article" />
+    </ul>
 </li>
 
 @code {
+    [CascadingParameter(Name="ArticlesSearch")]
+    public string? ArticlesSearch { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        searchTarget = false;
+
+        if (String.IsNullOrWhiteSpace(ArticlesSearch)) return; 
+
+        @if (Article.Title.Contains(ArticlesSearch))
+        {
+            ExpandParent();
+            searchTarget = true;
+        }
+    }
+
     [Parameter]
     public Article Article { get; set; } = null!;
 
@@ -41,10 +60,28 @@
     [Parameter]
     public EventCallback<List<Article>> ArticlesChanged { get; set; }
 
-    private bool Expanded = false;
+    private bool expanded = false;
+    private bool searchTarget = false;
 
     private void ExpandOrCollapse()
     {
-        Expanded = !Expanded;
+        expanded = !expanded;
     }
+
+    private void Expand()
+    {
+        expanded = true;
+        ExpandParent();
+    }
+
+    private void ExpandParent()
+    {
+        if (ParentExpand != null)
+        {
+            ParentExpand.Invoke();
+        }
+    }
+
+    [Parameter]
+    public Action? ParentExpand { get; set; }
 }

@@ -59,9 +59,10 @@ else
                     for (int j = 0; j < groups.Count; j++)
                     {
                         (List<IContent>, List<INote>) group = groups[j];
-    
                         (List<IContent> contents, List<INote> notes) = group;
+
                         <div class="d-flex flex-column sm:flex-row @(j != 0 ? "border-top-primary pt-4" : "")">
+
                             <div class="sm:flex-grow-2 pr-4">
                                 @foreach(IContent content in contents)
                                 {
@@ -75,18 +76,21 @@ else
                                 }
                             </div>
 
-                            <div class="sm:flex-grow-1">
-                                @foreach(INote note in notes)
-                                {
-                                    <NoteElement Note="@note" @bind-ElementsContainer="@ElementsContainer" />
-
-                                    @if (ReadMode == false)
+                            @if (notes.Count != 0)
+                            {
+                                <div class="sm:flex-grow-1">
+                                    @foreach(INote note in notes)
                                     {
-                                        <NewElement @bind-ElementsContainer="@ElementsContainer"
-                                                    OrdinalPosition="@(note.OrdinalPosition + 1)" />
+                                        <NoteElement Note="@note" @bind-ElementsContainer="@ElementsContainer" />
+
+                                        @if (ReadMode == false)
+                                        {
+                                            <NewElement @bind-ElementsContainer="@ElementsContainer"
+                                                        OrdinalPosition="@(note.OrdinalPosition + 1)" />
+                                        }
                                     }
-                                }
-                            </div>
+                                </div>
+                            }
                         </div>
                     }
                 }

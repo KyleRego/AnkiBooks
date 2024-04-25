@@ -4,6 +4,12 @@
     border-style: solid;
 }
 
+.border-highlight {
+    border: 1px;
+    border-color: rgb(51, 255, 51);
+    border-style: solid;
+}
+
 .border-primary-thin {
     border: 1px;
     border-color: var(--ab-border-primary-dark);
