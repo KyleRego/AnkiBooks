@@ -1,0 +1,21 @@
+.flex-grow-0 {
+    flex: 0;
+}
+
+.flex-grow-1 {
+    flex: 1;
+}
+
+.flex-grow-2 {
+    flex: 2;
+}
+
+@media (min-width: 640px) {
+    .sm\:flex-grow-1 {
+        flex: 1;
+    }
+
+    .sm\:flex-grow-2 {
+        flex: 2;
+    }
+}

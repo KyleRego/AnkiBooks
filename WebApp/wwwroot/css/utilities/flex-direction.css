@@ -1,0 +1,17 @@
+.flex-row {
+    flex-direction: row;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+@media (min-width: 640px) {
+    .sm\:flex-row {
+        flex-direction: row;
+    }
+
+    .sm\:flex-column {
+        flex-direction: column;
+    }
+}
