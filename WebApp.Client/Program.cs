@@ -1,4 +1,3 @@
-using AnkiBooks.ApplicationCore.Interfaces;
 using AnkiBooks.ApplicationCore.Interfaces.Services;
 using AnkiBooks.WebApp.Client;
 using AnkiBooks.WebApp.Client.Services;
@@ -13,5 +12,6 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddSingleton<AuthenticationStateProvider, PersistentAuthenticationStateProvider>();
 builder.Services.AddScoped<IUserArticleService, ClientUserArticleService>();
+builder.Services.AddScoped<IBookService, BookService>();
 
 await builder.Build().RunAsync();

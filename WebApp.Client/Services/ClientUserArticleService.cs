@@ -6,14 +6,9 @@ using Microsoft.AspNetCore.Components.WebAssembly.Http;
 
 namespace AnkiBooks.WebApp.Client.Services;
 
-public class ClientUserArticleService(HttpClient httpClient) : IUserArticleService
+public class ClientUserArticleService(HttpClient httpClient) : HttpServiceBase, IUserArticleService
 {
     private readonly HttpClient _httpClient = httpClient;
-
-    private readonly JsonSerializerOptions _jsonOptions = new()
-        {
-            PropertyNameCaseInsensitive = true
-        };
 
     public async Task<Article?> GetUserArticle(string articleId)
     {
