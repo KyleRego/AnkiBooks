@@ -1,16 +1,16 @@
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Interfaces.Services
 
-@inject IInfoSourceService InfoSourceService
+@inject ILinkService LinkService
 
-<EditForm Model="NewLinkSource" OnValidSubmit="HandleSubmit">
+<EditForm Model="NewLink" OnValidSubmit="HandleSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
     <div>
         <label>
             URL:
-            <InputText @bind-Value="NewLinkSource!.Url" />
+            <InputText @bind-Value="NewLink!.Url" />
         </label>
     </div>
     <div>
@@ -20,26 +20,26 @@
 
 @code {
     [Parameter]
-    public List<InfoSource> Sources { get; set; } = null!;
+    public List<Link> Links { get; set; } = null!;
     
     [Parameter]
-    public EventCallback<List<InfoSource>> SourcesChanged { get; set; }
+    public EventCallback<List<Link>> LinksChanged { get; set; }
 
     [SupplyParameterFromForm]
-    public LinkSource? NewLinkSource { get; set; }
+    public Link? NewLink { get; set; }
 
-    protected override void OnInitialized() => NewLinkSource = new();
+    protected override void OnInitialized() => NewLink = new();
 
     private async Task HandleSubmit()
     {
-        ArgumentNullException.ThrowIfNull(NewLinkSource);
-        ArgumentNullException.ThrowIfNull(NewLinkSource.Url);
+        ArgumentNullException.ThrowIfNull(NewLink);
+        ArgumentNullException.ThrowIfNull(NewLink.Url);
         // Validate URL here
-        LinkSource? createdLinkSource = await InfoSourceService.PostLinkSource(NewLinkSource);
-        if (createdLinkSource != null)
+        Link? createdLink = await LinkService.PostLink(NewLink);
+        if (createdLink != null)
         {
-            Sources.Add((InfoSource)createdLinkSource);
-            await SourcesChanged.InvokeAsync(Sources);
+            Links.Add(createdLink);
+            await LinksChanged.InvokeAsync(Links);
         }
     }
 } 

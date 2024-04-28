@@ -1,6 +1,6 @@
 namespace AnkiBooks.ApplicationCore.Entities;
 
-public class LinkSource : InfoSource
+public class Link : InfoSource
 {
     public string? Url { get; set; }
 }

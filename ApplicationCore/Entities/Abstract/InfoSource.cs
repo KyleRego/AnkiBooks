@@ -4,7 +4,7 @@ using AnkiBooks.ApplicationCore.Identity;
 
 namespace AnkiBooks.ApplicationCore.Entities;
 
-public class InfoSource : EntityBase
+public abstract class InfoSource : EntityBase
 {
     [ForeignKey(nameof(User))]
     public string? UserId { get; set; }

@@ -12,5 +12,5 @@ public class ApplicationUser : IdentityUser
 
     public List<Article> Articles { get; set; } = [];
     public List<Book> Books { get; set; } = [];
-    public List<LinkSource> LinkSources { get; set; } = [];
+    public List<Link> Links { get; set; } = [];
 }

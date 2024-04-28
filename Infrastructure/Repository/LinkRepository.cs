@@ -5,21 +5,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AnkiBooks.Infrastructure.Repository;
 
-public class InfoSourceRepository(ApplicationDbContext dbContext) : IInfoSourceRepository
+public class LinkRepository(ApplicationDbContext dbContext) : ILinkRepository
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
 
-    public async Task<List<InfoSource>> GetInfoSourcesAsync(string userId)
+    public async Task<List<Link>> GetLinksAsync(string userId)
     {
-        return await _dbContext.InfoSources
+        return await _dbContext.Links
                             .Where(ls => ls.UserId == userId)
                             .ToListAsync();
     }
 
-    public async Task<LinkSource> InsertLinkSourceAsync(LinkSource linkSource)
+    public async Task<Link> InsertLinkAsync(Link link)
     {
-        _dbContext.LinkSources.Add(linkSource);
+        _dbContext.Links.Add(link);
         await _dbContext.SaveChangesAsync();
-        return linkSource;
+        return link;
     }
 }

@@ -22,8 +22,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<ClozeNote> ClozeNotes { get; set; }
     public DbSet<MarkdownContent> MarkdownContents { get; set; }
 
-    public DbSet<InfoSource> InfoSources { get; set; }
-    public DbSet<LinkSource> LinkSources { get; set; }
+    public DbSet<Link> Links { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

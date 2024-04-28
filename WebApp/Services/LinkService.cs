@@ -5,21 +5,21 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 namespace AnkiBooks.WebApp.Services;
 
-public class InfoSourceService( IInfoSourceRepository repository,
-                                IUserIdProvider userIdProvider) : IInfoSourceService
+public class LinkService( ILinkRepository repository,
+                                IUserIdProvider userIdProvider) : ILinkService
 {
-    private readonly IInfoSourceRepository _repository = repository;
+    private readonly ILinkRepository _repository = repository;
     private readonly IUserIdProvider _userIdProvider = userIdProvider;
 
-    public async Task<List<InfoSource>?> GetInfoSources()
+    public async Task<List<Link>?> GetLinks()
     {
         string? currentUserId = await _userIdProvider.GetCurrentUserId();
         if (currentUserId == null) return [];
 
-        return await _repository.GetInfoSourcesAsync(currentUserId);
+        return await _repository.GetLinksAsync(currentUserId);
     }
 
-    public Task<LinkSource?> PostLinkSource(LinkSource linkSource)
+    public Task<Link?> PostLink(Link link)
     {
         throw new NotImplementedException();
     }

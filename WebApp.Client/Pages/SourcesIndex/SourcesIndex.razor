@@ -6,37 +6,32 @@
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Interfaces.Services
 
-@inject IInfoSourceService InfoSourceService
+@inject ILinkService LinkService
 @inject PersistentComponentState ApplicationState
 @inject ILogger<SourcesIndex> logger
 
 <h1>Sources:</h1>
 
-@if (sources == null)
+@if (links == null)
 {
-    <p>Requesting sources...</p>
+    <p>Requesting links...</p>
 }
 else
 {
     <ul>
-        @foreach (InfoSource source in sources)
+        @foreach (Link link in links)
         {
             <li>
-            @switch(source)
-            {
-                case LinkSource link:
-                    <span>@link.Url</span>
-                    break;
-            }
+                <span>@link.Url</span>
             </li>
         }
     </ul>
 }
 
-<NewSource @bind-Sources="sources" />
+<NewSource @bind-Links="links" />
 
 @code {
-    private List<InfoSource>? sources;
+    private List<Link>? links;
 
     private PersistingComponentStateSubscription persistingSubscription;
 
@@ -44,21 +39,21 @@ else
     {
         persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
 
-        if (!ApplicationState.TryTakeFromJson<List<InfoSource>?>(nameof(sources), out var restored))
+        if (!ApplicationState.TryTakeFromJson<List<Link>?>(nameof(links), out var restored))
         {
-            sources = await InfoSourceService.GetInfoSources();
+            links = await LinkService.GetLinks();
         }
         else
         {
-            sources = restored;
+            links = restored;
         }
 
-        ArgumentNullException.ThrowIfNull(sources);
+        ArgumentNullException.ThrowIfNull(links);
     }
 
     private Task PersistData()
     {
-        ApplicationState.PersistAsJson(nameof(sources), sources);
+        ApplicationState.PersistAsJson(nameof(links), links);
 
         return Task.CompletedTask;
     }
