@@ -14,12 +14,16 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin,
         ApplicationRoleClaim, ApplicationUserToken>(options)
 {
+    public DbSet<Book> Books { get; set; }
+
     public DbSet<Article> Articles { get; set; }
     public DbSet<ArticleElement> ArticleElements { get; set; }
-    public DbSet<Book> Books { get; set; }
     public DbSet<BasicNote> BasicNotes { get; set; }
     public DbSet<ClozeNote> ClozeNotes { get; set; }
     public DbSet<MarkdownContent> MarkdownContents { get; set; }
+
+    public DbSet<InfoSource> InfoSources { get; set; }
+    public DbSet<LinkSource> LinkSources { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

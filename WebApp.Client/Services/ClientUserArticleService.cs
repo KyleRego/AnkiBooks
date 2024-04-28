@@ -6,10 +6,8 @@ using Microsoft.AspNetCore.Components.WebAssembly.Http;
 
 namespace AnkiBooks.WebApp.Client.Services;
 
-public class ClientUserArticleService(HttpClient httpClient) : HttpServiceBase, IUserArticleService
+public class ClientUserArticleService(HttpClient httpClient) : HttpServiceBase(httpClient), IUserArticleService
 {
-    private readonly HttpClient _httpClient = httpClient;
-
     public async Task<Article?> GetUserArticle(string articleId)
     {
         HttpRequestMessage request = new(HttpMethod.Get, $"api/user/Articles/{articleId}");

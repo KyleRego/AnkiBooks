@@ -49,8 +49,12 @@ builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IBasicNoteRepository, BasicNoteRepository>();
 builder.Services.AddScoped<IClozeNoteRepository, ClozeNoteRepository>();
 builder.Services.AddScoped<IMarkdownContentRepository, MarkdownContentRepository>();
+builder.Services.AddScoped<IInfoSourceRepository, InfoSourceRepository>();
+
 builder.Services.AddScoped<IUserArticleService, ServerUserArticleService>();
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IInfoSourceService, InfoSourceService>();
+builder.Services.AddScoped<IUserIdProvider, UserIdProvider>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

@@ -1,0 +1,70 @@
+@page "/sources"
+
+@implements IDisposable
+
+@using System.Text.Json
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Interfaces.Services
+
+@inject IInfoSourceService InfoSourceService
+@inject PersistentComponentState ApplicationState
+@inject ILogger<SourcesIndex> logger
+
+<h1>Sources:</h1>
+
+@if (sources == null)
+{
+    <p>Requesting sources...</p>
+}
+else
+{
+    <ul>
+        @foreach (InfoSource source in sources)
+        {
+            <li>
+            @switch(source)
+            {
+                case LinkSource link:
+                    <span>@link.Url</span>
+                    break;
+            }
+            </li>
+        }
+    </ul>
+}
+
+<NewSource @bind-Sources="sources" />
+
+@code {
+    private List<InfoSource>? sources;
+
+    private PersistingComponentStateSubscription persistingSubscription;
+
+    protected override async Task OnInitializedAsync()
+    {
+        persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
+
+        if (!ApplicationState.TryTakeFromJson<List<InfoSource>?>(nameof(sources), out var restored))
+        {
+            sources = await InfoSourceService.GetInfoSources();
+        }
+        else
+        {
+            sources = restored;
+        }
+
+        ArgumentNullException.ThrowIfNull(sources);
+    }
+
+    private Task PersistData()
+    {
+        ApplicationState.PersistAsJson(nameof(sources), sources);
+
+        return Task.CompletedTask;
+    }
+
+    void IDisposable.Dispose()
+    {
+        persistingSubscription.Dispose();
+    }
+}

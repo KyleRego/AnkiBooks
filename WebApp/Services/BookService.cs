@@ -9,18 +9,11 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 namespace AnkiBooks.WebApp.Services;
 
-public class BookService(  IBookRepository repository,
-                                        AuthenticationStateProvider authStateProvider) : IBookService
+public class BookService(   IBookRepository repository,
+                            IUserIdProvider userIdProvider) : IBookService
 {
     private readonly IBookRepository _repository = repository;
-    private readonly AuthenticationStateProvider _authStateProvider = authStateProvider;
-
-    // Duplicated in ServerUserArticleService, following WET
-    private async Task<string?> GetCurrentUserId()
-    {
-        return (await _authStateProvider.GetAuthenticationStateAsync())
-                    .User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-    }
+    private readonly IUserIdProvider _userIdProvider = userIdProvider;
 
     public async Task<List<Book>?> GetPublicBooks()
     {

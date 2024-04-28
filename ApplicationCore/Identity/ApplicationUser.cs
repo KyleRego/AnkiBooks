@@ -11,4 +11,6 @@ public class ApplicationUser : IdentityUser
     public virtual ICollection<ApplicationUserRole> UserRoles { get; set; } = null!;
 
     public List<Article> Articles { get; set; } = [];
+    public List<Book> Books { get; set; } = [];
+    public List<LinkSource> LinkSources { get; set; } = [];
 }

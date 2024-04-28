@@ -5,10 +5,8 @@ using Microsoft.AspNetCore.Components.WebAssembly.Http;
 
 namespace AnkiBooks.WebApp.Client.Services;
 
-public class BookService(HttpClient httpClient) : HttpServiceBase, IBookService
+public class BookService(HttpClient httpClient) : HttpServiceBase(httpClient), IBookService
 {
-    private readonly HttpClient _httpClient = httpClient;
-
     public async Task<List<Book>?> GetPublicBooks()
     {
         HttpRequestMessage request = new(HttpMethod.Get, $"api/Books");

@@ -13,5 +13,6 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddSingleton<AuthenticationStateProvider, PersistentAuthenticationStateProvider>();
 builder.Services.AddScoped<IUserArticleService, ClientUserArticleService>();
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IInfoSourceService, InfoSourceService>();
 
 await builder.Build().RunAsync();

@@ -1,0 +1,45 @@
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Interfaces.Services
+
+@inject IInfoSourceService InfoSourceService
+
+<EditForm Model="NewLinkSource" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>
+            URL:
+            <InputText @bind-Value="NewLinkSource!.Url" />
+        </label>
+    </div>
+    <div>
+        <button type="submit">Add link source</button>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public List<InfoSource> Sources { get; set; } = null!;
+    
+    [Parameter]
+    public EventCallback<List<InfoSource>> SourcesChanged { get; set; }
+
+    [SupplyParameterFromForm]
+    public LinkSource? NewLinkSource { get; set; }
+
+    protected override void OnInitialized() => NewLinkSource = new();
+
+    private async Task HandleSubmit()
+    {
+        ArgumentNullException.ThrowIfNull(NewLinkSource);
+        ArgumentNullException.ThrowIfNull(NewLinkSource.Url);
+        // Validate URL here
+        LinkSource? createdLinkSource = await InfoSourceService.PostLinkSource(NewLinkSource);
+        if (createdLinkSource != null)
+        {
+            Sources.Add((InfoSource)createdLinkSource);
+            await SourcesChanged.InvokeAsync(Sources);
+        }
+    }
+} 
