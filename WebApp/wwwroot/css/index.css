@@ -1,3 +1,5 @@
+@import "./components/button.css";
+
 @import "./utilities/background-color.css";
 @import "./utilities/border.css";
 @import "./utilities/color.css";
@@ -19,7 +21,9 @@
 @import "./utilities/visibility.css";
 @import "./utilities/width.css";
 @import "./utilities/word-break.css";
+
 @import "./vendor/preflight.css";
+
 @import "./dialog.css";
 @import "./forms.css";
 @import "./theme.css";

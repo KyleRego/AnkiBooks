@@ -17,14 +17,15 @@
 
 <PageTitle>Register</PageTitle>
 
-<h1 class="font-size-32-px mb-4">Register</h1>
-
+<div class="mt-4 d-flex justify-content-center">
+<div class="w-84">
+<h1 class="font-size-24-px mb-4">Register</h1>
 <div class="d-flex">
-    <div class="flex-grow-1 pr-4">
+    <div class="flex-grow-1">
         <StatusMessage Message="@Message" />
         <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
             <DataAnnotationsValidator />
-            <h2 class="font-size-24-px mb-4">Create a new account:</h2>
+            <h2 class="mb-4">Create a new account:</h2>
             <hr />
             <div class="py-4">
                 <ValidationSummary class="text-danger" role="alert" />
@@ -49,7 +50,7 @@
             </div>
         </EditForm>
     </div>
-    <div class="flex-grow-1">
+    <div class="flex-grow-1 d-none">
         <section>
             <h3 class="font-size-24-px mb-4">Use another service to register:</h3>
             <hr />
@@ -58,6 +59,8 @@
             </div>
         </section>
     </div>
+</div>
+</div>
 </div>
 
 @code {
