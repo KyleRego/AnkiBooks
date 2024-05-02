@@ -1,5 +1,5 @@
 .bg-primary {
-    background-color: var(--ab-bg-primary-dark);
+    background-color: var(--ab-bg-primary);
 }
 
 .hover\:bg-primary-light:hover {

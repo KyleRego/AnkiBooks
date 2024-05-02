@@ -1,3 +1,13 @@
+.font-size-6xl {
+    font-size: 60px;
+}
+
+@media (max-width: 640px) {
+    .sm\:font-size-4xl {
+        font-size: 36px;
+    }
+}
+
 .font-size-24-px {
     font-size: 24px;
 }

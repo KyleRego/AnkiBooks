@@ -1,4 +1,6 @@
 @page "/articles/{id}"
+@page "/articles"
+@layout Layout
 
 @implements IDisposable
 
@@ -9,25 +11,13 @@
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Interfaces
 @using AnkiBooks.ApplicationCore.Interfaces.Services
-@using AnkiBooks.WebApp.Client.Pages.Articles.Show.Contents
-@using AnkiBooks.WebApp.Client.Pages.Articles.Show.Notes
+@using AnkiBooks.WebApp.Client.Pages.Articles.Contents
+@using AnkiBooks.WebApp.Client.Pages.Articles.Notes
 
 @inject IUserArticleService UserArticleService
-@inject ILogger<ArticleRoot> Logger
+@inject ILogger<PageRoot> Logger
 @inject PersistentComponentState ApplicationState
 @inject AuthenticationStateProvider AuthenticationStateProvider
-
-<CascadingValue Value="@ReadMode" Name="ReadMode">
-<div class="w-100 p-4 d-flex justify-content-end align-items-center">
-    @if (ReadMode == false)
-    {
-        <span role="button" @onclick="StartReadMode">Read mode</span>
-    }
-    else
-    {
-        <span role="button" @onclick="EndReadMode">Edit mode</span>
-    }
-</div>
 
 @if (article == null || ElementsContainer == null)
 {
@@ -98,17 +88,13 @@ else
         </article>
     </CascadingValue>
 }
-</CascadingValue>
 
 @code {
     [Parameter]
     public string? Id { get; set; }
 
-    public bool ReadMode { get; set; } = false;
-
-    private void StartReadMode() => ReadMode = true;
-
-    private void EndReadMode() => ReadMode = false;
+    [CascadingParameter]
+    public bool ReadMode { get; set; }
 
     private OrderedElementsContainer<ArticleElement>? ElementsContainer;
 
@@ -118,7 +104,8 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
-        ArgumentNullException.ThrowIfNull(Id);
+        if (Id == null) return;
+        // TODO: Retrieve random article using a spaced repetition algorithm
 
         persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
 

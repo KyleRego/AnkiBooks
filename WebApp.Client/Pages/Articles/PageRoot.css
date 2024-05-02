@@ -1,6 +1,6 @@
 ::deep select {
     color: var(--ab-color-primary-dark);
-    background-color: var(--ab-bg-primary-dark) ;
+    background-color: var(--ab-bg-primary) ;
 }
 
 ::deep option {

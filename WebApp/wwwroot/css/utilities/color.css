@@ -1,5 +1,9 @@
-.text-primary {
+.color-primary {
     color: var(--ab-color-primary-dark);
+}
+
+.color-secondary {
+    color: var(--ab-site-text-color);
 }
 
 .text-secondary {

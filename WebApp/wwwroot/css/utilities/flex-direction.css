@@ -6,6 +6,7 @@
     flex-direction: column;
 }
 
+/* This somehow doesnt make sense to have sm class applied at bigger than 640 */
 @media (min-width: 640px) {
     .sm\:flex-row {
         flex-direction: row;

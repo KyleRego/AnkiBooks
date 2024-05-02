@@ -14,6 +14,10 @@
     height: 100vh;
 }
 
+.h-screen-minus-header {
+    height: calc(100vh - 58px);
+}
+
 .h-100 {
     height: 100%;
 }

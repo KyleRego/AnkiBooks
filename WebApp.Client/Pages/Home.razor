@@ -14,25 +14,14 @@
 
 <PageTitle>Anki Books</PageTitle>
 
-<h1 class="font-size-48-px text-center p-16">
-    Hello and welcome to Anki Books
-</h1>
-
-<div class="mt-4 text-center">
-    <h2>Free published books:</h2>
-
-    @if (publicBooks != null)
-    {
-        <ul>
-            <li>Pretend book name (need to be able to create public books)</li>
-            @foreach (Book book in publicBooks)
-            {
-                <li>@book.Title</li>
-            }
-        </ul>
-    }
+<div class="d-flex justify-content-center align-items-center h-screen-minus-header">
+    <div>
+        <div>Welcome to</div>
+        <h1 class="color-secondary font-size-6xl sm:font-size-4xl font-bold">
+            Anki Books
+        </h1>
+    </div>
 </div>
-
 
 @code {
     private List<Book>? publicBooks;

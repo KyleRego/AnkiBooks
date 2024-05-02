@@ -1,7 +1,10 @@
 :root {
-    --ab-bg-primary-dark: #171717;
+    --ab-bg-primary: rgb(18 13 25);
     --ab-bg-secondary-dark: #2f2f2f;
     --ab-bg-tertiary-dark: #343434;
+
+    --ab-color-primary: rgb(236 231 242);
+    --ab-color-secondary: rgb(177 102 255);
 
     --ab-color-primary-dark: #ececec;
     --ab-color-secondary-dark: #e6e6e6;

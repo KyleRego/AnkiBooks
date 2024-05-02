@@ -70,7 +70,7 @@
         if (firstRender)
         {
             module = await JS.InvokeAsync<IJSObjectReference>("import",
-                "./Shared/ArticlesTree/NewArticle.razor.js");
+                "./Pages/Articles/ArticlesTree/NewArticle.razor.js");
             await module.InvokeVoidAsync("setupDialog", ContainerDomId);
         }
     }
