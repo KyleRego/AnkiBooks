@@ -2,7 +2,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.ApplicationCore.Interfaces;
-using AnkiBooks.ApplicationCore.Interfaces.Services;
+using AnkiBooks.ApplicationCore.Services;
 using AnkiBooks.Infrastructure.Data;
 using AnkiBooks.WebApp.Components.Account;
 using Microsoft.AspNetCore.Components.Authorization;

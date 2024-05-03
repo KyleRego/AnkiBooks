@@ -1,6 +1,7 @@
 @page "/articles/{id}"
 @page "/articles"
-@layout Layout
+
+@layout ArticlesLayout
 
 @implements IDisposable
 
@@ -10,7 +11,7 @@
 @using AnkiBooks.ApplicationCore
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Interfaces
-@using AnkiBooks.ApplicationCore.Interfaces.Services
+@using AnkiBooks.ApplicationCore.Services
 @using AnkiBooks.WebApp.Client.Pages.Articles.Contents
 @using AnkiBooks.WebApp.Client.Pages.Articles.Notes
 
@@ -22,21 +23,30 @@
 <SectionContent SectionName="article-title">
     @if (article != null)
     {
-        <div class="pl-4 d-flex justify-content-start align-items-end">
+        <div class="pl-4 d-flex justify-content-start align-items-center">
+            @if (editingTitle == false)
+            {
+                <div class="pr-2">
+                    @article.Title
+                </div>
 
-            <div class="pr-2">
-                @article.Title
-            </div>
-
-            <div class="w-5 h-5" role="button">
-                <Edit />
-            </div>
-
+                <div class="w-5 h-5" role="button" @onclick="EditTitle">
+                    <Edit />
+                </div>
+            }
+            else
+            {
+                <EditTitle StartingArticle="@article" @bind-EditingTitle="editingTitle" />
+            }
         </div>
     }
 </SectionContent>
 
-@if (ArticleIsLoading())
+@if (Id == null)
+{
+    <PageTitle>Articles</PageTitle>
+}
+else if (article == null || ElementsContainer == null)
 {
     <PageTitle>Loading article...</PageTitle>
 
@@ -127,6 +137,7 @@ else
     {
         if (Id == null) return;
         // TODO: Retrieve random article using a spaced repetition algorithm
+        editingTitle = false;
 
         persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
 
@@ -155,8 +166,10 @@ else
         persistingSubscription.Dispose();
     }
 
-    private bool ArticleIsLoading()
+    private bool editingTitle = false;
+
+    private void EditTitle()
     {
-        return Id != null && (article == null || ElementsContainer == null);
+        editingTitle = true;
     }
 }

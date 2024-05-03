@@ -2,14 +2,14 @@ using System.Security.Claims;
 using System.Security.Principal;
 using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.ApplicationCore.Interfaces;
-using AnkiBooks.ApplicationCore.Interfaces.Services;
+using AnkiBooks.ApplicationCore.Services;
 using AnkiBooks.Infrastructure.Data;
 using AnkiBooks.WebApp.Components.Account;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace AnkiBooks.WebApp.Services;
 
-public class ServerUserArticleService(  IUserArticleRepository repository,
+public class UserArticleService(  IUserArticleRepository repository,
                                         AuthenticationStateProvider authStateProvider) : IUserArticleService
 {
     private readonly IUserArticleRepository _repository = repository;
@@ -37,7 +37,12 @@ public class ServerUserArticleService(  IUserArticleRepository repository,
         return await _repository.GetArticlesAsync(userId);
     }
 
-    public Task<Article?> PostUserArticle(Article articleData)
+    public Task<Article?> PostUserArticle(Article article)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Article?> PatchUserArticle(Article article)
     {
         throw new NotImplementedException();
     }

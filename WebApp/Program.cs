@@ -9,7 +9,7 @@ using AnkiBooks.ApplicationCore.Interfaces;
 using AnkiBooks.Infrastructure.Repository;
 using AnkiBooks.WebApp.Client;
 using AnkiBooks.WebApp.Services;
-using AnkiBooks.ApplicationCore.Interfaces.Services;
+using AnkiBooks.ApplicationCore.Services;
 using System.Security.Principal;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -51,7 +51,7 @@ builder.Services.AddScoped<IClozeNoteRepository, ClozeNoteRepository>();
 builder.Services.AddScoped<IMarkdownContentRepository, MarkdownContentRepository>();
 builder.Services.AddScoped<ILinkRepository, LinkRepository>();
 
-builder.Services.AddScoped<IUserArticleService, ServerUserArticleService>();
+builder.Services.AddScoped<IUserArticleService, UserArticleService>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<ILinkService, LinkService>();
 builder.Services.AddScoped<IUserIdProvider, UserIdProvider>();

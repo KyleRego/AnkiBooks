@@ -1,6 +1,6 @@
 using System.Text.Json;
 using AnkiBooks.ApplicationCore.Entities;
-using AnkiBooks.ApplicationCore.Interfaces.Services;
+using AnkiBooks.ApplicationCore.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Http;
 
 namespace AnkiBooks.WebApp.Client.Services;

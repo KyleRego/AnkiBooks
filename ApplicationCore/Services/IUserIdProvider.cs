@@ -1,4 +1,4 @@
-namespace AnkiBooks.ApplicationCore.Interfaces.Services;
+namespace AnkiBooks.ApplicationCore.Services;
 
 public interface IUserIdProvider
 {

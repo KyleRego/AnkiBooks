@@ -1,6 +1,6 @@
 using AnkiBooks.ApplicationCore.Entities;
 
-namespace AnkiBooks.ApplicationCore.Interfaces.Services;
+namespace AnkiBooks.ApplicationCore.Services;
 
 public interface ILinkService
 {

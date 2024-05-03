@@ -1,6 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
-using IUserIdProvider = AnkiBooks.ApplicationCore.Interfaces.Services.IUserIdProvider;
+using IUserIdProvider = AnkiBooks.ApplicationCore.Services.IUserIdProvider;
 
 namespace AnkiBooks.WebApp.Services;
 

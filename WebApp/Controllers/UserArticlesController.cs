@@ -51,8 +51,8 @@ public class UserArticlesController(IUserArticleRepository repository,
 
     // PUT: api/user/Articles/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{articleId}")]
-    public async Task<IActionResult> PutArticle(string articleId, Article article)
+    [HttpPatch("{articleId}")]
+    public async Task<ActionResult<Article>> PatchArticle(string articleId, Article article)
     {
         if (articleId != article.Id) return BadRequest();
         string? userId = CurrentUserId();
@@ -62,7 +62,7 @@ public class UserArticlesController(IUserArticleRepository repository,
 
         try
         {
-            await _repository.UpdateArticleAsync(article);
+            return await _repository.UpdateArticleAsync(article);
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -75,8 +75,6 @@ public class UserArticlesController(IUserArticleRepository repository,
                 throw;
             }
         }
-
-        return NoContent();
     }
 
     // POST: api/user/Articles

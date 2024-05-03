@@ -6,7 +6,7 @@
 @using AnkiBooks.WebApp.Client.Pages.Articles.ArticlesTree
 
 <div class="d-flex flex-row">
-    <div id="articles-sidebar" class="flex-shrink-0 position-sticky left-0 top-0 bottom-0
+    <div id="articles-sidebar" class="flex-shrink-0 flex-position-sticky left-0 top-0 bottom-0
                                     h-screen w-64 border-right-primary
                                     @(articlesSidebarExpanded == false ? "d-none" : "d-block" )">
         <div class="pt-4 mx-4 d-flex justify-content-between">
@@ -18,10 +18,11 @@
                 <BookOpen />
             </div>
         </div>
+
         <ArticlesTree />
     </div>
 
-    <div>
+    <div class="w-100">
         <div class="my-4 mr-4 d-flex justify-content-start">
 
             <div class="@(articlesSidebarExpanded == true ? "d-none" :

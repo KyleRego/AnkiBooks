@@ -1,0 +1,42 @@
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Services
+
+@inject IUserArticleService UserArticleService
+
+<EditForm Model="Article" OnValidSubmit="SubmitForm">
+    <div class="d-flex flex-row justify-content-start">
+        <InputText @bind-Value="@Article.Title" />
+        <button type="submit" class="ml-2">
+            Submit
+        </button>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public bool EditingTitle { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> EditingTitleChanged { get; set; }
+
+    [Parameter]
+    public Article StartingArticle { get; set; } = null!;
+
+    [SupplyParameterFromForm]
+    public Article Article { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        Article = StartingArticle;
+    }
+
+    private async Task SubmitForm()
+    {
+        ArgumentNullException.ThrowIfNull(Article.Title);
+
+        Article? updatedArticle = await UserArticleService.PatchUserArticle(Article);
+
+        EditingTitle = false;
+        await EditingTitleChanged.InvokeAsync(EditingTitle);
+    }
+}
