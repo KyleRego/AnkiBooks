@@ -1,16 +1,22 @@
+using System.Diagnostics;
+
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using AnkiBooks.WebApp.Components;
-using AnkiBooks.WebApp.Components.Account;
-using AnkiBooks.Infrastructure.Data;
+
 using AnkiBooks.ApplicationCore.Identity;
 using AnkiBooks.ApplicationCore.Interfaces;
-using AnkiBooks.Infrastructure.Repository;
-using AnkiBooks.WebApp.Client;
-using AnkiBooks.WebApp.Services;
 using AnkiBooks.ApplicationCore.Services;
-using System.Security.Principal;
+
+using AnkiBooks.Infrastructure.Data;
+using AnkiBooks.Infrastructure.Repository;
+using Infrastructure.Migrations;
+
+using AnkiBooks.WebApp.Components;
+using AnkiBooks.WebApp.Components.Account;
+using AnkiBooks.WebApp.Services;
+
+using AnkiBooks.WebApp.Client;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -39,7 +45,11 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     {
-    options.UseSqlite(builder.Configuration.GetConnectionString("Database"));
+    options.UseSqlite
+        (
+            builder.Configuration.GetConnectionString("Database"),
+            b => b.MigrationsAssembly("Infrastructure")
+        );
     options.EnableSensitiveDataLogging();
     }
 );
@@ -70,7 +80,8 @@ WebApplication app = builder.Build();
 using (IServiceScope scope = app.Services.CreateScope())
 {
     ApplicationDbContext context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    context.Database.EnsureCreated();
+
+    context.Database.Migrate();
 
     string testUserEmail = "test@example.com";
     string testUserPassword = "Asdf333!";
