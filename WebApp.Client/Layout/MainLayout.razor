@@ -45,12 +45,15 @@
                                 h-screen w-64 border-right-primary
                                 @(sidebarExpanded == false ? "d-none" : "d-block" )">
 
-            <NavLink class="d-flex px-7 py-4 hover:bg-primary-light" href="" Match="NavLinkMatch.All">
+            <NavLink @onclick="CloseSidebar"
+                     class="d-flex px-7 py-4 hover:bg-primary-light"
+                     href=""
+                     Match="NavLinkMatch.All">
                 About Anki Books
             </NavLink>
 
             <ul class="d-flex flex-column">
-                <li>
+                <li @onclick="CloseSidebar">
                     <a href="articles" class="d-flex align-items-center px-7 py-4 hover:bg-primary-light">
                         <div class="w-5 h-5 mr-2">
                             <RectangleStack />
@@ -61,7 +64,7 @@
                     </a>
                 </li>
 
-                <li>
+                <li @onclick="CloseSidebar">
                     <a href="" class="d-flex align-items-center px-7 py-4 hover:bg-primary-light">
                         <div class="w-5 h-5 mr-2">
                             <BookOpen />
@@ -72,7 +75,7 @@
                     </a>
                 </li>
 
-                <li>
+                <li @onclick="CloseSidebar">
                     <a href="sources" class="d-flex align-items-center px-7 py-4 hover:bg-primary-light">
                         <div class="w-5 h-5 mr-2">
                             <ClipboardDocumentCheck />
@@ -83,7 +86,7 @@
                     </a>
                 </li>
 
-                <li>
+                <li @onclick="CloseSidebar">
                     <a href="" class="d-flex align-items-center px-7 py-4 hover:bg-primary-light">
                         <div class="w-5 h-5 mr-2">
                             <ChainLink />
@@ -94,7 +97,7 @@
                     </a>
                 </li>
 
-                <li>
+                <li @onclick="CloseSidebar">
                     <a href="" class="d-flex align-items-center px-7 py-4 hover:bg-primary-light">
                         <div class="w-5 h-5 mr-2">
                             <Users />
@@ -114,10 +117,15 @@
 </div>
 
 @code {
+    private bool sidebarExpanded = false;
+
+    private void CloseSidebar()
+    {
+        sidebarExpanded = false;
+    }
+
     private void ToggleSidebar()
     {
         sidebarExpanded = !sidebarExpanded;
     }
-
-    private bool sidebarExpanded = false;
 }

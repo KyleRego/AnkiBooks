@@ -33,3 +33,7 @@
 .align-items-baseline {
     align-items: baseline;
 }
+
+.align-items-end {
+    align-items: end;
+}

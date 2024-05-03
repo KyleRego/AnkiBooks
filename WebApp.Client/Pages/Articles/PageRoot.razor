@@ -19,20 +19,41 @@
 @inject PersistentComponentState ApplicationState
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-@if (article == null || ElementsContainer == null)
+<SectionContent SectionName="article-title">
+    @if (article != null)
+    {
+        <div class="pl-4 d-flex justify-content-start align-items-end">
+
+            <div class="pr-2">
+                @article.Title
+            </div>
+
+            <div class="w-5 h-5" role="button">
+                <Edit />
+            </div>
+
+        </div>
+    }
+</SectionContent>
+
+@if (ArticleIsLoading())
 {
     <PageTitle>Loading article...</PageTitle>
 
-    <p>Loading article...</p>
+    <p class="p-4">Loading article...</p>
 }
 else
 {
+    ArgumentNullException.ThrowIfNull(Id);
+    ArgumentNullException.ThrowIfNull(@article);
+    ArgumentNullException.ThrowIfNull(ElementsContainer);
+
     <PageTitle>@article.Title</PageTitle>
 
     List<ArticleElement> elements = ElementsContainer.OrderedElements;
 
     <CascadingValue Value="@article.Id" Name="ArticleId">
-    
+
         <article class="px-4">
             <div>
                 @if (elements.Count == 0)
@@ -132,5 +153,10 @@ else
     void IDisposable.Dispose()
     {
         persistingSubscription.Dispose();
+    }
+
+    private bool ArticleIsLoading()
+    {
+        return Id != null && (article == null || ElementsContainer == null);
     }
 }
