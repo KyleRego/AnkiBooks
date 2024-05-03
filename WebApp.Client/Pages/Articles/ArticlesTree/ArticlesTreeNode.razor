@@ -35,6 +35,9 @@
 </li>
 
 @code {
+    [CascadingParameter(Name="CurrentArticle")]
+    public Article? CurrentArticle { get; set; }
+
     [CascadingParameter(Name="ArticlesSearch")]
     public string? ArticlesSearch { get; set; }
 
@@ -42,9 +45,14 @@
     {
         searchTarget = false;
 
+        if (CurrentArticle != null && CurrentArticle.Id == Article.Id)
+        {
+            Article = CurrentArticle;
+        }
+
         if (String.IsNullOrWhiteSpace(ArticlesSearch)) return; 
 
-        @if (Article.Title.Contains(ArticlesSearch))
+        if (Article.Title.Contains(ArticlesSearch))
         {
             ExpandParent();
             searchTarget = true;

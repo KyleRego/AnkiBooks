@@ -1,0 +1,161 @@
+@page "/articles/{id}"
+@page "/articles"
+
+@implements IDisposable
+
+@layout MainLayout
+
+@inject IUserArticleService UserArticleService
+@inject ILogger<ArticlesPage> Logger
+@inject PersistentComponentState ApplicationState
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Services
+@using AnkiBooks.WebApp.Client.Shared.Heroicons
+@using AnkiBooks.WebApp.Client.Pages.Articles.ArticlesTree
+
+<PageTitle>Articles</PageTitle>
+
+<div class="d-flex flex-row">
+    <div id="articles-sidebar" class="flex-shrink-0 flex-position-sticky left-0 top-0 bottom-0
+                                    h-screen w-64 border-right-primary
+                                    @(articlesSidebarExpanded == false ? "d-none" : "d-block" )">
+        <div class="pt-4 mx-4 d-flex justify-content-between">
+            <div>
+                [Articles Tree Switcher]
+            </div>
+
+            <div class="w-6 h-6 cursor-pointer" role="button" @onclick="ToggleArticlesSidebar">
+                <BookOpen />
+            </div>
+        </div>
+
+        <CascadingValue Value="@currentArticle" Name="CurrentArticle">
+            <ArticlesTree />
+        </CascadingValue>
+    </div>
+
+    <div class="w-100">
+        <div class="my-4 mr-4 d-flex justify-content-start">
+
+            <div class="@(articlesSidebarExpanded == true ? "d-none" :
+                                                            "w-64 d-flex flex-row justify-content-between border-right-primary-spacing" )">
+                <div class="pl-4">
+                    [Articles Tree Switcher]
+                </div>
+
+                <div class="pr-4">
+                    <div class="w-6 h-6 cursor-pointer" role="button" @onclick="ToggleArticlesSidebar">
+                        <BookOpen />
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex flex-row justify-content-start">
+                <div class="pl-4">
+                    @if (ReadMode == false)
+                    {
+                        <span role="button" @onclick="StartReadMode">Read mode</span>
+                    }
+                    else
+                    {
+                        <span role="button" @onclick="EndReadMode">Edit mode</span>
+                    }
+                </div>
+
+                <div>
+                    @if (currentArticle != null)
+                    {
+                        <div class="pl-4 d-flex justify-content-start align-items-center">
+                            @if (editingTitle == false)
+                            {
+                                <div class="pr-2">
+                                    @currentArticle.Title
+                                </div>
+
+                                <div class="w-5 h-5" role="button" @onclick="EditTitle">
+                                    <Edit />
+                                </div>
+                            }
+                            else
+                            {
+                                <EditTitle StartingArticle="@currentArticle" @bind-EditingTitle="editingTitle" />
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <CascadingValue Value="@ReadMode" Name="ReadMode">
+            <div>
+                @if (currentArticle != null)
+                {
+                    <ArticleContent Article="@currentArticle" />
+                }
+            </div>
+        </CascadingValue>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+
+    public bool ReadMode { get; set; } = false;
+
+    private void StartReadMode() => ReadMode = true;
+
+    private void EndReadMode() => ReadMode = false;
+
+    private void ToggleArticlesSidebar()
+    {
+        articlesSidebarExpanded = !articlesSidebarExpanded;
+    }
+
+    private bool articlesSidebarExpanded = true;
+
+    private Article? currentArticle;
+
+    private PersistingComponentStateSubscription persistingSubscription;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id == null) return;
+        // TODO: Retrieve random article using a spaced repetition algorithm
+        editingTitle = false;
+
+        persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
+
+        if (!ApplicationState.TryTakeFromJson<Article>(nameof(currentArticle), out var restored))
+        {
+            currentArticle = await UserArticleService.GetUserArticle(Id);
+        }
+        else
+        {
+            currentArticle = restored;
+        }
+
+        ArgumentNullException.ThrowIfNull(currentArticle);
+    }
+
+    private Task PersistData()
+    {
+        ApplicationState.PersistAsJson(nameof(currentArticle), currentArticle);
+
+        return Task.CompletedTask;
+    }
+
+    void IDisposable.Dispose()
+    {
+        persistingSubscription.Dispose();
+    }
+
+    private bool editingTitle = false;
+
+    private void EditTitle()
+    {
+        editingTitle = true;
+    }
+}
