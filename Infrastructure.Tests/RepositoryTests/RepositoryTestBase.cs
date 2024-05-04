@@ -1,3 +1,4 @@
+using AnkiBooks.ApplicationCore.Entities;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,5 +19,34 @@ public abstract class RepositoryTestBase
         dbContext.Database.EnsureCreated();
 
         return dbContext;
+    }
+
+    protected static bool ValidateArticleOrdinalPositions(ApplicationDbContext dbContext, Article article, int expectedElementsCount)
+    {
+        List<ArticleElement> elements = dbContext.ArticleElements.Where(
+            e => e.ArticleId == article.Id
+        ).OrderBy(e => e.OrdinalPosition).ToList();
+
+        if (elements.Count != expectedElementsCount)
+        {
+            return false;
+        }
+
+        List<int> ordinalPositions = [];
+
+        foreach (ArticleElement element in elements)
+        {
+            ordinalPositions.Add(element.OrdinalPosition);
+        }
+
+        for (int i = 0; i < expectedElementsCount; i++ )
+        {
+            if (ordinalPositions[i] != i)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

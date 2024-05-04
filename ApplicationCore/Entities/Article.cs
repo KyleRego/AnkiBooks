@@ -4,10 +4,10 @@ using AnkiBooks.ApplicationCore.Identity;
 
 namespace AnkiBooks.ApplicationCore.Entities;
 
-public class Article(string title) : EntityBase
+public class Article : EntityBase
 {
     [Required]
-    public string Title { get; set; } = title;
+    public string Title { get; set; } = "New article";
 
     [Required]
     public bool Public { get; set; } = false;
