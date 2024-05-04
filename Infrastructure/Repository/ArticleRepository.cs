@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.ApplicationCore.Interfaces;
+using AnkiBooks.ApplicationCore.Repository;
 using AnkiBooks.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,8 +25,7 @@ public class ArticleRepository(ApplicationDbContext dbContext) : IArticleReposit
     public async Task<Article?> GetArticleAsync(string articleId)
     {
         return await _dbContext.Articles
-                    .Include(a => a.BasicNotes)
-                    .Include(a => a.ClozeNotes)
+                    .Include(a => a.Decks)
                     .Include(a => a.MarkdownContents)
                     .FirstOrDefaultAsync(a => a.Id == articleId);
     }

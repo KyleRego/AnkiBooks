@@ -14,7 +14,6 @@ public static class CommonServices
     public static void Configure(IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(configuration["AppUrl"]!) });
-        services.AddScoped<IAnkiBooksApiService, AnkiBooksApiService>();
         services.AddScoped<DraggedItemHolder<ArticleElement>>();
     }
 }

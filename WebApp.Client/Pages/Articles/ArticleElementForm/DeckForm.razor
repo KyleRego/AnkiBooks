@@ -1,0 +1,46 @@
+@using AnkiBooks.ApplicationCore.Entities
+
+<div class="my-4 px-2 pt-2 pb-1 border-primary-thin">
+    <EditForm Model="Deck" OnValidSubmit="SubmitForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="d-flex flex-column">
+            <InputTextArea @bind-Value="Deck.Description" id="Front" class="p-2 mb-2" />
+
+            <div class="d-flex justify-content-center">
+                <button type="submit">
+                    @SubmitButtonText()
+                </button>
+            </div>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public Deck StartingDeck { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        Deck = StartingDeck;
+    }
+
+    [Parameter]
+    public bool EditingExisting { get; set; }
+
+    private string SubmitButtonText()
+    {
+        return EditingExisting ? "Update" : "Create";
+    }
+
+    [Parameter]
+    public Func<Deck, Task> ParentSubmitMethod { get; set; } = null!;
+
+    private async Task SubmitForm()
+    {
+        await ParentSubmitMethod.Invoke(Deck);
+    }
+
+    [SupplyParameterFromForm]
+    public Deck Deck { get; set; } = null!;
+}

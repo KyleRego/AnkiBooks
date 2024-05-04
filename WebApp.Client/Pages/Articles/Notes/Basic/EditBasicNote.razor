@@ -1,9 +1,8 @@
-@using System.ComponentModel.DataAnnotations
+@* @using System.ComponentModel.DataAnnotations
 @using System.Text.Json
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Interfaces
 @inject ILogger<EditBasicNote> Logger
-@inject IAnkiBooksApiService ApiService
 
 <BasicNoteForm  StartingBasicNote="@StartingBasicNote"
                 EditingExisting="true"
@@ -32,4 +31,4 @@
         Editing = false;
         await EditingChanged.InvokeAsync(Editing);
     }
-}
+} *@

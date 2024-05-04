@@ -1,7 +1,6 @@
 using AnkiBooks.ApplicationCore.Entities;
-using AnkiBooks.ApplicationCore.Interfaces;
+using AnkiBooks.ApplicationCore.Repository;
 using AnkiBooks.ApplicationCore.Services;
-using Microsoft.AspNetCore.Components.Authorization;
 
 namespace AnkiBooks.WebApp.Services;
 

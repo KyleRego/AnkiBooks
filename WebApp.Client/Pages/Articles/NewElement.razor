@@ -3,15 +3,14 @@
 @using AnkiBooks.ApplicationCore.Interfaces
 @using AnkiBooks.WebApp.Client.Pages.Articles.Notes.Basic
 @using AnkiBooks.WebApp.Client.Pages.Articles.Notes.Cloze
-@using AnkiBooks.WebApp.Client.Pages.Articles.Contents.Markdown
+@using AnkiBooks.WebApp.Client.Pages.Articles.NewArticleElement
 
 @if (dropDownItemSelected == null)
 {
     <div class="mb-4 d-flex justify-content-center">
         <InputSelect @bind-Value="dropDownItemSelected" name="new-element">
             <option value="" selected>New element</option>
-            <option value="@ArticleElementType.BasicNote">Basic note</option>
-            <option value="@ArticleElementType.ClozeNote">Cloze note</option>
+            <option value="@ArticleElementType.Deck">Deck</option>
             <option value="@ArticleElementType.MarkdownContent">Markdown</option>
         </InputSelect>
     </div>
@@ -20,19 +19,13 @@ else
 {
     @switch (dropDownItemSelected)
     {
-        case ArticleElementType.BasicNote:
-            <NewBasicNote   @bind-ElementsContainer:get="ElementsContainer"
-                            @bind-ElementsContainer:set="ElementsContainerChanged"
-                            @bind-DropDownItemSelected="dropDownItemSelected"
-                            OrdinalPosition="@OrdinalPosition" />
-            break;
-        case ArticleElementType.ClozeNote:
-            <NewClozeNote   @bind-ElementsContainer:get="ElementsContainer"
-                            @bind-ElementsContainer:set="ElementsContainerChanged"
-                            @bind-DropDownItemSelected="dropDownItemSelected"
-                            OrdinalPosition="@OrdinalPosition" />
-            break;
-
+        case ArticleElementType.Deck:
+            <NewDeck    @bind-ElementsContainer:get="ElementsContainer"
+                        @bind-ElementsContainer:set="ElementsContainerChanged"
+                        @bind-DropDownItemSelected="dropDownItemSelected"
+                        OrdinalPosition="@OrdinalPosition" />
+            break;    
+    
         case ArticleElementType.MarkdownContent:
             <NewMarkdown    @bind-ElementsContainer:get="ElementsContainer"
                             @bind-ElementsContainer:set="ElementsContainerChanged"

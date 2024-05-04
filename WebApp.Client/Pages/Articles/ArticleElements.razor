@@ -1,0 +1,81 @@
+@using System.Text.Json
+@using System.Security.Claims
+
+@using AnkiBooks.ApplicationCore
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Interfaces
+@using AnkiBooks.ApplicationCore.Services
+
+@using AnkiBooks.WebApp.Client.Pages.Articles.Notes
+@using AnkiBooks.WebApp.Client.Pages.Articles.MarkdownElement
+@using AnkiBooks.WebApp.Client.Pages.Articles.DeckElement
+
+@inject IUserArticleService UserArticleService
+@inject ILogger<ArticleElements> Logger
+@inject PersistentComponentState ApplicationState
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>@Article.Title</PageTitle>
+
+@if (ElementsContainer != null)
+{
+    List<ArticleElement> elements = ElementsContainer.OrderedElements;
+
+    <CascadingValue Value="@Article.Id" Name="ArticleId">
+        <article class="px-4">
+            <div>
+                @if (elements.Count == 0)
+                {
+                    @if (ReadMode == false)
+                    {
+                        <NewElement @bind-ElementsContainer="@ElementsContainer" OrdinalPosition="@(0)" />
+                    }
+                }
+                else
+                {
+                    List<ArticleElement> elements = ElementsContainer.OrderedElements;
+
+                    for (int j = 0; j < elements.Count; j++)
+                    {
+                        ArticleElement element = elements[j];
+
+                        <div class="d-flex flex-column sm:flex-row @(j != 0 ? "border-top-primary pt-4" : "")">
+                            @switch(element)
+                            {
+                                case MarkdownContent mdContent:
+                                    <ShowMarkdown   MarkdownContent="@mdContent"
+                                            @bind-ElementsContainer="@ElementsContainer" />
+                                    break;
+
+                                case Deck deck:
+                                    <DeckElement  Element="@deck" @bind-ElementsContainer="@ElementsContainer" />
+                                    break;
+
+                                default:
+                                    break;
+                            }
+                        </div>
+
+                        <NewElement @bind-ElementsContainer="@ElementsContainer" OrdinalPosition="@(j + 1)" />
+                    }
+                }
+            </div>
+        </article>
+    </CascadingValue>
+}
+
+
+@code {
+    [Parameter]
+    public Article Article { get; set; } = null!;
+
+    private OrderedElementsContainer<ArticleElement>? ElementsContainer;
+
+    protected override void OnParametersSet()
+    {
+        ElementsContainer = new(Article.OrderedElements());
+    }
+
+    [CascadingParameter]
+    public bool ReadMode { get; set; }
+}

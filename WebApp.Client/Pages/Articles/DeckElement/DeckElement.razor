@@ -1,0 +1,37 @@
+@using AnkiBooks.ApplicationCore.Entities
+
+@using AnkiBooks.WebApp.Client.Pages.Articles.EditArticleElement
+
+@if (Editing == true)
+{
+    <EditDeck StartingDeck="@Element" @bind-Editing="@Editing" />
+}
+else
+{
+    <p>
+        @Element.Description    
+    </p>
+
+    <div class="w-5 h-5" role="button"
+        @onclick="BeginEditing">
+        <Edit />
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Deck Element { get; set; } = null!;
+
+    [Parameter]
+    public OrderedElementsContainer<ArticleElement> ElementsContainer { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<OrderedElementsContainer<ArticleElement>> ElementsContainerChanged { get; set; }
+
+    public bool Editing { get; set; } = false;
+
+    private void BeginEditing()
+    {
+        Editing = true;
+    }
+}

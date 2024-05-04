@@ -1,9 +1,13 @@
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Interfaces
+@using AnkiBooks.ApplicationCore.Services
+
 @using AnkiBooks.WebApp.Client.Services
-@using AnkiBooks.WebApp.Client.Shared.Heroicons
+
+@using AnkiBooks.WebApp.Client.Pages.Articles.EditArticleElement
+
 @inject DraggedItemHolder<ArticleElement> draggedItemHolder
-@inject IAnkiBooksApiService ApiService
+@inject IMarkdownContentService MarkdownContentService
 
 @if (Editing == true)
 {
@@ -98,7 +102,7 @@ else
 
     private async Task HandleDrop()
     {
-        nestedDragLevels = 0;
+        @* nestedDragLevels = 0;
         ArticleElement? droppedItem = draggedItemHolder.DraggedItem;
 
         if (droppedItem == null) return;
@@ -110,6 +114,6 @@ else
         ArgumentNullException.ThrowIfNull(updatedItem);
 
         ElementsContainer.UpdatePosition(droppedItem);
-        await ElementsContainerChanged.InvokeAsync(ElementsContainer);
+        await ElementsContainerChanged.InvokeAsync(ElementsContainer); *@
     }
 }

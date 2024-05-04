@@ -1,22 +1,19 @@
-using System.Diagnostics;
-
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Components.Authorization;
 
 using AnkiBooks.ApplicationCore.Identity;
-using AnkiBooks.ApplicationCore.Interfaces;
 using AnkiBooks.ApplicationCore.Services;
 
 using AnkiBooks.Infrastructure.Data;
 using AnkiBooks.Infrastructure.Repository;
-using Infrastructure.Migrations;
 
 using AnkiBooks.WebApp.Components;
 using AnkiBooks.WebApp.Components.Account;
 using AnkiBooks.WebApp.Services;
 
 using AnkiBooks.WebApp.Client;
+using AnkiBooks.ApplicationCore.Repository;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +55,7 @@ builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IBasicNoteRepository, BasicNoteRepository>();
 builder.Services.AddScoped<IClozeNoteRepository, ClozeNoteRepository>();
+builder.Services.AddScoped<IDeckRepository, DeckRepository>();
 builder.Services.AddScoped<IMarkdownContentRepository, MarkdownContentRepository>();
 builder.Services.AddScoped<ILinkRepository, LinkRepository>();
 
@@ -65,6 +63,8 @@ builder.Services.AddScoped<IUserArticleService, UserArticleService>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<ILinkService, LinkService>();
 builder.Services.AddScoped<IUserIdProvider, UserIdProvider>();
+builder.Services.AddScoped<IMarkdownContentService, MarkdownContentService>();
+builder.Services.AddScoped<IDeckService, DeckService>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

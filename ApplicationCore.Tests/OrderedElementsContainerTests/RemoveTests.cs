@@ -11,11 +11,11 @@ public class RemoveTests
     public void RemoveRemovesElementAndLeavesOrdinalPositionsValid()
     {
         List<ArticleElement> notes =  [
-            new ClozeNote() { Text="a", OrdinalPosition=0 },
-            new ClozeNote() { Text="b", OrdinalPosition=1 },
-            new BasicNote() { Front="a", Back="b", OrdinalPosition=2},
-            new BasicNote() { Front="a", Back="b", OrdinalPosition=3},
-            new BasicNote() { Front="a", Back="b", OrdinalPosition=4}
+            new Deck() { OrdinalPosition=0 },
+            new Deck() { OrdinalPosition=1 },
+            new Deck() { OrdinalPosition=2},
+            new Deck() { OrdinalPosition=3},
+            new Deck() { OrdinalPosition=4}
         ];
 
         OrderedElementsContainer<ArticleElement> container = new(notes);

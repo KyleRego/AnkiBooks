@@ -8,11 +8,11 @@ public class AdjustElementPositionTests
     [Fact]
     public void AdjustElementPositionMovesElementToItsPositionCorrectly1()
     {
-        ClozeNote n1 = new() { Text="a", OrdinalPosition=0 };
-        BasicNote n2 = new() { Front="a", Back="b", OrdinalPosition=1 };
-        ClozeNote n3 = new() { Text="b", OrdinalPosition=2 };
-        BasicNote n4 = new() { Front="a", Back="b", OrdinalPosition=3 };
-        BasicNote n5 = new() { Front="a", Back="b", OrdinalPosition=4 };
+        Deck n1 = new() { OrdinalPosition=0 };
+        Deck n2 = new() { OrdinalPosition=1 };
+        Deck n3 = new() { OrdinalPosition=2 };
+        Deck n4 = new() { OrdinalPosition=3 };
+        Deck n5 = new() { OrdinalPosition=4 };
         List<ArticleElement> notes = [n1, n2, n3, n4, n5];
 
         OrderedElementsContainer<ArticleElement> container = new(notes);
@@ -35,11 +35,11 @@ public class AdjustElementPositionTests
     [Fact]
     public void AdjustElementPositionMovesElementToItsPositionCorrectly2()
     {
-        ClozeNote n1 = new() { Text="a", OrdinalPosition=0 };
-        BasicNote n2 = new() { Front="a", Back="b", OrdinalPosition=1 };
-        ClozeNote n3 = new() { Text="b", OrdinalPosition=2 };
-        BasicNote n4 = new() { Front="a", Back="b", OrdinalPosition=3 };
-        BasicNote n5 = new() { Front="a", Back="b", OrdinalPosition=4 };
+        Deck n1 = new() { OrdinalPosition=0 };
+        Deck n2 = new() { OrdinalPosition=1 };
+        Deck n3 = new() { OrdinalPosition=2 };
+        Deck n4 = new() { OrdinalPosition=3 };
+        Deck n5 = new() { OrdinalPosition=4 };
         List<ArticleElement> notes = [n1, n2, n3, n4, n5];
 
         OrderedElementsContainer<ArticleElement> container = new(notes);

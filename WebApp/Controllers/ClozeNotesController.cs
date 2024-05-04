@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AnkiBooks.ApplicationCore.Entities;
-using AnkiBooks.ApplicationCore.Interfaces;
+using AnkiBooks.ApplicationCore.Repository;
 
 namespace AnkiBooks.WebApp.Controllers;
 
@@ -10,27 +10,6 @@ namespace AnkiBooks.WebApp.Controllers;
 public class ClozeNotesController(IClozeNoteRepository clozeNoteRepository) : ControllerBase
 {
     private readonly IClozeNoteRepository _clozeNoteRepository = clozeNoteRepository;
-
-    // GET: api/ClozeNotes
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<ClozeNote>>> GetClozeNotes()
-    {
-        return await _clozeNoteRepository.GetClozeNotesAsync();
-    }
-
-    // GET: api/ClozeNotes/5
-    [HttpGet("{id}")]
-    public async Task<ActionResult<ClozeNote>> GetClozeNote(string id)
-    {
-        ClozeNote? clozeNote = await _clozeNoteRepository.GetClozeNoteAsync(id);
-
-        if (clozeNote == null)
-        {
-            return NotFound();
-        }
-
-        return clozeNote;
-    }
 
     // PUT: api/ClozeNotes/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -41,16 +20,10 @@ public class ClozeNotesController(IClozeNoteRepository clozeNoteRepository) : Co
         {
             return BadRequest();
         }
-        ClozeNote? currentClozeNote = await _clozeNoteRepository.GetClozeNoteAsync(id);
-
-        if (currentClozeNote == null)
-        {
-            return NotFound();
-        }
 
         try
         {
-            return await _clozeNoteRepository.UpdateOrderedElementAsync(currentClozeNote, clozeNote);
+            return await _clozeNoteRepository.UpdateClozeNoteAsync(clozeNote);
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -72,7 +45,7 @@ public class ClozeNotesController(IClozeNoteRepository clozeNoteRepository) : Co
     {
         try
         {
-            await _clozeNoteRepository.InsertOrderedElementAsync(clozeNote);
+            await _clozeNoteRepository.InsertClozeNoteAsync(clozeNote);
         }
         catch (DbUpdateException)
         {
@@ -99,7 +72,7 @@ public class ClozeNotesController(IClozeNoteRepository clozeNoteRepository) : Co
             return NotFound();
         }
 
-        await _clozeNoteRepository.DeleteOrderedElementAsync(clozeNote);
+        await _clozeNoteRepository.DeleteClozeNoteAsync(clozeNote);
 
         return NoContent();
     }

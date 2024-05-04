@@ -2,7 +2,6 @@ namespace AnkiBooks.ApplicationCore.Entities;
 
 public enum ArticleElementType
 {
-    BasicNote,
-    ClozeNote,
+    Deck,
     MarkdownContent
 }

@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using AnkiBooks.ApplicationCore.Exceptions;
 using AnkiBooks.ApplicationCore.Interfaces;
+using AnkiBooks.ApplicationCore.Repository;
 using AnkiBooks.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 

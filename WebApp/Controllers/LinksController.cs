@@ -1,6 +1,6 @@
 using System.Security.Claims;
 using AnkiBooks.ApplicationCore.Entities;
-using AnkiBooks.ApplicationCore.Interfaces;
+using AnkiBooks.ApplicationCore.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AnkiBooks.WebApp.Controllers;

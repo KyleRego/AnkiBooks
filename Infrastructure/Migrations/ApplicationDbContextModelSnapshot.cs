@@ -73,6 +73,30 @@ namespace Infrastructure.Migrations
                     b.UseTphMappingStrategy();
                 });
 
+            modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.BasicNote", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Back")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DeckId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Front")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeckId");
+
+                    b.ToTable("BasicNotes");
+                });
+
             modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.Book", b =>
                 {
                     b.Property<string>("Id")
@@ -93,6 +117,26 @@ namespace Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.ClozeNote", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DeckId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeckId");
+
+                    b.ToTable("ClozeNotes");
                 });
 
             modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.Link", b =>
@@ -308,16 +352,11 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.BasicNote", b =>
+            modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.Deck", b =>
                 {
                     b.HasBaseType("AnkiBooks.ApplicationCore.Entities.ArticleElement");
 
-                    b.Property<string>("Back")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Front")
-                        .IsRequired()
+                    b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
                     b.HasIndex("ArticleId");
@@ -327,25 +366,7 @@ namespace Infrastructure.Migrations
                             t.HasCheckConstraint("CK_SectionOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0");
                         });
 
-                    b.HasDiscriminator().HasValue("BasicNote");
-                });
-
-            modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.ClozeNote", b =>
-                {
-                    b.HasBaseType("AnkiBooks.ApplicationCore.Entities.ArticleElement");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasIndex("ArticleId");
-
-                    b.ToTable(t =>
-                        {
-                            t.HasCheckConstraint("CK_SectionOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0");
-                        });
-
-                    b.HasDiscriminator().HasValue("ClozeNote");
+                    b.HasDiscriminator().HasValue("Deck");
                 });
 
             modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.MarkdownContent", b =>
@@ -358,12 +379,9 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ArticleId");
 
-                    b.ToTable("ArticleElements", t =>
+                    b.ToTable(t =>
                         {
                             t.HasCheckConstraint("CK_SectionOrdinalPositionIsNotNegative", "[OrdinalPosition] >= 0");
-
-                            t.Property("Text")
-                                .HasColumnName("MarkdownContent_Text");
                         });
 
                     b.HasDiscriminator().HasValue("MarkdownContent");
@@ -384,6 +402,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.BasicNote", b =>
+                {
+                    b.HasOne("AnkiBooks.ApplicationCore.Entities.Deck", "Deck")
+                        .WithMany("BasicNotes")
+                        .HasForeignKey("DeckId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Deck");
+                });
+
             modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.Book", b =>
                 {
                     b.HasOne("AnkiBooks.ApplicationCore.Identity.ApplicationUser", "User")
@@ -391,6 +420,17 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.ClozeNote", b =>
+                {
+                    b.HasOne("AnkiBooks.ApplicationCore.Entities.Deck", "Deck")
+                        .WithMany("ClozeNotes")
+                        .HasForeignKey("DeckId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Deck");
                 });
 
             modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.Link", b =>
@@ -465,21 +505,10 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.BasicNote", b =>
+            modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.Deck", b =>
                 {
                     b.HasOne("AnkiBooks.ApplicationCore.Entities.Article", "Article")
-                        .WithMany("BasicNotes")
-                        .HasForeignKey("ArticleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Article");
-                });
-
-            modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.ClozeNote", b =>
-                {
-                    b.HasOne("AnkiBooks.ApplicationCore.Entities.Article", "Article")
-                        .WithMany("ClozeNotes")
+                        .WithMany("Decks")
                         .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -500,11 +529,9 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.Article", b =>
                 {
-                    b.Navigation("BasicNotes");
-
                     b.Navigation("ChildArticles");
 
-                    b.Navigation("ClozeNotes");
+                    b.Navigation("Decks");
 
                     b.Navigation("MarkdownContents");
                 });
@@ -531,6 +558,13 @@ namespace Infrastructure.Migrations
                     b.Navigation("Tokens");
 
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.Deck", b =>
+                {
+                    b.Navigation("BasicNotes");
+
+                    b.Navigation("ClozeNotes");
                 });
 #pragma warning restore 612, 618
         }

@@ -14,5 +14,7 @@ builder.Services.AddSingleton<AuthenticationStateProvider, PersistentAuthenticat
 builder.Services.AddScoped<IUserArticleService, UserArticleService>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<ILinkService, LinkService>();
+builder.Services.AddScoped<IMarkdownContentService, MarkdownContentService>();
+builder.Services.AddScoped<IDeckService, DeckService>();
 
 await builder.Build().RunAsync();

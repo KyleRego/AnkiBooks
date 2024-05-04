@@ -20,6 +20,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<ArticleElement> ArticleElements { get; set; }
     public DbSet<BasicNote> BasicNotes { get; set; }
     public DbSet<ClozeNote> ClozeNotes { get; set; }
+    public DbSet<Deck> Decks { get; set; }
     public DbSet<MarkdownContent> MarkdownContents { get; set; }
 
     public DbSet<Link> Links { get; set; }

@@ -1,14 +1,14 @@
-@using System.ComponentModel.DataAnnotations
-@using System.Text.Json
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Enums
 @using AnkiBooks.ApplicationCore.Interfaces
-@inject ILogger<NewMarkdown> Logger
-@inject IAnkiBooksApiService ApiService
+@using AnkiBooks.ApplicationCore.Services
 
-<MarkdownForm  StartingMarkdown="@StartingMarkdown()"
-                EditingExisting="false"
-                ParentSubmitMethod="@SubmitForm" />
+@inject ILogger<NewDeck> Logger
+@inject IDeckService DeckService
+
+<DeckForm  StartingDeck="@StartingDeck()"
+            EditingExisting="false"
+            ParentSubmitMethod="@SubmitForm" />
 
 @code {
     [CascadingParameter(Name="ArticleId")]
@@ -29,7 +29,7 @@
     [Parameter]
     public EventCallback<OrderedElementsContainer<ArticleElement>?> ElementsContainerChanged { get; set; }
 
-    private MarkdownContent StartingMarkdown()
+    private Deck StartingDeck()
     {
         return new()
         {
@@ -37,14 +37,14 @@
         };
     }
 
-    private async Task SubmitForm(MarkdownContent newMarkdownContent)
+    private async Task SubmitForm(Deck newDeck)
     {
-        newMarkdownContent.OrdinalPosition = OrdinalPosition;
+        newDeck.OrdinalPosition = OrdinalPosition;
 
-        MarkdownContent? createdContent = (MarkdownContent?)await ApiService.PostElement(newMarkdownContent);
-        ArgumentNullException.ThrowIfNull(createdContent);
+        Deck? createdDeck = await DeckService.PostDeck(newDeck);
+        ArgumentNullException.ThrowIfNull(newDeck);
 
-        ElementsContainer.Add(createdContent);
+        ElementsContainer.Add(createdDeck);
         await ElementsContainerChanged.InvokeAsync(ElementsContainer);
         DropDownItemSelected = null;
         await DropDownItemSelectedChanged.InvokeAsync(DropDownItemSelected);

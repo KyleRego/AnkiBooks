@@ -1,0 +1,40 @@
+@using System.ComponentModel.DataAnnotations
+@using System.Text.Json
+
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Enums
+@using AnkiBooks.ApplicationCore.Interfaces
+@using AnkiBooks.ApplicationCore.Services
+
+@inject IDeckService ApiService
+
+<DeckForm  StartingDeck="@StartingDeck"
+                EditingExisting="true"
+                ParentSubmitMethod="@SubmitForm" />
+
+@code {
+    [Parameter]
+    public OrderedElementsContainer<ArticleElement> ElementsContainer { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<OrderedElementsContainer<ArticleElement>> ElementsContainerChanged { get; set; }
+
+    [Parameter]
+    public Deck StartingDeck { get; set; } = null!;
+
+    [Parameter]
+    public bool Editing { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> EditingChanged { get; set; }
+
+    private async Task SubmitForm(Deck newDeck)
+    {
+        ArgumentNullException.ThrowIfNull(newDeck.Description);
+        Deck? updatedDeck = await ApiService.PutDeck(newDeck);
+        ArgumentNullException.ThrowIfNull(updatedDeck);
+
+        Editing = false;
+        await EditingChanged.InvokeAsync(Editing);
+    }
+}

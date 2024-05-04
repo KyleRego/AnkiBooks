@@ -1,5 +1,6 @@
 using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.ApplicationCore.Interfaces;
+using AnkiBooks.ApplicationCore.Repository;
 using AnkiBooks.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 

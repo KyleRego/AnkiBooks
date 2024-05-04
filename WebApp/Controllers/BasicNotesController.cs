@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AnkiBooks.ApplicationCore.Entities;
-using AnkiBooks.ApplicationCore.Interfaces;
+using AnkiBooks.ApplicationCore.Repository;
 
 namespace AnkiBooks.WebApp.Controllers;
 
@@ -10,27 +10,6 @@ namespace AnkiBooks.WebApp.Controllers;
 public class BasicNotesController(IBasicNoteRepository basicNoteRepository) : ControllerBase
 {
     private readonly IBasicNoteRepository _basicNoteRepository = basicNoteRepository;
-
-    // GET: api/BasicNotes
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<BasicNote>>> GetBasicNotes()
-    {
-        return await _basicNoteRepository.GetBasicNotesAsync();
-    }
-
-    // GET: api/BasicNotes/5
-    [HttpGet("{id}")]
-    public async Task<ActionResult<BasicNote>> GetBasicNote(string id)
-    {
-        BasicNote? basicNote = await _basicNoteRepository.GetBasicNoteAsync(id);
-
-        if (basicNote == null)
-        {
-            return NotFound();
-        }
-
-        return basicNote;
-    }
 
     // PUT: api/BasicNotes/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -41,16 +20,10 @@ public class BasicNotesController(IBasicNoteRepository basicNoteRepository) : Co
         {
             return BadRequest();
         }
-        BasicNote? currentBasicNote = await _basicNoteRepository.GetBasicNoteAsync(id);
-
-        if (currentBasicNote == null)
-        {
-            return NotFound();
-        }
 
         try
         {
-            return await _basicNoteRepository.UpdateOrderedElementAsync(currentBasicNote, basicNote);
+            return await _basicNoteRepository.UpdateBasicNoteAsync(basicNote);
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -72,7 +45,7 @@ public class BasicNotesController(IBasicNoteRepository basicNoteRepository) : Co
     {
         try
         {
-            await _basicNoteRepository.InsertOrderedElementAsync(basicNote);
+            await _basicNoteRepository.InsertBasicNoteAsync(basicNote);
         }
         catch (DbUpdateException)
         {
@@ -99,7 +72,7 @@ public class BasicNotesController(IBasicNoteRepository basicNoteRepository) : Co
             return NotFound();
         }
 
-        await _basicNoteRepository.DeleteOrderedElementAsync(basicNote);
+        await _basicNoteRepository.DeleteBasicNoteAsync(basicNote);
 
         return NoContent();
     }

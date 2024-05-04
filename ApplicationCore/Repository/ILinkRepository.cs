@@ -1,6 +1,6 @@
 using AnkiBooks.ApplicationCore.Entities;
 
-namespace AnkiBooks.ApplicationCore.Interfaces;
+namespace AnkiBooks.ApplicationCore.Repository;
 
 public interface ILinkRepository
 {

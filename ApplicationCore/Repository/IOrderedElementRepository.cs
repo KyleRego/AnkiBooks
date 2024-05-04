@@ -1,6 +1,6 @@
-using AnkiBooks.ApplicationCore.Entities;
+using AnkiBooks.ApplicationCore.Interfaces;
 
-namespace AnkiBooks.ApplicationCore.Interfaces;
+namespace AnkiBooks.ApplicationCore.Repository;
 
 public interface IOrderedElementRepository<T> where T : IOrdinalChild
 {

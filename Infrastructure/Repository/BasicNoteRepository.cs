@@ -1,34 +1,19 @@
 using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.ApplicationCore.Exceptions;
 using AnkiBooks.ApplicationCore.Interfaces;
+using AnkiBooks.ApplicationCore.Repository;
 using AnkiBooks.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace AnkiBooks.Infrastructure.Repository;
 
-public class BasicNoteRepository(ApplicationDbContext dbContext)
-                            : OrderedElementRepositoryBase<BasicNote>(dbContext), IBasicNoteRepository
+public class BasicNoteRepository(ApplicationDbContext dbContext) : IBasicNoteRepository
 {
-    protected override List<IOrdinalChild> GetAllOrdinalChildren(BasicNote basicNote)
-    {
-        return _dbContext.ArticleElements.Where(
-            el => el.ArticleId == basicNote.ArticleId
-        ).Cast<IOrdinalChild>().ToList();
-    }
+    private readonly ApplicationDbContext _dbContext = dbContext;
 
-    protected override void AddElementToDbContext(BasicNote basicNote)
+    public async Task<bool> BasicNoteExists(string basicNoteId)
     {
-        _dbContext.BasicNotes.Add(basicNote);
-    }
-
-    protected override void RemoveElementFromDbContext(BasicNote basicNote)
-    {
-        _dbContext.BasicNotes.Remove(basicNote);
-    }
-
-    public async Task<List<BasicNote>> GetBasicNotesAsync()
-    {
-        return await _dbContext.BasicNotes.ToListAsync();
+        return await _dbContext.BasicNotes.AnyAsync(bn => bn.Id == basicNoteId);
     }
 
     public async Task<BasicNote?> GetBasicNoteAsync(string basicNoteId)
@@ -36,8 +21,23 @@ public class BasicNoteRepository(ApplicationDbContext dbContext)
         return await _dbContext.BasicNotes.FirstOrDefaultAsync(bn => bn.Id == basicNoteId);
     }
 
-    public async Task<bool> BasicNoteExists(string basicNoteId)
+    public async Task<BasicNote> InsertBasicNoteAsync(BasicNote basicNote)
     {
-        return await _dbContext.BasicNotes.AnyAsync(bn => bn.Id == basicNoteId);
+        _dbContext.BasicNotes.Add(basicNote);
+        await _dbContext.SaveChangesAsync();
+        return basicNote;
+    }
+
+    public async Task DeleteBasicNoteAsync(BasicNote basicNote)
+    {
+        _dbContext.BasicNotes.Remove(basicNote);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<BasicNote> UpdateBasicNoteAsync(BasicNote basicNote)
+    {
+        _dbContext.Entry(basicNote).State = EntityState.Modified;
+        await _dbContext.SaveChangesAsync();
+        return basicNote;
     }
 }

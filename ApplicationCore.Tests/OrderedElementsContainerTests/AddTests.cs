@@ -10,19 +10,19 @@ public class AddTests
     [Fact]
     public void TestAddWithTwoElementsAlready()
     {
-        List<ArticleElement> notes =
+        List<ArticleElement> decks =
         [
-            new ClozeNote() { Text="a", OrdinalPosition=0 },
-            new ClozeNote() { Text="b", OrdinalPosition=1 }
+            new Deck() {  OrdinalPosition=0 },
+            new Deck() {  OrdinalPosition=1 }
         ];
 
-        OrderedElementsContainer<ArticleElement> container = new(notes);
-        BasicNote noteToAdd = new() { Front="a", Back="b", OrdinalPosition=1 };
-        container.Add(noteToAdd);
+        OrderedElementsContainer<ArticleElement> container = new(decks);
+        Deck deck = new() { OrdinalPosition=1 };
+        container.Add(deck);
         container.AssertNotesCountIs(3);
         container.AssertNotesAreOrdered();
 
         IOrdinalChild element = container.OrderedElements.First(el => el.OrdinalPosition == 1);
-        Assert.Equal(noteToAdd, element);
+        Assert.Equal(deck, element);
     }
 }
