@@ -45,7 +45,7 @@ public class ClozeNotesController(IClozeNoteRepository clozeNoteRepository) : Co
     {
         try
         {
-            await _clozeNoteRepository.InsertClozeNoteAsync(clozeNote);
+            return await _clozeNoteRepository.InsertClozeNoteAsync(clozeNote);
         }
         catch (DbUpdateException)
         {
@@ -58,8 +58,6 @@ public class ClozeNotesController(IClozeNoteRepository clozeNoteRepository) : Co
                 throw;
             }
         }
-
-        return CreatedAtAction("GetClozeNote", new { id = clozeNote.Id }, clozeNote);
     }
 
     // DELETE: api/ClozeNotes/5

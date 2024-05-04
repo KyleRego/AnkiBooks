@@ -1,10 +1,12 @@
-@* <div    class="text-center p-2 h-100
+@using AnkiBooks.ApplicationCore.Entities
+
+<div    class="text-center p-2 h-100
                 d-flex flex-column justify-content-center"
         role="button"
         tabindex="0" @onclick="FlipCard" @onkeypress="FlipCardFromKeyboardEnter">
 
     <span>
-        @ClozeNoteText
+        @ClozeNote.Text
 
         @if (showAnswer == true)
         {
@@ -21,7 +23,7 @@
 
 @code {
     [Parameter]
-    public string ClozeNoteText { get; set; } = null!;
+    public ClozeNote ClozeNote { get; set; } = null!;
 
     private bool showAnswer = false;
 
@@ -37,4 +39,4 @@
             FlipCard();
         }
     }
-} *@
+}

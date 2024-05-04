@@ -1,4 +1,6 @@
-@* <div    class="text-center p-2 h-100
+@using AnkiBooks.ApplicationCore.Entities
+
+<div    class="text-center p-2 h-100
                 d-flex flex-column justify-content-center"
         role="button"
         tabindex="0" 
@@ -6,23 +8,20 @@
         @onkeypress="FlipCardFromKeyboardEnter">
 
     <div>
-        @BasicNoteFront
+        @BasicNote.Front
     </div>
 
     @if (showAnswer == true)
     {
         <div class="mt-2 pt-2 border-top-primary">
-            @BasicNoteBack
+            @BasicNote.Back
         </div>
     }
 </div>
 
 @code {
     [Parameter]
-    public string BasicNoteFront { get; set; } = null!;
-
-    [Parameter]
-    public string BasicNoteBack { get; set; } = null!;
+    public BasicNote BasicNote { get; set; } = null!;
 
     private bool showAnswer = false;
 
@@ -38,4 +37,4 @@
             FlipCard();
         }
     }
-} *@
+}

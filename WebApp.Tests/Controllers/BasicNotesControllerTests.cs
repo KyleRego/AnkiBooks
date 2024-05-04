@@ -7,22 +7,41 @@ using AnkiBooks.ApplicationCore.Entities;
 
 namespace AnkiBooks.WebApp.Tests.Controllers.BasicNotesControllerTests;
 
-public class PutBasicNoteTests(TestServerFactory<Program> factory) : IClassFixture<TestServerFactory<Program>>
+public class BasicNoteControllerTests(TestServerFactory<Program> factory) : IClassFixture<TestServerFactory<Program>>
 {
     private readonly TestServerFactory<Program> _factory = factory;
 
     [Fact]
-    public async Task UpdatesBasicNote()
+    public async Task PostBasicNote()
     {
         using IServiceScope scope = _factory.Services.CreateScope();
         ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        BasicNote basicNote = new() { Front = "Hello", Back = "World", OrdinalPosition = 0 };
-        Article article = new("Test article")
+        Deck deck = await dbContext.CreateDeck();
+
+        BasicNote basicNote = new()
         {
-            BasicNotes = [ basicNote ]
+            Front = "Front",
+            Back = "Back",
+            DeckId = deck.Id
         };
-        dbContext.Articles.Add(article);
+
+        HttpClient client = _factory.CreateClient();
+
+        HttpResponseMessage response = await client.PostAsJsonAsync("api/BasicNotes", basicNote);
+
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task PutBasicNote()
+    {
+        using IServiceScope scope = _factory.Services.CreateScope();
+        ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        BasicNote basicNote = new() { Front = "Hello", Back = "World" };
+        Deck deck = await dbContext.CreateDeck();
+        dbContext.Decks.Add(deck);
         await dbContext.SaveChangesAsync();
 
         BasicNote bnData = new()
@@ -30,8 +49,7 @@ public class PutBasicNoteTests(TestServerFactory<Program> factory) : IClassFixtu
             Id = basicNote.Id,
             Front = "Front",
             Back = "Back",
-            OrdinalPosition = 0,
-            ArticleId = article.Id
+            DeckId = deck.Id
         };
 
         HttpClient client = _factory.CreateClient();

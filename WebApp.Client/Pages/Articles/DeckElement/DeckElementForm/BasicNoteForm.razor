@@ -1,11 +1,13 @@
-@* @using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Entities
 
 <div class="my-4 px-2 pt-2 pb-1 border-primary-thin">
-    <EditForm Model="ClozeNote" OnValidSubmit="SubmitForm">
+    <EditForm Model="BasicNote" OnValidSubmit="SubmitForm">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <div class="d-flex flex-column">
-            <InputTextArea @bind-Value="ClozeNote.Text" id="Text" class="p-2 mb-1" />
+            <InputTextArea @bind-Value="BasicNote.Front" id="Front" class="p-2 mb-2" />
+            
+            <InputTextArea @bind-Value="BasicNote.Back" id="Back" class="p-2 mb-1" />
 
             <div class="d-flex justify-content-center">
                 <button type="submit">
@@ -18,11 +20,11 @@
 
 @code {
     [Parameter]
-    public ClozeNote StartingClozeNote { get; set; } = null!;
+    public BasicNote StartingBasicNote { get; set; } = null!;
 
     protected override void OnInitialized()
     {
-        ClozeNote = StartingClozeNote;
+        BasicNote = StartingBasicNote;
     }
 
     [Parameter]
@@ -30,17 +32,17 @@
 
     private string SubmitButtonText()
     {
-        return EditingExisting ? "Update cloze note" : "Create cloze note";
+        return EditingExisting ? "Update" : "Create";
     }
 
     [Parameter]
-    public Func<ClozeNote, Task> ParentSubmitMethod { get; set; } = null!;
+    public Func<BasicNote, Task> ParentSubmitMethod { get; set; } = null!;
 
     private async Task SubmitForm()
     {
-        await ParentSubmitMethod.Invoke(ClozeNote);
+        await ParentSubmitMethod.Invoke(BasicNote);
     }
 
     [SupplyParameterFromForm]
-    public ClozeNote ClozeNote { get; set; } = null!;
-} *@
+    public BasicNote BasicNote { get; set; } = null!;
+}

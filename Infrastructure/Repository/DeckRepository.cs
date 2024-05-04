@@ -34,7 +34,10 @@ public class DeckRepository(ApplicationDbContext dbContext)
 
     public async Task<Deck?> GetDeckAsync(string clozeNoteId)
     {
-        return await _dbContext.Decks.FirstOrDefaultAsync(bn => bn.Id == clozeNoteId);
+        return await _dbContext.Decks
+                                .Include(d => d.BasicNotes)
+                                .Include(d => d.ClozeNotes)
+                                .FirstOrDefaultAsync(bn => bn.Id == clozeNoteId);
     }
 
     public async Task<bool> DeckExists(string clozeNoteId)

@@ -11,4 +11,11 @@ public class Deck : ArticleElement
     public List<BasicNote> BasicNotes { get; set; } = [];
 
     public List<ClozeNote> ClozeNotes { get; set; } = [];
+
+    public List<Card> Cards()
+    {
+        return BasicNotes.Cast<Card>()
+            .Concat(ClozeNotes.Cast<Card>())
+            .ToList();
+    }
 }

@@ -45,7 +45,7 @@ public class BasicNotesController(IBasicNoteRepository basicNoteRepository) : Co
     {
         try
         {
-            await _basicNoteRepository.InsertBasicNoteAsync(basicNote);
+            return await _basicNoteRepository.InsertBasicNoteAsync(basicNote);
         }
         catch (DbUpdateException)
         {
@@ -58,8 +58,6 @@ public class BasicNotesController(IBasicNoteRepository basicNoteRepository) : Co
                 throw;
             }
         }
-
-        return CreatedAtAction("GetBasicNote", new { id = basicNote.Id }, basicNote);
     }
 
     // DELETE: api/BasicNotes/5

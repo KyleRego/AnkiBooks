@@ -26,6 +26,9 @@ public class UserArticleRepository(ApplicationDbContext dbContext) : IUserArticl
     {
         return await _dbContext.Articles
                     .Include(a => a.Decks)
+                    .ThenInclude(d => d.BasicNotes)
+                    .Include(a => a.Decks)
+                    .ThenInclude(d => d.ClozeNotes)
                     .Include(sec => sec.MarkdownContents)
                     .FirstOrDefaultAsync(a => a.Id == articleId && a.UserId == userId);
     }

@@ -1,4 +1,4 @@
-namespace AnkiBooks.ApplicationCore.Entities;
+namespace AnkiBooks.ApplicationCore.Enums;
 
 public enum ArticleElementType
 {

@@ -63,6 +63,7 @@
     public EventCallback<List<Article>> ArticlesChanged { get; set; }
 
     private IJSObjectReference? module;
+
     private string ContainerDomId = Guid.NewGuid().ToString();
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
@@ -76,7 +77,7 @@
     }
 
     [SupplyParameterFromForm]
-    private Article Article { get; set; } = new("");
+    private Article Article { get; set; } = new();
 
     private async Task SubmitForm()
     {
@@ -91,7 +92,7 @@
         Navigation.NavigateTo($"articles/{article.Id}");
 
         // Reset the dialog
-        Article = new("");
+        Article = new();
         await module!.InvokeVoidAsync("setupDialog", ContainerDomId);
     }
 

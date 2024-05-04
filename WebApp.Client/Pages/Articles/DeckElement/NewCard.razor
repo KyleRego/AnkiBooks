@@ -1,0 +1,43 @@
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Enums
+@using AnkiBooks.ApplicationCore.Interfaces
+
+@using AnkiBooks.WebApp.Client.Pages.Articles.DeckElement.NewDeckElement
+@using AnkiBooks.WebApp.Client.Pages.Articles.NewArticleElement
+
+@if (dropDownItemSelected == null)
+{
+    <div class="mb-4 d-flex justify-content-center">
+        <InputSelect @bind-Value="dropDownItemSelected" name="new-card">
+            <option value="" selected>New card</option>
+            <option value="@CardType.BasicNote">Basic</option>
+            <option value="@CardType.ClozeNote">Cloze</option>
+        </InputSelect>
+    </div>
+}
+else
+{
+    @switch (dropDownItemSelected)
+    {
+        case CardType.BasicNote:
+            <NewBasicNote DeckId="@DeckId"
+                                    @bind-DropDownItemSelected="dropDownItemSelected" />
+            break;
+    
+        case CardType.ClozeNote:
+            <NewClozeNote DeckId="@DeckId"
+                                    @bind-DropDownItemSelected="dropDownItemSelected" />
+            break;
+
+        default:
+            break;
+
+    }
+}
+
+@code {
+    [Parameter]
+    public string DeckId { get; set; } = null;
+
+    private CardType? dropDownItemSelected = null;
+}
