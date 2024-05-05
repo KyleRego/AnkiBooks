@@ -1,19 +1,6 @@
 export function setupEventHandlers(domContainerId) {
     const containingElement = document.getElementById(domContainerId);
     const textArea = containingElement.querySelector("textArea");
-    const boldButton = containingElement.querySelector(".markdown-bold-button");
-    const italicButton = containingElement.querySelector(".markdown-italic-button");
-    const strikeButton = containingElement.querySelector(".markdown-strike-button");
-
-    for (let i = 1; i <= 6; i++)
-    {
-        const headingSelector = `.markdown-heading-${i}-button`;
-        containingElement.querySelector(headingSelector).addEventListener("click", () => {
-            insertAroundSelection(`${"#".repeat(i)} `, "");
-        })
-    }
-
-    const linkButton = containingElement.querySelector(".markdown-link-button");
 
     textArea.addEventListener("keydown", (event) => {
         if (event.ctrlKey && ["b", "i", "s"].includes(event.key)) {
@@ -36,22 +23,6 @@ export function setupEventHandlers(domContainerId) {
         }
     })
 
-    boldButton.addEventListener("click", () => {
-        insertBold();
-    });
-
-    italicButton.addEventListener("click", () => {
-        insertItalic();
-    })
-
-    strikeButton.addEventListener("click", () => {
-        insertStrikethrough();
-    });
-
-    linkButton.addEventListener("click", () => {
-        insertLink();
-    })
-
     function insertBold() {
         insertAroundSelection("**", "**");
     }
@@ -62,10 +33,6 @@ export function setupEventHandlers(domContainerId) {
 
     function insertStrikethrough() {
         insertAroundSelection("~~", "~~")
-    }
-
-    function insertLink() {
-        insertAroundSelection("[", "]()");
     }
 
     function insertAroundSelection(before, after) {
