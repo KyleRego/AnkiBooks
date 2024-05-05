@@ -19,7 +19,8 @@
 }
 else
 {
-    switch(Card)
+    <CardHeader @bind-EditingCard="editingCard" />
+    @switch(Card)
     {
         case BasicNote bn:
             <DeckBasicNote BasicNote="@bn" AnswerRevealed="answerRevealed" />
@@ -29,9 +30,7 @@ else
             <DeckClozeNote ClozeNote="@cn" AnswerRevealed="answerRevealed" />
             break;
     }
-    <CardFooter Card="@Card"
-                @bind-AnswerRevealed="answerRevealed"
-                @bind-EditingCard="editingCard"  />
+    <CardFooter Card="@Card" @bind-AnswerRevealed="answerRevealed" />
 }
 
 @code {

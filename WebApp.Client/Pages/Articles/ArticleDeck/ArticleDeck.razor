@@ -3,46 +3,84 @@
 @using AnkiBooks.WebApp.Client.Pages.Articles.EditArticleElement
 @using AnkiBooks.WebApp.Client.Pages.Articles.ArticleDeck.DeckCard
 
-<div class="pl-7 d-flex flex-row justify-content-center align-items-center">
-    <div>
+<div class="pl-7 d-flex flex-row justify-content-center">
+    <div class="w-72">
         @if (Editing == true)
         {
-            <EditDeck StartingDeck="@Element" @bind-Editing="@Editing" />
+            <EditDeck StartingDeck="@Deck" @bind-Editing="@Editing" />
         }
         else
         {
-            <div class="d-flex flex-row justify-content-start align-items-center">
-                <p>
-                    @Element.Description    
-                </p>
+            <div>
+                <div class="d-flex flex-row justify-content-end mb-2">
+                    <div class="btn btn-primary d-flex justify-content-start align-items-center"
+                            role="button" @onclick="BeginEditing">
+                        <div class="mr-2">
+                            Edit
+                        </div>
+                        <div class="w-5 h-5" >
+                            <Edit />
+                        </div>
+                    </div>
+                </div>
 
-                <div class="w-5 h-5 ml-4" role="button" @onclick="BeginEditing">
-                    <Edit />
+                <div class="d-flex flex-row justify-content-center mb-2">
+                    <div class="border-primary p-4">
+                        <div class="d-flex flex-row justify-content-center align-items-center mb-4">
+                            <div class="mr-4">
+                                @Deck.Name
+                            </div>
+
+                            <div>
+                                @(Cards.Count) cards
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <p class="text-center">
+                                @Deck.Description    
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-row justify-content-around align-items-center">
+                    @if (cardsRevealed == false)
+                    {
+                        <div class="d-flex justify-content-center">
+                            <button class="btn btn-primary" type="button" @onclick="ShowCards">    
+                                <div class="d-flex flex-row justify-content-start align-items-center">
+                                    <div class="mr-2">
+                                        Show cards
+                                    </div>
+                                    <div class="w-5 h-5">
+                                        <ArrowDownSquareStack />
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="d-flex justify-content-center">
+                            <button class="btn btn-primary" type="button" @onclick="HideCards">    
+                                <div class="d-flex flex-row justify-content-start align-items-center">
+                                    <div class="mr-2">
+                                        Hide cards
+                                    </div>
+                                    <div class="w-5 h-5">
+                                        <ArrowUpSquareStack />
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    }
+
+                    <NewCard DeckId="@Deck.Id" @bind-Cards="@Cards" />
                 </div>
             </div>
         }
     </div>
-
-    <div class="d-flex flex-row justify-content-center px-8">
-        <NewCard DeckId="@Element.Id" @bind-Cards="@Cards" />
-    </div>
-
-    @if (cardsRevealed == false)
-    {
-        <div class="d-flex justify-content-center">
-            <button class="btn btn-primary" type="button" @onclick="RevealCards">    
-                Reveal @(Cards.Count) cards
-            </button>
-        </div>
-    }
-    else
-    {
-        <div class="d-flex justify-content-center">
-            <button class="btn btn-primary" type="button" @onclick="HideCards">    
-                Hide @(Cards.Count) cards
-            </button>
-        </div>
-    }
 </div>
 
 @if (cardsRevealed == true)
@@ -59,13 +97,13 @@
 
 @code {
     [Parameter]
-    public Deck Element { get; set; } = null!;
+    public Deck Deck { get; set; } = null!;
 
     public List<Card> Cards { get; set; } = [];
 
     protected override void OnParametersSet()
     {
-        Cards = Element.Cards();
+        Cards = Deck.Cards();
     }
 
     [Parameter]
@@ -83,7 +121,7 @@
     
     private bool cardsRevealed = false;
 
-    private void RevealCards()
+    private void ShowCards()
     {
         cardsRevealed = true;
     }

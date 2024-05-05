@@ -59,6 +59,12 @@
     border-style: solid;
 }
 
+.border-primary-t {
+    border-top: 2px;
+    border-color: var(--ab-border-primary-dark);
+    border-style: solid;
+}
+
 .border-right-primary-spacing {
     border-right: 2px;
     border-color: transparent;

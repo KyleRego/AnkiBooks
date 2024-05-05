@@ -6,6 +6,10 @@
     position: absolute;
 }
 
+.position-relative {
+    position: relative;
+}
+
 .left-0 {
     left: 0;
 }

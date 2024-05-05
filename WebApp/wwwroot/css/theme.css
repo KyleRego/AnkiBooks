@@ -1,5 +1,8 @@
 :root {
     --ab-bg-primary: rgb(18 13 25);
+    --ab-bg-secondary: rgb(28 8 49);
+    --ab-bg-secondary-alt: rgba(19, 4, 35, 0.9);
+
     --ab-bg-secondary-dark: #2f2f2f;
     --ab-bg-tertiary-dark: #343434;
 
@@ -11,6 +14,8 @@
 
     --ab-border-primary-dark: #404040;
     --ab-border-secondary-dark: #00000069;
+
+    --ab-border-color-secondary: #9ca3af;
 
     --ab-bg-primary-light: #202020;
 }

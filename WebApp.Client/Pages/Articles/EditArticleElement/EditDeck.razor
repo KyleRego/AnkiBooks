@@ -30,7 +30,6 @@
 
     private async Task SubmitForm(Deck newDeck)
     {
-        ArgumentNullException.ThrowIfNull(newDeck.Description);
         Deck? updatedDeck = await ApiService.PutDeck(newDeck);
         ArgumentNullException.ThrowIfNull(updatedDeck);
 

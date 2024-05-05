@@ -1,0 +1,26 @@
+<div class="d-flex justify-content-end mb-2">
+    <div role="button" class="btn btn-primary" @onclick="StartEditing">
+        <div class="d-flex flex-row justify-content-start align-items-center">
+            <div class="mr-2">
+                Edit
+            </div>
+            <div class="w-4 h-4">
+                <Edit />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public bool EditingCard { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> EditingCardChanged { get; set; }
+
+    private async Task StartEditing()
+    {
+        EditingCard = true;
+        await EditingCardChanged.InvokeAsync(EditingCard);
+    }
+}

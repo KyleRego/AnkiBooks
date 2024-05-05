@@ -6,6 +6,11 @@
     padding-bottom: 0.25rem;
 }
 
+.py-1 {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
 .p-2 {
     padding: 0.5rem;
 }

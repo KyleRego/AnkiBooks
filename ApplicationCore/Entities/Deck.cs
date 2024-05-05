@@ -6,7 +6,10 @@ namespace AnkiBooks.ApplicationCore.Entities;
 
 public class Deck : ArticleElement
 {
-    public string Description { get; set; } = "New deck";
+    [Required]
+    public string Name { get; set; } = "New deck";
+
+    public string Description { get; set; } = "";
 
     public List<BasicNote> BasicNotes { get; set; } = [];
 

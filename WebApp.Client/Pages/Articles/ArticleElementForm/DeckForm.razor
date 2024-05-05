@@ -1,16 +1,22 @@
 @using AnkiBooks.ApplicationCore.Entities
 
-<EditForm Model="Deck" OnValidSubmit="SubmitForm">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div class="d-flex flex-row justify-content-start">
-        <InputText @bind-Value="@Deck.Description" />
+<div class="border-primary p-4">
+    <EditForm Model="Deck" OnValidSubmit="SubmitForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="d-flex flex-column">
+            <InputText @bind-Value="@Deck.Name" class="mb-2" />
 
-        <button type="submit" class="ml-2">
-            Submit
-        </button>
-    </div>
-</EditForm>
+            <InputTextArea @bind-Value="@Deck.Description" class="mb-2" />
+
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="ml-2">
+                    Submit
+                </button>
+            </div>
+        </div>
+    </EditForm>
+</div>
 
 @code {
     [Parameter]
