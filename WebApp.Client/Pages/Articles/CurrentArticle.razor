@@ -8,9 +8,10 @@
 
 @using AnkiBooks.WebApp.Client.Pages.Articles.MarkdownElement
 @using AnkiBooks.WebApp.Client.Pages.Articles.ArticleDeck
+@using AnkiBooks.WebApp.Client.Pages.Articles.NewArticleElement
 
 @inject IUserArticleService UserArticleService
-@inject ILogger<ArticleElements> Logger
+@inject ILogger<CurrentArticle> Logger
 @inject PersistentComponentState ApplicationState
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
@@ -27,7 +28,7 @@
                 {
                     @if (ReadMode == false)
                     {
-                        <NewElement @bind-ElementsContainer="@ElementsContainer" OrdinalPosition="@(0)" />
+                        <NewArticleElement @bind-ElementsContainer="@ElementsContainer" OrdinalPosition="@(0)" />
                     }
                 }
                 else
@@ -39,6 +40,11 @@
                         ArticleElement element = elements[j];
 
                         <div class="border-bottom-primary pb-4 @(j != 0 ? "border-top-primary pt-4" : "")">
+                            <div class="float-right pt-2 pr-2">
+                                <div role="button" class="w-5 h-5">
+                                    <Gear />
+                                </div>
+                            </div>
                             @switch(element)
                             {
                                 case MarkdownContent mdContent:
@@ -55,7 +61,7 @@
                             }
                         </div>
 
-                        <NewElement @bind-ElementsContainer="@ElementsContainer" OrdinalPosition="@(j + 1)" />
+                        <NewArticleElement @bind-ElementsContainer="@ElementsContainer" OrdinalPosition="@(j + 1)" />
                     }
                 }
             </div>

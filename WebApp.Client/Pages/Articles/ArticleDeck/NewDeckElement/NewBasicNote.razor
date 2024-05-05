@@ -18,13 +18,13 @@
     public string DeckId { get; set; } = null!;
 
     [Parameter]
+    public List<Card> Cards { get; set; } = null!;
+
+    [Parameter]
     public CardType? DropDownItemSelected { get; set; }
 
     [Parameter]
     public EventCallback<CardType?> DropDownItemSelectedChanged { get; set; }
-
-    [Parameter]
-    public List<Card> Cards { get; set; } = null!;
 
     [Parameter]
     public EventCallback<List<Card>> CardsChanged { get; set; }

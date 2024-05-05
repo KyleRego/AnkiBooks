@@ -1,34 +1,38 @@
-@* @using System.ComponentModel.DataAnnotations
+@using System.ComponentModel.DataAnnotations
 @using System.Text.Json
+
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Interfaces
+@using AnkiBooks.ApplicationCore.Services
+
 @inject ILogger<EditClozeNote> Logger
-@inject IAnkiBooksApiService ApiService
+@inject ICardService CardService
 
 <ClozeNoteForm  StartingClozeNote="@StartingClozeNote"
                 EditingExisting="true"
-                ParentSubmitMethod="@SubmitForm" />
+                ParentSubmitMethod="@SubmitForm"
+                @bind-EditingCard:get="@EditingCard"
+                @bind-EditingCard:set="@EditingCardChanged" />
 
 @code {
     [Parameter]
     public ClozeNote? StartingClozeNote { get; set; }
 
     [Parameter]
-    public bool Editing { get; set; }
+    public bool EditingCard { get; set; }
 
     [Parameter]
-    public EventCallback<bool> EditingChanged { get; set; }
+    public EventCallback<bool> EditingCardChanged { get; set; }
 
-    private async Task SubmitForm(ClozeNote updatedClozeNote)
+    private async Task SubmitForm(ClozeNote editClozeNote)
     {
-        ArgumentNullException.ThrowIfNull(updatedClozeNote.Text);
-        ArgumentNullException.ThrowIfNull(updatedClozeNote.ArticleId);
-        ArgumentNullException.ThrowIfNull(updatedClozeNote.OrdinalPosition);
+        ArgumentNullException.ThrowIfNull(editClozeNote.Text);
+        ArgumentNullException.ThrowIfNull(editClozeNote.DeckId);
 
-        ClozeNote? clozeNote = (ClozeNote?)await ApiService.PutElement(updatedClozeNote);
-        ArgumentNullException.ThrowIfNull(clozeNote);
+        ClozeNote? updatedClozeNote = (ClozeNote?)await CardService.PutCard(editClozeNote);
+        ArgumentNullException.ThrowIfNull(updatedClozeNote);
 
-        Editing = false;
-        await EditingChanged.InvokeAsync(Editing);
+        EditingCard = false;
+        await EditingCardChanged.InvokeAsync(EditingCard);
     }
-} *@
+}

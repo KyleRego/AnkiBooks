@@ -1,0 +1,44 @@
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.WebApp.Client.Pages.Articles.ArticleDeck.EditDeckElement
+@using AnkiBooks.WebApp.Client.Pages.Articles.ArticleDeck.DeckElementShow
+
+@if (editingCard == true)
+{
+    switch(Card)
+    {
+        case BasicNote bn:
+            <EditBasicNote StartingBasicNote="@bn"
+                            @bind-EditingCard="editingCard" />
+            break;
+
+        case ClozeNote cn:
+            <EditClozeNote StartingClozeNote="@cn"
+                            @bind-EditingCard="editingCard" />
+            break;
+    }
+}
+else
+{
+    switch(Card)
+    {
+        case BasicNote bn:
+            <DeckBasicNote BasicNote="@bn" AnswerRevealed="answerRevealed" />
+            break;
+
+        case ClozeNote cn:
+            <DeckClozeNote ClozeNote="@cn" AnswerRevealed="answerRevealed" />
+            break;
+    }
+    <CardFooter Card="@Card"
+                @bind-AnswerRevealed="answerRevealed"
+                @bind-EditingCard="editingCard"  />
+}
+
+@code {
+    [Parameter]
+    public Card Card { get; set; } = null!;
+
+    private bool answerRevealed;
+
+    private bool editingCard;
+}

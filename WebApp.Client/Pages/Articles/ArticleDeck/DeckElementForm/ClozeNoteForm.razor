@@ -1,10 +1,16 @@
 @using AnkiBooks.ApplicationCore.Entities
 
-<div class="my-4 px-2 pt-2 pb-1 border-primary-thin">
+<div class="w-72 my-4 px-2 pt-2 pb-1 border-primary-thin">
     <EditForm Model="ClozeNote" OnValidSubmit="SubmitForm">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <div class="d-flex flex-column">
+            <div class="mb-1 d-flex justify-content-end">
+                <button type="button" @onclick="Cancel">
+                    Cancel
+                </button>
+            </div>
+
             <InputTextArea @bind-Value="ClozeNote.Text" id="Text" class="p-2 mb-1" />
 
             <div class="d-flex justify-content-center">
@@ -43,4 +49,16 @@
 
     [SupplyParameterFromForm]
     public ClozeNote ClozeNote { get; set; } = null!;
+
+    [Parameter]
+    public bool EditingCard { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> EditingCardChanged { get; set; }
+
+    private async Task Cancel()
+    {
+        EditingCard = false;
+        await EditingCardChanged.InvokeAsync(EditingCard);
+    }
 }

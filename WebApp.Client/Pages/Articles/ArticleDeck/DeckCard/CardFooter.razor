@@ -1,0 +1,54 @@
+@using AnkiBooks.ApplicationCore.Entities
+
+<div class="border-primary-x border-primary-b d-flex justify-content-between p-2">
+    @if (AnswerRevealed == false)
+    {
+        <div role="button" class="pl-2" @onclick="ShowAnswer">
+            Show Answer
+        </div>
+    }
+    else
+    {
+        <div class="d-flex flex-row justify-content-start">
+            <div class="pr-4">
+                Bad
+            </div>
+            <div>
+                Good
+            </div>
+        </div>
+    }
+    <div role="button" class="pr-2" @onclick="StartEditing">
+        Edit
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Card Card { get; set; } = null!;
+
+    [Parameter]
+    public bool AnswerRevealed { get; set; }
+
+    [Parameter]
+
+    public bool EditingCard { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> AnswerRevealedChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> EditingCardChanged { get; set; }
+
+    private async Task ShowAnswer()
+    {
+        AnswerRevealed = true;
+        await AnswerRevealedChanged.InvokeAsync(AnswerRevealed);
+    }
+
+    private async Task StartEditing()
+    {
+        EditingCard = true;
+        await EditingCardChanged.InvokeAsync(EditingCard);
+    }
+}

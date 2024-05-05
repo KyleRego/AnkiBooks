@@ -46,6 +46,19 @@
     border-style: solid;
 }
 
+.border-primary-x {
+    border-left: 2px;
+    border-right: 2px;
+    border-color: var(--ab-border-primary-dark);
+    border-style: solid;
+}
+
+.border-primary-b {
+    border-bottom: 2px;
+    border-color: var(--ab-border-primary-dark);
+    border-style: solid;
+}
+
 .border-right-primary-spacing {
     border-right: 2px;
     border-color: transparent;

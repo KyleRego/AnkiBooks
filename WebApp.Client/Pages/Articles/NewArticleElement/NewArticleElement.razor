@@ -1,7 +1,6 @@
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Enums
 @using AnkiBooks.ApplicationCore.Interfaces
-@using AnkiBooks.WebApp.Client.Pages.Articles.NewArticleElement
 
 @if (dropDownItemSelected == null)
 {
@@ -23,7 +22,7 @@ else
                         @bind-DropDownItemSelected="dropDownItemSelected"
                         OrdinalPosition="@OrdinalPosition" />
             break;    
-    
+
         case ArticleElementType.MarkdownContent:
             <NewMarkdown    @bind-ElementsContainer:get="ElementsContainer"
                             @bind-ElementsContainer:set="ElementsContainerChanged"

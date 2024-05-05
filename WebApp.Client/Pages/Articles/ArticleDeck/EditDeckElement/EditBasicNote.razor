@@ -1,34 +1,39 @@
-@* @using System.ComponentModel.DataAnnotations
+@using System.ComponentModel.DataAnnotations
 @using System.Text.Json
+
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Interfaces
+@using AnkiBooks.ApplicationCore.Services
+
 @inject ILogger<EditBasicNote> Logger
+@inject ICardService CardService
 
 <BasicNoteForm  StartingBasicNote="@StartingBasicNote"
                 EditingExisting="true"
-                ParentSubmitMethod="@SubmitForm" />
+                ParentSubmitMethod="@SubmitForm"
+                @bind-EditingCard:get="@EditingCard"
+                @bind-EditingCard:set="@EditingCardChanged" />
 
 @code {
     [Parameter]
     public BasicNote? StartingBasicNote { get; set; }
 
     [Parameter]
-    public bool Editing { get; set; }
+    public bool EditingCard { get; set; }
 
     [Parameter]
-    public EventCallback<bool> EditingChanged { get; set; }
+    public EventCallback<bool> EditingCardChanged { get; set; }
 
-    private async Task SubmitForm(BasicNote updatedBasicNote)
+    private async Task SubmitForm(BasicNote editBasicNote)
     {
-        ArgumentNullException.ThrowIfNull(updatedBasicNote.Front);
-        ArgumentNullException.ThrowIfNull(updatedBasicNote.Back);
-        ArgumentNullException.ThrowIfNull(updatedBasicNote.ArticleId);
-        ArgumentNullException.ThrowIfNull(updatedBasicNote.OrdinalPosition);
+        ArgumentNullException.ThrowIfNull(editBasicNote.Front);
+        ArgumentNullException.ThrowIfNull(editBasicNote.Back);
+        ArgumentNullException.ThrowIfNull(editBasicNote.DeckId);
 
-        BasicNote? basicNote = (BasicNote?)await ApiService.PutElement(updatedBasicNote);
-        ArgumentNullException.ThrowIfNull(basicNote);
+        BasicNote? updatedBasicNote = (BasicNote?)await CardService.PutCard(editBasicNote);
+        ArgumentNullException.ThrowIfNull(updatedBasicNote);
 
-        Editing = false;
-        await EditingChanged.InvokeAsync(Editing);
+        EditingCard = false;
+        await EditingCardChanged.InvokeAsync(EditingCard);
     }
-} *@
+}

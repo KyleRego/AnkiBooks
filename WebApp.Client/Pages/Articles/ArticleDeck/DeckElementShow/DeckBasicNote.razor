@@ -2,9 +2,7 @@
 
 <div    class="border-primary text-center w-72 d-flex flex-column"
         role="button"
-        tabindex="0" 
-        @onclick="FlipCard" 
-        @onkeypress="FlipCardFromKeyboardEnter">
+        tabindex="0" >
 
     <div class="flex-grow-1 d-flex justify-content-center align-items-center p-4">
         <div>
@@ -12,7 +10,7 @@
         </div>
     </div>
 
-    @if (showAnswer == true)
+    @if (AnswerRevealed == true)
     {
         <div class="flex-grow-1 d-flex justify-content-center align-items-center p-4 border-top-primary">
             <div>
@@ -26,9 +24,10 @@
     [Parameter]
     public BasicNote BasicNote { get; set; } = null!;
 
-    private bool showAnswer = false;
+    [Parameter]
+    public bool AnswerRevealed { get; set; }
 
-    private void FlipCard()
+    @* private void FlipCard()
     {
         showAnswer = !showAnswer;
     }
@@ -39,5 +38,5 @@
         {
             FlipCard();
         }
-    }
+    } *@
 }
