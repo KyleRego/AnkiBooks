@@ -3,31 +3,31 @@
 @using AnkiBooks.WebApp.Client.Pages.Articles.EditArticleElement
 @using AnkiBooks.WebApp.Client.Pages.Articles.ArticleDeck.DeckCard
 
-<div class="pl-7 d-flex flex-row flex-wrap justify-content-around align-items-center">
-    <div class="w-72">
-        @if (Editing == true)
-        {
-            <EditDeck StartingDeck="@Deck" @bind-Editing="@Editing" />
-        }
-        else
-        {
-            <div>
-                <div class="d-flex flex-row justify-content-end mb-2">
-                    <div class="btn btn-primary d-flex justify-content-start align-items-center"
-                            role="button" @onclick="BeginEditing">
-                        <div class="mr-2">
-                            Edit
-                        </div>
-                        <div class="w-5 h-5" >
-                            <Edit />
+<div class="">
+    <div class="pl-7 d-flex flex-row justify-content-around align-items-center mb-4">
+        <div class="mb-2">
+            @if (Editing == true)
+            {
+                <EditDeck StartingDeck="@Deck" @bind-Editing="@Editing" />
+            }
+            else
+            {
+                <div>
+                    <div class="d-flex flex-row justify-content-center mb-2">
+                        <div class="btn btn-primary d-flex justify-content-start align-items-center"
+                                role="button" @onclick="BeginEditing">
+                            <div class="mr-2">
+                                Edit
+                            </div>
+                            <div class="w-5 h-5" >
+                                <Edit />
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="d-flex flex-row justify-content-center mb-2">
-                    <div class="border-primary p-4">
-                        <div class="d-flex flex-row justify-content-center align-items-center mb-4">
-                            <div class="mr-4">
+                    <div class="">
+                        <div class="d-flex flex-row justify-content-center align-items-end mb-4">
+                            <div class="mr-4 font-size-3xl">
                                 @Deck.Name
                             </div>
 
@@ -43,15 +43,23 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
 
-    <div class="d-flex flex-row justify-content-center">
-        <NewCard DeckId="@Deck.Id" @bind-Cards="@Cards" />
-    </div>
+    @if (cardsRevealed == true)
+    {
+        <div class="d-flex flex-row justify-content-around align-items-center flex-wrap mb-4">
+            @foreach (Card card in Cards)
+            {
+                <div class="m-3">
+                    <DeckCard Card="@card" />                
+                </div>
+            }
+        </div>
+    }
 
-    <div class="d-flex flex-row justify-content-around align-items-center">
+    <div class="d-flex flex-row justify-content-around align-items-center mb-4">
         @if (cardsRevealed == false)
         {
             <div class="d-flex justify-content-center">
@@ -84,15 +92,10 @@
         }
     </div>
 
-    @if (cardsRevealed == true)
-    {
-        @foreach (Card card in Cards)
-        {
-            <div class="m-3">
-                <DeckCard Card="@card" />                
-            </div>
-        }
-    }
+    <div class="d-flex flex-row justify-content-center">
+        <NewCard DeckId="@Deck.Id" @bind-Cards="@Cards" />
+    </div>
+
 </div>
 
 @code {
