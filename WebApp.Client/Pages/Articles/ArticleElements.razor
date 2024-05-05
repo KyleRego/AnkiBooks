@@ -7,7 +7,7 @@
 @using AnkiBooks.ApplicationCore.Services
 
 @using AnkiBooks.WebApp.Client.Pages.Articles.MarkdownElement
-@using AnkiBooks.WebApp.Client.Pages.Articles.DeckElement
+@using AnkiBooks.WebApp.Client.Pages.Articles.ArticleDeck
 
 @inject IUserArticleService UserArticleService
 @inject ILogger<ArticleElements> Logger
@@ -38,7 +38,7 @@
                     {
                         ArticleElement element = elements[j];
 
-                        <div class="d-flex flex-column sm:flex-row @(j != 0 ? "border-top-primary pt-4" : "")">
+                        <div class="border-bottom-primary pb-4 @(j != 0 ? "border-top-primary pt-4" : "")">
                             @switch(element)
                             {
                                 case MarkdownContent mdContent:
@@ -47,7 +47,7 @@
                                     break;
 
                                 case Deck deck:
-                                    <DeckElement  Element="@deck" @bind-ElementsContainer="@ElementsContainer" />
+                                    <ArticleDeck  Element="@deck" @bind-ElementsContainer="@ElementsContainer" />
                                     break;
 
                                 default:

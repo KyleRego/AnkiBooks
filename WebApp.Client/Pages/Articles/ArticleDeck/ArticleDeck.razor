@@ -1,0 +1,100 @@
+@using AnkiBooks.ApplicationCore.Entities
+
+@using AnkiBooks.WebApp.Client.Pages.Articles.EditArticleElement
+@using AnkiBooks.WebApp.Client.Pages.Articles.ArticleDeck.DeckBasicNote
+@using AnkiBooks.WebApp.Client.Pages.Articles.ArticleDeck.DeckClozeNote
+
+<div class="p-4 d-flex flex-row justify-content-center">
+    @if (Editing == true)
+    {
+        <EditDeck StartingDeck="@Element" @bind-Editing="@Editing" />
+    }
+    else
+    {
+        <div class="d-flex flex-row justify-content-start align-items-center">
+            <p>
+                @Element.Description    
+            </p>
+
+            <div class="w-5 h-5 ml-4" role="button" @onclick="BeginEditing">
+                <Edit />
+            </div>
+        </div>
+    }
+</div>
+
+
+<div class="px-4 d-flex flex-row justify-content-center">
+    <NewCard DeckId="@Element.Id" @bind-Cards="@Cards" />
+</div>
+
+@if (cardsRevealed == false)
+{
+    <div class="d-flex justify-content-center p-4">
+        <button class="btn btn-primary" type="button" @onclick="RevealCards">    
+            Reveal @(Cards.Count) cards
+        </button>
+    </div>
+}
+else
+{
+    <div class="d-flex justify-content-center p-4">
+        <button class="btn btn-primary" type="button" @onclick="HideCards">    
+            Hide @(Cards.Count) cards
+        </button>
+    </div>
+    <div class="d-flex flex-row justify-content-around align-items-center flex-wrap">
+        @foreach (Card card in Cards)
+        {
+            <div class="m-3">
+                @switch(card)
+                {
+                    case BasicNote bn:
+                        <DeckBasicNote BasicNote="@bn" />
+                        break;
+
+                    case ClozeNote cn:
+                        <DeckClozeNote ClozeNote="@cn" />
+                        break;
+                }
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Deck Element { get; set; } = null!;
+
+    public List<Card> Cards { get; set; } = [];
+
+    protected override void OnParametersSet()
+    {
+        Cards = Element.Cards();
+    }
+
+    [Parameter]
+    public OrderedElementsContainer<ArticleElement> ElementsContainer { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<OrderedElementsContainer<ArticleElement>> ElementsContainerChanged { get; set; }
+
+    public bool Editing { get; set; } = false;
+
+    private void BeginEditing()
+    {
+        Editing = true;
+    }
+    
+    private bool cardsRevealed = false;
+
+    private void RevealCards()
+    {
+        cardsRevealed = true;
+    }
+
+    private void HideCards()
+    {
+        cardsRevealed = false;
+    }
+}

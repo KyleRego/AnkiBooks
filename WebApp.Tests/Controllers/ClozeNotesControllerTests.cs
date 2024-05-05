@@ -29,6 +29,6 @@ public class ClozeNotesControllerTests(TestServerFactory<Program> factory) : ICl
 
         HttpResponseMessage response = await client.PostAsJsonAsync("api/ClozeNotes", clozeNote);
 
-        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 }

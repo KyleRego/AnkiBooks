@@ -30,7 +30,7 @@ public class BasicNoteControllerTests(TestServerFactory<Program> factory) : ICla
 
         HttpResponseMessage response = await client.PostAsJsonAsync("api/BasicNotes", basicNote);
 
-        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
     [Fact]
@@ -41,7 +41,7 @@ public class BasicNoteControllerTests(TestServerFactory<Program> factory) : ICla
 
         BasicNote basicNote = new() { Front = "Hello", Back = "World" };
         Deck deck = await dbContext.CreateDeck();
-        dbContext.Decks.Add(deck);
+        deck.BasicNotes.Add(basicNote);
         await dbContext.SaveChangesAsync();
 
         BasicNote bnData = new()

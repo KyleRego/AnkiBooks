@@ -19,15 +19,10 @@
 
 <div class="d-flex flex-row">
     <div id="articles-sidebar" class="flex-shrink-0 flex-position-sticky left-0 top-0 bottom-0
-                                    h-screen w-64 border-right-primary
-                                    @(articlesSidebarExpanded == false ? "d-none" : "d-block" )">
-        <div class="pt-4 mx-4 d-flex justify-content-between">
+                                    h-screen w-64 border-right-primary">
+        <div class="pt-4 mx-4 d-flex justify-content-center">
             <div>
                 [Articles Tree Switcher]
-            </div>
-
-            <div class="w-6 h-6 cursor-pointer" role="button" @onclick="ToggleArticlesSidebar">
-                <BookOpen />
             </div>
         </div>
 
@@ -37,54 +32,38 @@
     </div>
 
     <div class="w-100">
-        <div class="my-4 mr-4 d-flex justify-content-start">
+        <div class="my-4 mr-4 d-flex justify-content-between">
+            <div class="pl-4">
+                @if (currentArticle != null)
+                {
+                    <div class="pl-4 d-flex justify-content-start align-items-center">
+                        @if (editingTitle == false)
+                        {
+                            <div class="pr-2">
+                                @currentArticle.Title
+                            </div>
 
-            <div class="@(articlesSidebarExpanded == true ? "d-none" :
-                                                            "w-64 d-flex flex-row justify-content-between border-right-primary-spacing" )">
-                <div class="pl-4">
-                    [Articles Tree Switcher]
-                </div>
-
-                <div class="pr-4">
-                    <div class="w-6 h-6 cursor-pointer" role="button" @onclick="ToggleArticlesSidebar">
-                        <BookOpen />
+                            <div class="w-5 h-5" role="button" @onclick="EditTitle">
+                                <Edit />
+                            </div>
+                        }
+                        else
+                        {
+                            <EditTitle StartingArticle="@currentArticle" @bind-EditingTitle="editingTitle" />
+                        }
                     </div>
-                </div>
+                }
             </div>
 
-            <div class="d-flex flex-row justify-content-start">
-                <div class="pl-4">
-                    @if (ReadMode == false)
-                    {
-                        <span role="button" @onclick="StartReadMode">Read mode</span>
-                    }
-                    else
-                    {
-                        <span role="button" @onclick="EndReadMode">Edit mode</span>
-                    }
-                </div>
-
-                <div>
-                    @if (currentArticle != null)
-                    {
-                        <div class="pl-4 d-flex justify-content-start align-items-center">
-                            @if (editingTitle == false)
-                            {
-                                <div class="pr-2">
-                                    @currentArticle.Title
-                                </div>
-
-                                <div class="w-5 h-5" role="button" @onclick="EditTitle">
-                                    <Edit />
-                                </div>
-                            }
-                            else
-                            {
-                                <EditTitle StartingArticle="@currentArticle" @bind-EditingTitle="editingTitle" />
-                            }
-                        </div>
-                    }
-                </div>
+            <div class="pr-4">
+                @if (ReadMode == false)
+                {
+                    <span role="button" @onclick="StartReadMode">Read mode</span>
+                }
+                else
+                {
+                    <span role="button" @onclick="EndReadMode">Edit mode</span>
+                }
             </div>
         </div>
 

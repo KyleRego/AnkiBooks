@@ -1,11 +1,13 @@
 @using AnkiBooks.ApplicationCore.Entities
 
-<div    class="text-center p-2 h-100
-                d-flex flex-column justify-content-center"
+<div    class="border-primary text-center w-72 d-flex flex-column
+                    justify-content-center align-items-center p-4"
         role="button"
-        tabindex="0" @onclick="FlipCard" @onkeypress="FlipCardFromKeyboardEnter">
+        tabindex="0"
+        @onclick="FlipCard"
+        @onkeypress="FlipCardFromKeyboardEnter">
 
-    <span>
+    <div>
         @ClozeNote.Text
 
         @if (showAnswer == true)
@@ -16,8 +18,7 @@
         {
             <span> [...]</span>
         }
-    </span>
-
+    </div>
     
 </div>
 

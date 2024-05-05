@@ -42,7 +42,7 @@
         newDeck.OrdinalPosition = OrdinalPosition;
 
         Deck? createdDeck = await DeckService.PostDeck(newDeck);
-        ArgumentNullException.ThrowIfNull(newDeck);
+        ArgumentNullException.ThrowIfNull(createdDeck);
 
         ElementsContainer.Add(createdDeck);
         await ElementsContainerChanged.InvokeAsync(ElementsContainer);

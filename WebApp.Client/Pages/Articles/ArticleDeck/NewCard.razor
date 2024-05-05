@@ -2,12 +2,12 @@
 @using AnkiBooks.ApplicationCore.Enums
 @using AnkiBooks.ApplicationCore.Interfaces
 
-@using AnkiBooks.WebApp.Client.Pages.Articles.DeckElement.NewDeckElement
+@using AnkiBooks.WebApp.Client.Pages.Articles.ArticleDeck.NewDeckElement
 @using AnkiBooks.WebApp.Client.Pages.Articles.NewArticleElement
 
 @if (dropDownItemSelected == null)
 {
-    <div class="mb-4 d-flex justify-content-center">
+    <div>
         <InputSelect @bind-Value="dropDownItemSelected" name="new-card">
             <option value="" selected>New card</option>
             <option value="@CardType.BasicNote">Basic</option>
@@ -21,12 +21,16 @@ else
     {
         case CardType.BasicNote:
             <NewBasicNote DeckId="@DeckId"
-                                    @bind-DropDownItemSelected="dropDownItemSelected" />
+                                    @bind-DropDownItemSelected="dropDownItemSelected"
+                                    @bind-Cards:get="@Cards"
+                                    @bind-Cards:set="@CardsChanged" />
             break;
     
         case CardType.ClozeNote:
             <NewClozeNote DeckId="@DeckId"
-                                    @bind-DropDownItemSelected="dropDownItemSelected" />
+                                    @bind-DropDownItemSelected="dropDownItemSelected"
+                                    @bind-Cards:get="@Cards"
+                                    @bind-Cards:set="@CardsChanged" />
             break;
 
         default:
@@ -37,7 +41,13 @@ else
 
 @code {
     [Parameter]
-    public string DeckId { get; set; } = null;
+    public string DeckId { get; set; } = null!;
 
     private CardType? dropDownItemSelected = null;
+
+    [Parameter]
+    public List<Card> Cards { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<List<Card>> CardsChanged { get; set; }
 }

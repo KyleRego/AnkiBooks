@@ -15,13 +15,19 @@
 
 @code {
     [Parameter]
-    public string DeckId { get; set; }
+    public string DeckId { get; set; } = null!;
 
     [Parameter]
     public CardType? DropDownItemSelected { get; set; }
 
     [Parameter]
     public EventCallback<CardType?> DropDownItemSelectedChanged { get; set; }
+
+    [Parameter]
+    public List<Card> Cards { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<List<Card>> CardsChanged { get; set; }
 
     private ClozeNote StartingClozeNote()
     {
@@ -41,5 +47,8 @@
 
         DropDownItemSelected = null;
         await DropDownItemSelectedChanged.InvokeAsync(DropDownItemSelected);
+
+        Cards.Add(createdClozeNote);
+        await CardsChanged.InvokeAsync(Cards);
     }
 }

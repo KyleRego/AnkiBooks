@@ -53,6 +53,10 @@
     padding-top: 1rem;
 }
 
+.pb-4 {
+    padding-bottom: 1rem;
+}
+
 .py-4 {
     padding-top: 1rem;
     padding-bottom: 1rem;
