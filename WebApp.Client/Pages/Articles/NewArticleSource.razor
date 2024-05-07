@@ -1,0 +1,48 @@
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Services
+
+@inject ILinkService LinkService
+
+<EditForm Model="FormLink" OnValidSubmit="HandleSubmit">
+    <div class="d-flex flex-row justify-content-start">
+        <InputText @bind-Value="FormLink.Url" />
+        <button type="submit" class="ml-2">
+            Add source
+        </button>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public Article Article { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<Article> ArticleChanged { get; set; }
+
+    [Parameter]
+    public bool AddingSource { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> AddingSourceChanged { get; set; }
+
+    [SupplyParameterFromForm]
+    private Link FormLink { get; set; } = new();
+
+    private async Task HandleSubmit()
+    {
+        ArgumentNullException.ThrowIfNull(FormLink);
+        ArgumentNullException.ThrowIfNull(FormLink.Url);
+        ArgumentNullException.ThrowIfNull(Article);
+        FormLink.ArticleId = Article.Id;
+        // Validate URL here
+        Link? createdLink = await LinkService.PostLink(FormLink);
+        if (createdLink != null)
+        {
+            Article.Links.Add(createdLink);
+            await ArticleChanged.InvokeAsync(Article);
+
+            AddingSource = false;
+            await AddingSourceChanged.InvokeAsync(AddingSource);
+        }
+    }
+}

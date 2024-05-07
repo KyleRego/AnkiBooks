@@ -23,8 +23,6 @@ else
         @ondragleave:preventDefault
         @ondrop="HandleDrop">
 
-    @if (ReadMode == false)
-    {
     <div class="float-right">
         <div class="mb-1 ml-1 p-1 border-primary-thin d-flex flex-row justify-content-between align-items-center">
             <div class="w-5 h-5" role="button"
@@ -44,7 +42,6 @@ else
             </div>
         </div>
     </div>
-    }
 
     <RenderMarkdown Text="@MarkdownContent.Text" />
 </div>
@@ -59,9 +56,6 @@ else
 
     [Parameter]
     public EventCallback<OrderedElementsContainer<ArticleElement>> ElementsContainerChanged { get; set; }
-
-    [CascadingParameter(Name="ReadMode")]
-    public bool ReadMode { get; set; }
 
     public bool Editing { get; set; } = false;
 

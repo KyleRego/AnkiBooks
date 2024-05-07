@@ -1,0 +1,75 @@
+@using AnkiBooks.ApplicationCore.Entities
+
+<div class="my-4 mr-4 d-flex justify-content-start">
+    <div class="mr-12">
+        <div class="pl-4 d-flex justify-content-start align-items-center">
+            @if (editingTitle == false)
+            {
+                <div class="font-size-3xl pr-4">
+                    @Article.Title
+                </div>
+
+                <div class="w-5 h-5" role="button" @onclick="StartEditingTitle">
+                    <Edit />
+                </div>
+            }
+            else
+            {
+                <EditTitle @bind-Article:get="@Article"
+                            @bind-Article:set="@ArticleChanged"
+                            @bind-EditingTitle="editingTitle" />
+            }
+        </div>
+    </div>
+
+</div>
+
+<div class="px-4">
+    <ul class="pl-4 list-style-inside list-style-type-disk">
+        @foreach(Link link in Article.Links)
+        {
+            <li>
+                @link.Url
+            </li>
+        }     
+    </ul>
+</div>
+
+<div class="p-4">
+@if (addingSource == false)
+{
+    <div    role="button" @onclick="StartAddingSource"
+            class="d-flex flex-row justify-content-start align-items-center">
+        <div class="w-4 h-4"><Plus /></div>
+        <div class="pl-2">Add source</div>
+    </div>
+}
+else
+{
+    <NewArticleSource @bind-Article:get="@Article"
+                @bind-Article:set="@ArticleChanged"
+                @bind-AddingSource="addingSource" />
+}
+</div>
+
+@code {
+    [Parameter]
+    public Article Article { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<Article?> ArticleChanged { get; set; }
+
+    private bool editingTitle = false;
+
+    private void StartEditingTitle()
+    {
+        editingTitle = true;
+    }
+
+    private bool addingSource = false;
+
+    private void StartAddingSource()
+    {
+        addingSource = true;
+    }
+}

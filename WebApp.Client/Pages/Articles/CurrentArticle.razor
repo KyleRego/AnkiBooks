@@ -26,10 +26,7 @@
             <div>
                 @if (elements.Count == 0)
                 {
-                    @if (ReadMode == false)
-                    {
-                        <NewArticleElement @bind-ElementsContainer="@ElementsContainer" OrdinalPosition="@(0)" />
-                    }
+                    <NewArticleElement @bind-ElementsContainer="@ElementsContainer" OrdinalPosition="@(0)" />
                 }
                 else
                 {
@@ -80,7 +77,4 @@
     {
         ElementsContainer = new(Article.OrderedElements());
     }
-
-    [CascadingParameter]
-    public bool ReadMode { get; set; }
 }

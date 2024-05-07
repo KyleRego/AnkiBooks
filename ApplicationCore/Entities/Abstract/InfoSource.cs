@@ -12,5 +12,11 @@ public abstract class InfoSource : EntityBase
     [JsonIgnore]
     public ApplicationUser? User { get; set; }
 
+    [ForeignKey(nameof(Article))]
+    public string? ArticleId { get; set; }
+
+    [JsonIgnore]
+    public Article? Article { get; set; }
+
     public bool Complete { get; set; }
 }

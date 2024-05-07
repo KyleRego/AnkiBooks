@@ -1,0 +1,11 @@
+.list-style-inside {
+    list-style: inside;
+}
+
+.list-style-type-disc {
+    list-style-type: disc;
+}
+
+.list-style-type-plus {
+    list-style-type: "+";
+}

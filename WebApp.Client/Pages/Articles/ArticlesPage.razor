@@ -31,62 +31,19 @@
         </CascadingValue>
     </div>
 
-    <div class="w-100">
-        <div class="my-4 mr-4 d-flex justify-content-between">
-            <div class="pl-4">
-                @if (currentArticle != null)
-                {
-                    <div class="pl-4 d-flex justify-content-start align-items-center">
-                        @if (editingTitle == false)
-                        {
-                            <div class="pr-2">
-                                @currentArticle.Title
-                            </div>
+    @if (currentArticle != null)
+    {
+        <div class="w-100">
+            <ArticleHeader @bind-Article="@currentArticle" />
 
-                            <div class="w-5 h-5" role="button" @onclick="EditTitle">
-                                <Edit />
-                            </div>
-                        }
-                        else
-                        {
-                            <EditTitle StartingArticle="@currentArticle" @bind-EditingTitle="editingTitle" />
-                        }
-                    </div>
-                }
-            </div>
-
-            <div class="pr-4">
-                @if (ReadMode == false)
-                {
-                    <span role="button" @onclick="StartReadMode">Read mode</span>
-                }
-                else
-                {
-                    <span role="button" @onclick="EndReadMode">Edit mode</span>
-                }
-            </div>
+            <CurrentArticle Article="@currentArticle" />
         </div>
-
-        <CascadingValue Value="@ReadMode" Name="ReadMode">
-            <div>
-                @if (currentArticle != null)
-                {
-                    <CurrentArticle Article="@currentArticle" />
-                }
-            </div>
-        </CascadingValue>
-    </div>
+    }
 </div>
 
 @code {
     [Parameter]
     public string? Id { get; set; }
-
-    public bool ReadMode { get; set; } = false;
-
-    private void StartReadMode() => ReadMode = true;
-
-    private void EndReadMode() => ReadMode = false;
 
     private void ToggleArticlesSidebar()
     {
@@ -103,7 +60,6 @@
     {
         if (Id == null) return;
         // TODO: Retrieve random article using a spaced repetition algorithm
-        editingTitle = false;
 
         persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
 
@@ -129,12 +85,5 @@
     void IDisposable.Dispose()
     {
         persistingSubscription.Dispose();
-    }
-
-    private bool editingTitle = false;
-
-    private void EditTitle()
-    {
-        editingTitle = true;
     }
 }

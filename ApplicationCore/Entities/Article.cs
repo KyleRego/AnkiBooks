@@ -37,4 +37,6 @@ public class Article : EntityBase
             .OrderBy(item => item.OrdinalPosition)
             .ToList();
     }
+
+    public List<Link> Links { get; set; } = [];
 }

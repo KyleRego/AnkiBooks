@@ -3,11 +3,11 @@
 
 @inject IUserArticleService UserArticleService
 
-<EditForm Model="Article" OnValidSubmit="SubmitForm">
+<EditForm Model="FormArticle" OnValidSubmit="SubmitForm">
     <div class="d-flex flex-row justify-content-start">
-        <InputText @bind-Value="@Article.Title" />
+        <InputText @bind-Value="@FormArticle.Title" />
         <button type="submit" class="ml-2">
-            Submit
+            Update title
         </button>
     </div>
 </EditForm>
@@ -20,14 +20,17 @@
     public EventCallback<bool> EditingTitleChanged { get; set; }
 
     [Parameter]
-    public Article StartingArticle { get; set; } = null!;
+    public Article Article { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<Article> ArticleChanged { get; set; }
 
     [SupplyParameterFromForm]
-    public Article Article { get; set; } = null!;
+    public Article FormArticle { get; set; } = null!;
 
     protected override void OnInitialized()
     {
-        Article = StartingArticle;
+        FormArticle = Article;
     }
 
     private async Task SubmitForm()
@@ -35,6 +38,10 @@
         ArgumentNullException.ThrowIfNull(Article.Title);
 
         Article? updatedArticle = await UserArticleService.PatchUserArticle(Article);
+        ArgumentNullException.ThrowIfNull(updatedArticle);
+
+        Article = updatedArticle;
+        await ArticleChanged.InvokeAsync(Article);
 
         EditingTitle = false;
         await EditingTitleChanged.InvokeAsync(EditingTitle);

@@ -25,6 +25,7 @@ public class UserArticleRepository(ApplicationDbContext dbContext) : IUserArticl
     public async Task<Article?> GetArticleAsync(string userId, string articleId)
     {
         return await _dbContext.Articles
+                    .Include(a => a.Links)
                     .Include(a => a.Decks)
                     .ThenInclude(d => d.BasicNotes)
                     .Include(a => a.Decks)
