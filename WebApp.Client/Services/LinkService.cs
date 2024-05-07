@@ -10,7 +10,7 @@ public class LinkService(HttpClient httpClient) : HttpServiceBase(httpClient), I
 {
     public async Task<List<Link>?> GetLinks()
     {
-        HttpRequestMessage request = new(HttpMethod.Get, $"api/Links");
+        HttpRequestMessage request = new(HttpMethod.Get, "api/Links");
         request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
 
         HttpResponseMessage response = await _httpClient.SendAsync(request);
@@ -22,7 +22,23 @@ public class LinkService(HttpClient httpClient) : HttpServiceBase(httpClient), I
 
     public async Task<Link?> PostLink(Link link)
     {
-        HttpRequestMessage request = new(HttpMethod.Post, $"api/Links")
+        HttpRequestMessage request = new(HttpMethod.Post, "api/Links")
+        {
+            Content = new StringContent(JsonSerializer.Serialize(link),
+                                        new MediaTypeHeaderValue("application/json"))
+        };
+        request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
+
+        HttpResponseMessage response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+
+        string responseBody = await response.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<Link>(responseBody, _jsonOptions);
+    }
+
+    public async Task<Link?> PutLink(Link link)
+    {
+        HttpRequestMessage request = new(HttpMethod.Put, $"api/Links/{link.Id}")
         {
             Content = new StringContent(JsonSerializer.Serialize(link),
                                         new MediaTypeHeaderValue("application/json"))

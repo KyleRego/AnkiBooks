@@ -23,4 +23,11 @@ public class LinkRepository(ApplicationDbContext dbContext) : ILinkRepository
         await _dbContext.SaveChangesAsync();
         return link;
     }
+
+    public async Task<Link> UpdateLinkAsync(Link link)
+    {
+        _dbContext.Entry(link).State = EntityState.Modified;
+        await _dbContext.SaveChangesAsync();
+        return link;
+    }
 }

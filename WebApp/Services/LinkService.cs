@@ -22,4 +22,9 @@ public class LinkService( ILinkRepository repository,
     {
         throw new NotImplementedException();
     }
+
+    public Task<Link?> PutLink(Link link)
+    {
+        throw new NotImplementedException();
+    }
 }

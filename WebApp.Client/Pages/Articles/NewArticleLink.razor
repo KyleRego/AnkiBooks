@@ -4,11 +4,27 @@
 @inject ILinkService LinkService
 
 <EditForm Model="FormLink" OnValidSubmit="HandleSubmit">
-    <div class="d-flex flex-row justify-content-start">
-        <InputText @bind-Value="FormLink.Url" />
-        <button type="submit" class="ml-2">
-            Add source
-        </button>
+    <div>
+        <div class="d-flex justify-content-center">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+        </div>
+
+        <div class="d-flex flex-row justify-content-start">
+            <div>
+                <label>URL:</label>
+                <InputText @bind-Value="FormLink.Url" />
+            </div>
+
+            <div>
+                <label>Name:</label
+                <InputText @bind-Value="FormLink.Name" />
+            </div>
+
+            <button type="submit" class="ml-2">
+                Create source
+            </button>
+        </div>
     </div>
 </EditForm>
 

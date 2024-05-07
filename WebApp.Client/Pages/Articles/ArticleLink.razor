@@ -1,0 +1,34 @@
+@using AnkiBooks.ApplicationCore.Entities
+
+@if (editing == false)
+{
+<div class="d-flex flex-row justify-content-start align-items-center">
+    <a href="@Link.Url" class="pr-2">
+        @(Link.Name ?? Link.Url)
+    </a>
+    <div role="button" class="w-4 h-4" @onclick="StartEditing">
+        <Edit />
+    </div>
+</div>
+}
+else
+{
+    <EditArticleLink @bind-Link:get="Link"
+                        @bind-Link:set="LinkChanged"
+                        @bind-Editing="editing" />
+}
+
+@code {
+    [Parameter]
+    public Link Link { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<Link> LinkChanged { get; set; }
+
+    private bool editing = false;
+
+    private void StartEditing()
+    {
+        editing = true;
+    }
+}

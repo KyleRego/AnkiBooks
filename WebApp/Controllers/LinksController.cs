@@ -38,4 +38,21 @@ public class LinksController(ILinkRepository repository) : ControllerBase
 
         return await _repository.InsertLinkAsync(link);
     }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<Link>> Update(string id, Link link)
+    {
+        string? currentUserId = CurrentUserId();
+        if (currentUserId == null) Forbid();
+        ArgumentNullException.ThrowIfNull(currentUserId);
+
+        if (link.UserId != currentUserId) Forbid();
+
+        if (id != link.Id)
+        {
+            return BadRequest();
+        }
+
+        return await _repository.UpdateLinkAsync(link);
+    }
 }
