@@ -6,7 +6,7 @@
     <a href="@Link.Url" class="pr-2">
         @(Link.Name ?? Link.Url)
     </a>
-    <div role="button" class="w-4 h-4" @onclick="StartEditing">
+    <div role="button" title="Edit source" class="w-4 h-4" @onclick="StartEditing">
         <Edit />
     </div>
 </div>
