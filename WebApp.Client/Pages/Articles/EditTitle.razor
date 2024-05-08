@@ -5,9 +5,11 @@
 
 <EditForm Model="FormArticle" OnValidSubmit="SubmitForm">
     <div class="d-flex flex-row justify-content-start">
-        <InputText @bind-Value="@FormArticle.Title" />
+
+        <InputText class="flex-grow-1" @bind-Value="@FormArticle.Title" />
+
         <button type="submit" class="ml-2">
-            Update title
+            Update article title
         </button>
     </div>
 </EditForm>

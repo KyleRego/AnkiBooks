@@ -1,17 +1,21 @@
 @using AnkiBooks.ApplicationCore.Entities
 
-<div class="border-primary p-4">
+<div class="border-primary pt-4 px-4 pb-2 w-100">
     <EditForm Model="Deck" OnValidSubmit="SubmitForm">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <div class="d-flex flex-column">
-            <InputText @bind-Value="@Deck.Name" class="mb-2" />
+            <div class="mb-2 d-flex justify-content-start align-items-center">
+                <label class="mr-2">Name:</label>
+                <InputText class="flex-grow-1" @bind-Value="@Deck.Name" />
+            </div>
 
-            <InputTextArea @bind-Value="@Deck.Description" class="mb-2" />
+            <label class="mb-2">Description:</label>
+            <InputTextArea @bind-Value="@Deck.Description" class="mb-2" rows="5" />
 
             <div class="d-flex justify-content-center">
                 <button type="submit" class="ml-2">
-                    Submit
+                    @SubmitButtonText()
                 </button>
             </div>
         </div>
@@ -32,7 +36,7 @@
 
     private string SubmitButtonText()
     {
-        return EditingExisting ? "Update" : "Create";
+        return EditingExisting ? "Update deck" : "Create deck";
     }
 
     [Parameter]

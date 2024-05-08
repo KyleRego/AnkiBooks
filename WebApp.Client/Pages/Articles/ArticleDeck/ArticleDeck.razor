@@ -3,50 +3,40 @@
 @using AnkiBooks.WebApp.Client.Pages.Articles.EditArticleElement
 @using AnkiBooks.WebApp.Client.Pages.Articles.ArticleDeck.DeckCard
 
-<div class="">
-    <div class="pl-7 d-flex flex-row justify-content-around align-items-center mb-4">
-        <div class="mb-2">
-            @if (Editing == true)
-            {
-                <EditDeck StartingDeck="@Deck" @bind-Editing="@Editing" />
-            }
-            else
-            {
+<div class="mb-4">
+    @if (Editing == true)
+    {
+        <EditDeck StartingDeck="@Deck" @bind-Editing="@Editing" />
+    }
+    else
+    {
+        <div class="border-primary p-4">
+            <div class="d-flex flex-row justify-content-center align-items-baseline mb-4">
+                <div class="mr-4 font-size-3xl">
+                    @Deck.Name
+                </div>
+
+                <div class="mr-4">
+                    @(Cards.Count) cards
+                </div>
+
                 <div>
-                    <div class="d-flex flex-row justify-content-center mb-2">
-                        <div class="btn btn-primary d-flex justify-content-start align-items-center"
-                                role="button" @onclick="BeginEditing">
-                            <div class="mr-2">
-                                Edit
-                            </div>
-                            <div class="w-5 h-5" >
-                                <Edit />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="">
-                        <div class="d-flex flex-row justify-content-center align-items-end mb-4">
-                            <div class="mr-4 font-size-3xl">
-                                @Deck.Name
-                            </div>
-
-                            <div>
-                                @(Cards.Count) cards
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-center">
-                            <p class="text-center">
-                                @Deck.Description    
-                            </p>
-                        </div>
+                    <div class="w-5 h-5" role="button" title="Edit deck" @onclick="BeginEditing" >
+                        <Edit />
                     </div>
                 </div>
-            }
-        </div>
-    </div>
+            </div>
 
+            <div class="d-flex justify-content-center">
+                <p class="text-center">
+                    @Deck.Description    
+                </p>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="">
     @if (cardsRevealed == true)
     {
         <div class="d-flex flex-row justify-content-around align-items-center flex-wrap mb-4">

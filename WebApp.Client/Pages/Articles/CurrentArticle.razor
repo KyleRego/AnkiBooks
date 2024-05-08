@@ -37,11 +37,6 @@
                         ArticleElement element = elements[j];
 
                         <div class="border-bottom-primary pb-4 @(j != 0 ? "border-top-primary pt-4" : "")">
-                            <div class="float-right pt-2 pr-2">
-                                <div role="button" class="w-5 h-5">
-                                    <Gear />
-                                </div>
-                            </div>
                             @switch(element)
                             {
                                 case MarkdownContent mdContent:
