@@ -1,0 +1,115 @@
+@using AnkiBooks.ApplicationCore.Entities
+
+@using AnkiBooks.WebApp.Client.Pages.Articles.Decks.Cards
+
+@if (Editing == true)
+{
+    <EditDeck StartingDeck="@Deck" @bind-Editing="@Editing" />
+}
+else
+{
+    <div class="d-flex flex-row justify-content-start align-items-center">
+        <div class="font-size-2xl mr-4">
+            @Deck.Name
+        </div>
+
+        <div class="w-5 h-5 flex-shrink-0" role="button" title="Edit deck" @onclick="BeginEditing" >
+            <Edit />
+        </div>
+    </div>
+
+    @if (!String.IsNullOrWhiteSpace(@Deck.Description))
+    {
+        <p class="my-4">
+            @Deck.Description    
+        </p>
+    }
+
+    <div class="my-4">
+        @(Cards.Count) cards
+    </div>
+
+    <div class="my-4">
+    @if (cardsRevealed == false)
+    {
+        <button class="btn btn-primary m-auto d-block" type="button" title="Show cards" @onclick="ShowCards">    
+            <div class="d-flex flex-row justify-content-start align-items-center">
+                <div class="mr-2">
+                    Show cards
+                </div>
+                <div class="w-5 h-5">
+                    <ArrowDownSquareStack />
+                </div>
+            </div>
+        </button>
+    }
+    else
+    {
+        <button class="btn btn-primary m-auto d-block" type="button" title="Hide cards" @onclick="HideCards">    
+            <div class="d-flex flex-row justify-content-start align-items-center">
+                <div class="mr-2">
+                    Hide cards
+                </div>
+                <div class="w-5 h-5">
+                    <ArrowUpSquareStack />
+                </div>
+            </div>
+        </button>
+    }
+    </div>
+}
+
+@if (cardsRevealed == true)
+{
+    <div class="d-flex flex-row justify-content-around align-items-center flex-wrap">
+        @for (int i = 0; i < Cards.Count; i++)
+        {
+            Card card = Cards[i];
+
+            <div class="mb-4">
+                <CardRoot Card="@card" />                
+            </div>
+        }
+    </div>
+}
+
+<div class="d-flex flex-row justify-content-center">
+    <NewCard DeckId="@Deck.Id" @bind-Cards="@Cards" />
+</div>
+
+@code {
+    [Parameter]
+    public Deck Deck { get; set; } = null!;
+
+    public List<Card> Cards { get; set; } = [];
+
+    protected override void OnParametersSet()
+    {
+        Cards = Deck.Cards();
+    }
+
+    [Parameter]
+    public OrderedElementsContainer<ArticleElement> ElementsContainer { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<OrderedElementsContainer<ArticleElement>> ElementsContainerChanged { get; set; }
+
+    public bool Editing { get; set; } = false;
+
+    private void BeginEditing()
+    {
+        Editing = true;
+    }
+    
+    private bool cardsRevealed = true;
+
+    private void ShowCards()
+    {
+        cardsRevealed = true;
+    }
+
+    private void HideCards()
+    {
+        cardsRevealed = false;
+    }
+}

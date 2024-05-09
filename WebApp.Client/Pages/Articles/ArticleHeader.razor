@@ -59,6 +59,11 @@ else
     [Parameter]
     public EventCallback<Article?> ArticleChanged { get; set; }
 
+    protected override void OnParametersSet()
+    {
+        editingTitle = false;
+    }
+
     private bool editingTitle = false;
 
     private void StartEditingTitle()

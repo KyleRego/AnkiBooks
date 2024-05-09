@@ -53,6 +53,8 @@ public class UserArticlesController(IUserArticleRepository repository,
     [HttpPatch("{articleId}")]
     public async Task<ActionResult<Article>> PatchArticle(string articleId, Article article)
     {
+        logger.LogInformation(articleId);
+        logger.LogInformation(article.Id);
         if (articleId != article.Id) return BadRequest();
         string? userId = CurrentUserId();
         if (userId == null) return BadRequest("User ID not in claims");

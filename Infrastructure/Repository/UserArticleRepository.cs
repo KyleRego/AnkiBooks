@@ -36,6 +36,7 @@ public class UserArticleRepository(ApplicationDbContext dbContext) : IUserArticl
 
     public async Task<Article> InsertArticleAsync(string userId, Article article)
     {
+        // Should userId be set outside of this?
         article.UserId = userId;
         _dbContext.Articles.Add(article);
         await _dbContext.SaveChangesAsync();
@@ -50,6 +51,7 @@ public class UserArticleRepository(ApplicationDbContext dbContext) : IUserArticl
 
     public async Task<Article> UpdateArticleAsync(Article article)
     {
+        ArgumentNullException.ThrowIfNull(article.UserId);
         _dbContext.Entry(article).State = EntityState.Modified;
         await _dbContext.SaveChangesAsync();
         return article;

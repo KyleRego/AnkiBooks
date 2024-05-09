@@ -6,9 +6,8 @@
 @using AnkiBooks.ApplicationCore.Interfaces
 @using AnkiBooks.ApplicationCore.Services
 
-@using AnkiBooks.WebApp.Client.Pages.Articles.MarkdownElement
-@using AnkiBooks.WebApp.Client.Pages.Articles.ArticleDeck
-@using AnkiBooks.WebApp.Client.Pages.Articles.NewArticleElement
+@using AnkiBooks.WebApp.Client.Pages.Articles.MarkdownContents
+@using AnkiBooks.WebApp.Client.Pages.Articles.Decks
 
 @inject IUserArticleService UserArticleService
 @inject ILogger<CurrentArticle> Logger
@@ -40,12 +39,12 @@
                             @switch(element)
                             {
                                 case MarkdownContent mdContent:
-                                    <ShowMarkdown   MarkdownContent="@mdContent"
+                                    <MarkdownRoot   MarkdownContent="@mdContent"
                                             @bind-ElementsContainer="@ElementsContainer" />
                                     break;
 
                                 case Deck deck:
-                                    <ArticleDeck  Deck="@deck" @bind-ElementsContainer="@ElementsContainer" />
+                                    <DeckRoot  Deck="@deck" @bind-ElementsContainer="@ElementsContainer" />
                                     break;
 
                                 default:
