@@ -80,6 +80,10 @@
     padding-right: 1.75rem;
 }
 
+.pl-8 {
+    padding-left: 2rem;
+}
+
 .px-8 {
     padding-left: 2rem;
     padding-right: 2rem;

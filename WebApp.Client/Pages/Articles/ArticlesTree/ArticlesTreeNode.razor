@@ -47,6 +47,7 @@
 
         if (CurrentArticle != null && CurrentArticle.Id == Article.Id)
         {
+            CurrentArticle.ChildArticles = Article.ChildArticles;
             Article = CurrentArticle;
         }
 

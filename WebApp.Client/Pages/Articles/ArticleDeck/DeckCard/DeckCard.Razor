@@ -19,17 +19,20 @@
 }
 else
 {
-    <CardHeader @bind-EditingCard="editingCard" />
-    @switch(Card)
-    {
-        case BasicNote bn:
-            <DeckBasicNote BasicNote="@bn" AnswerRevealed="answerRevealed" />
-            break;
+    <div class="d-flex flex-row">
+        @switch(Card)
+        {
+            case BasicNote bn:
+                <DeckBasicNote BasicNote="@bn" AnswerRevealed="answerRevealed" />
+                break;
 
-        case ClozeNote cn:
-            <DeckClozeNote ClozeNote="@cn" AnswerRevealed="answerRevealed" />
-            break;
-    }
+            case ClozeNote cn:
+                <DeckClozeNote ClozeNote="@cn" AnswerRevealed="answerRevealed" />
+                break;
+        }
+
+        <CardRightSide @bind-EditingCard="editingCard" />
+    </div>
     <CardFooter Card="@Card" @bind-AnswerRevealed="answerRevealed" />
 }
 

@@ -14,7 +14,7 @@
     font-size: 60px;
 }
 
-@media (max-width: 640px) {
+@media (min-width: 640px) {
     .sm\:font-size-4xl {
         font-size: 36px;
     }

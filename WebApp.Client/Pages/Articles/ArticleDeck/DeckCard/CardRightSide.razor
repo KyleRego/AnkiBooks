@@ -1,0 +1,19 @@
+<div class="d-flex flex-column justify-content-start">
+    <div role="button" title="Edit card" class="w-5 h-5" @onclick="StartEditing" >
+        <Edit />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public bool EditingCard { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> EditingCardChanged { get; set; }
+
+    private async Task StartEditing()
+    {
+        EditingCard = true;
+        await EditingCardChanged.InvokeAsync(EditingCard);
+    }
+}
