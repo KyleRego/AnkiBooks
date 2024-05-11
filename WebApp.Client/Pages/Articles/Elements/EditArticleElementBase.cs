@@ -21,4 +21,10 @@ public class EditArticleElementBase<T> : ComponentBase where T : ArticleElement
 
     [Parameter]
     public required EventCallback<bool> EditingChanged { get; set; }
+
+    protected async Task Cancel()
+    {
+        Editing = false;
+        await EditingChanged.InvokeAsync(Editing);
+    }
 }

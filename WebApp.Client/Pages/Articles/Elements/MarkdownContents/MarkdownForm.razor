@@ -10,6 +10,11 @@
 
 <div id="@ContainerDomId">
     <div class="d-flex flex-column">
+        <div class="mb-1 d-flex justify-content-end">
+            <button type="button" @onclick="Cancel">
+                Cancel
+            </button>
+        </div>
 
         <InputTextArea class="border-secondary mb-2" @bind-Value="ArticleElement.Text" rows="5"/>
 

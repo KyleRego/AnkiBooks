@@ -9,7 +9,8 @@
 
 <DeckForm  InitialArticleElement="@InitialArticleElement()"
             EditingExisting="false"
-            ParentSubmitMethod="@SubmitForm" />
+            ParentSubmitMethod="@SubmitForm"
+            ParentCancelMethod="@Cancel" />
 
 @code {
     private async Task SubmitForm(Deck newDeck)

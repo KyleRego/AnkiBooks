@@ -41,4 +41,10 @@ public class NewArticleElementBase<T> : ComponentBase where T : ArticleElement, 
         DropDownItemSelected = null;
         await DropDownItemSelectedChanged.InvokeAsync(DropDownItemSelected);
     }
+
+    protected async Task Cancel()
+    {
+        DropDownItemSelected = null;
+        await DropDownItemSelectedChanged.InvokeAsync(DropDownItemSelected);
+    }
 }

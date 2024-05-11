@@ -20,16 +20,24 @@ public class ArticleElementFormBase<T> : ComponentBase where T : ArticleElement
     [Parameter]
     public bool EditingExisting { get; set; }
 
+    protected virtual string SubmitButtonText()
+    {
+        return EditingExisting ? "Update" : "Create";
+    }
+
     [Parameter]
     public required Func<T, Task> ParentSubmitMethod { get; set; }
+
+    [Parameter]
+    public required Func<Task> ParentCancelMethod { get; set; }
 
     protected async Task SubmitForm()
     {
         await ParentSubmitMethod.Invoke(ArticleElement);
     }
 
-    protected virtual string SubmitButtonText()
+    protected async Task Cancel()
     {
-        return EditingExisting ? "Update" : "Create";
+        await ParentCancelMethod.Invoke();
     }
 }

@@ -4,11 +4,17 @@
 
 @inherits ArticleElementFormBase<Deck>
 
-<div class="border-primary pt-4 px-4 pb-2 w-100">
+<div class="border-primary py-2 px-4 w-100">
     <EditForm Model="ArticleElement" OnValidSubmit="SubmitForm">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <div class="d-flex flex-column">
+            <div class="mb-1 d-flex justify-content-end">
+                <button type="button" @onclick="Cancel">
+                    Cancel
+                </button>
+            </div>
+
             <div class="mb-2 d-flex justify-content-start align-items-center">
                 <label class="mr-2">Name:</label>
                 <InputText class="flex-grow-1" @bind-Value="@ArticleElement.Name" />
@@ -27,7 +33,7 @@
 </div>
 
 @code {
-    private string SubmitButtonText()
+    protected override string SubmitButtonText()
     {
         return EditingExisting ? "Update deck" : "Create deck";
     }
