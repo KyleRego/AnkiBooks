@@ -1,20 +1,16 @@
-@using System.ComponentModel.DataAnnotations
-@using System.Text.Json
+using Microsoft.AspNetCore.Components;
 
-@using AnkiBooks.ApplicationCore.Entities
-@using AnkiBooks.ApplicationCore.Enums
-@using AnkiBooks.ApplicationCore.Interfaces
-@using AnkiBooks.ApplicationCore.Services
+using AnkiBooks.ApplicationCore.Entities;
+using AnkiBooks.ApplicationCore.Services;
+using AnkiBooks.ApplicationCore.Enums;
 
-@inject ILogger<NewClozeNote> Logger
-@inject ICardService CardService
+namespace AnkiBooks.WebApp.Client.Pages.Articles.Decks.Cards;
 
-<ClozeNoteForm  StartingCard="@StartingClozeNote()"
-                EditingExisting="false"
-                ParentSubmitMethod="@SubmitForm"
-                ParentCancelMethod="@Cancel" />
+public class NewCardBase<T> : ComponentBase where T : Card, new()
+{
+    [Inject]
+    public required ICardService CardService { get; set; }
 
-@code {
     [Parameter]
     public string DeckId { get; set; } = null!;
 
@@ -30,7 +26,7 @@
     [Parameter]
     public EventCallback<List<Card>> CardsChanged { get; set; }
 
-    private ClozeNote StartingClozeNote()
+    protected T StartingCard()
     {
         return new()
         {
@@ -38,12 +34,11 @@
         };
     }
 
-    private async Task SubmitForm(ClozeNote newClozeNote)
+    protected async Task SubmitForm(T newCard)
     {
-        ArgumentNullException.ThrowIfNull(newClozeNote.Text);
-        ArgumentNullException.ThrowIfNull(newClozeNote.DeckId);
+        ArgumentNullException.ThrowIfNull(newCard.DeckId);
         
-        ClozeNote? createdClozeNote = (ClozeNote?)await CardService.PostCard(newClozeNote);
+        ClozeNote? createdClozeNote = (ClozeNote?)await CardService.PostCard(newCard);
         ArgumentNullException.ThrowIfNull(createdClozeNote);
 
         DropDownItemSelected = null;
@@ -53,7 +48,7 @@
         await CardsChanged.InvokeAsync(Cards);
     }
 
-    private async Task Cancel()
+    protected async Task Cancel()
     {
         DropDownItemSelected = null;
         await DropDownItemSelectedChanged.InvokeAsync(DropDownItemSelected);

@@ -9,9 +9,10 @@
 @inject ILogger<NewBasicNote> Logger
 @inject ICardService CardService
 
-<BasicNoteForm  StartingBasicNote="@StartingBasicNote()"
+<BasicNoteForm  StartingCard="@StartingBasicNote()"
                 EditingExisting="false"
-                ParentSubmitMethod="@SubmitForm" />
+                ParentSubmitMethod="@SubmitForm"
+                ParentCancelMethod="@Cancel" />
 
 @code {
     [Parameter]
@@ -51,5 +52,11 @@
 
         Cards.Add(createdBasicNote);
         await CardsChanged.InvokeAsync(Cards);
+    }
+
+    private async Task Cancel()
+    {
+        DropDownItemSelected = null;
+        await DropDownItemSelectedChanged.InvokeAsync(DropDownItemSelected);
     }
 }

@@ -5,35 +5,11 @@
 @using AnkiBooks.ApplicationCore.Interfaces
 @using AnkiBooks.ApplicationCore.Services
 
-@inject ILogger<EditBasicNote> Logger
-@inject ICardService CardService
+@using AnkiBooks.WebApp.Client.Pages.Articles.Decks.Cards
 
-<BasicNoteForm  StartingBasicNote="@StartingBasicNote"
+@inherits EditCardBase<BasicNote>
+
+<BasicNoteForm  StartingCard="@InitialCard"
                 EditingExisting="true"
                 ParentSubmitMethod="@SubmitForm"
-                @bind-EditingCard:get="@EditingCard"
-                @bind-EditingCard:set="@EditingCardChanged" />
-
-@code {
-    [Parameter]
-    public BasicNote? StartingBasicNote { get; set; }
-
-    [Parameter]
-    public bool EditingCard { get; set; }
-
-    [Parameter]
-    public EventCallback<bool> EditingCardChanged { get; set; }
-
-    private async Task SubmitForm(BasicNote editBasicNote)
-    {
-        ArgumentNullException.ThrowIfNull(editBasicNote.Front);
-        ArgumentNullException.ThrowIfNull(editBasicNote.Back);
-        ArgumentNullException.ThrowIfNull(editBasicNote.DeckId);
-
-        BasicNote? updatedBasicNote = (BasicNote?)await CardService.PutCard(editBasicNote);
-        ArgumentNullException.ThrowIfNull(updatedBasicNote);
-
-        EditingCard = false;
-        await EditingCardChanged.InvokeAsync(EditingCard);
-    }
-}
+                ParentCancelMethod="@Cancel" />

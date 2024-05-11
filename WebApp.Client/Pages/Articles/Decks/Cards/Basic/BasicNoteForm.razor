@@ -1,7 +1,10 @@
+@inherits CardFormBase<BasicNote>
+
 @using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.WebApp.Client.Pages.Articles.Decks.Cards
 
 <div class="w-72 px-2 pt-2 pb-1 border-primary-thin">
-    <EditForm Model="BasicNote" OnValidSubmit="SubmitForm">
+    <EditForm Model="Card!" OnValidSubmit="SubmitForm">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <div class="d-flex flex-column">
@@ -11,9 +14,9 @@
                 </button>
             </div>
 
-            <InputTextArea @bind-Value="BasicNote.Front" id="Front" class="p-2 mb-2" />
+            <InputTextArea @bind-Value="Card.Front" id="Front" class="p-2 mb-2" />
             
-            <InputTextArea @bind-Value="BasicNote.Back" id="Back" class="p-2 mb-1" />
+            <InputTextArea @bind-Value="Card.Back" id="Back" class="p-2 mb-1" />
 
             <div class="d-flex justify-content-center">
                 <button type="submit">
@@ -25,42 +28,8 @@
 </div>
 
 @code {
-    [Parameter]
-    public BasicNote StartingBasicNote { get; set; } = null!;
-
-    protected override void OnInitialized()
-    {
-        BasicNote = StartingBasicNote;
-    }
-
-    [Parameter]
-    public bool EditingExisting { get; set; }
-
     private string SubmitButtonText()
     {
         return EditingExisting ? "Update" : "Create";
-    }
-
-    [Parameter]
-    public Func<BasicNote, Task> ParentSubmitMethod { get; set; } = null!;
-
-    private async Task SubmitForm()
-    {
-        await ParentSubmitMethod.Invoke(BasicNote);
-    }
-
-    [SupplyParameterFromForm]
-    public BasicNote BasicNote { get; set; } = null!;
-
-    [Parameter]
-    public bool EditingCard { get; set; }
-
-    [Parameter]
-    public EventCallback<bool> EditingCardChanged { get; set; }
-
-    private async Task Cancel()
-    {
-        EditingCard = false;
-        await EditingCardChanged.InvokeAsync(EditingCard);
     }
 }

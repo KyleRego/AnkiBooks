@@ -5,34 +5,11 @@
 @using AnkiBooks.ApplicationCore.Interfaces
 @using AnkiBooks.ApplicationCore.Services
 
-@inject ILogger<EditClozeNote> Logger
-@inject ICardService CardService
+@using AnkiBooks.WebApp.Client.Pages.Articles.Decks.Cards
 
-<ClozeNoteForm  StartingClozeNote="@StartingClozeNote"
+@inherits EditCardBase<ClozeNote>
+
+<ClozeNoteForm  StartingCard="@InitialCard"
                 EditingExisting="true"
                 ParentSubmitMethod="@SubmitForm"
-                @bind-EditingCard:get="@EditingCard"
-                @bind-EditingCard:set="@EditingCardChanged" />
-
-@code {
-    [Parameter]
-    public ClozeNote? StartingClozeNote { get; set; }
-
-    [Parameter]
-    public bool EditingCard { get; set; }
-
-    [Parameter]
-    public EventCallback<bool> EditingCardChanged { get; set; }
-
-    private async Task SubmitForm(ClozeNote editClozeNote)
-    {
-        ArgumentNullException.ThrowIfNull(editClozeNote.Text);
-        ArgumentNullException.ThrowIfNull(editClozeNote.DeckId);
-
-        ClozeNote? updatedClozeNote = (ClozeNote?)await CardService.PutCard(editClozeNote);
-        ArgumentNullException.ThrowIfNull(updatedClozeNote);
-
-        EditingCard = false;
-        await EditingCardChanged.InvokeAsync(EditingCard);
-    }
-}
+                ParentCancelMethod="@Cancel" />

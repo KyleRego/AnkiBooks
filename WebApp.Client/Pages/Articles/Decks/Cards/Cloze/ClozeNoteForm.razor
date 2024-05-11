@@ -1,7 +1,10 @@
+@inherits CardFormBase<ClozeNote>
+
 @using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.WebApp.Client.Pages.Articles.Decks.Cards
 
 <div class="w-72 px-2 pt-2 pb-1 border-primary-thin">
-    <EditForm Model="ClozeNote" OnValidSubmit="SubmitForm">
+    <EditForm Model="Card!" OnValidSubmit="SubmitForm">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <div class="d-flex flex-column">
@@ -11,7 +14,7 @@
                 </button>
             </div>
 
-            <InputTextArea @bind-Value="ClozeNote.Text" id="Text" class="p-2 mb-1" />
+            <InputTextArea @bind-Value="Card.Text" id="Text" class="p-2 mb-1" />
 
             <div class="d-flex justify-content-center">
                 <button type="submit">
@@ -23,42 +26,8 @@
 </div>
 
 @code {
-    [Parameter]
-    public ClozeNote StartingClozeNote { get; set; } = null!;
-
-    protected override void OnInitialized()
-    {
-        ClozeNote = StartingClozeNote;
-    }
-
-    [Parameter]
-    public bool EditingExisting { get; set; }
-
     private string SubmitButtonText()
     {
         return EditingExisting ? "Update cloze note" : "Create cloze note";
-    }
-
-    [Parameter]
-    public Func<ClozeNote, Task> ParentSubmitMethod { get; set; } = null!;
-
-    private async Task SubmitForm()
-    {
-        await ParentSubmitMethod.Invoke(ClozeNote);
-    }
-
-    [SupplyParameterFromForm]
-    public ClozeNote ClozeNote { get; set; } = null!;
-
-    [Parameter]
-    public bool EditingCard { get; set; }
-
-    [Parameter]
-    public EventCallback<bool> EditingCardChanged { get; set; }
-
-    private async Task Cancel()
-    {
-        EditingCard = false;
-        await EditingCardChanged.InvokeAsync(EditingCard);
     }
 }

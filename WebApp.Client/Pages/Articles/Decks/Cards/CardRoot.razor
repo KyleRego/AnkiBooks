@@ -8,13 +8,11 @@
     switch(Card)
     {
         case BasicNote bn:
-            <EditBasicNote StartingBasicNote="@bn"
-                            @bind-EditingCard="editingCard" />
+            <EditBasicNote InitialCard="@bn" @bind-EditingCard="editingCard" />
             break;
 
         case ClozeNote cn:
-            <EditClozeNote StartingClozeNote="@cn"
-                            @bind-EditingCard="editingCard" />
+            <EditClozeNote InitialCard="@cn" @bind-EditingCard="editingCard" />
             break;
     }
 }

@@ -30,7 +30,7 @@
 
 @code {
     [Parameter]
-    public Link Link { get; set; }
+    public Link Link { get; set; } = null!;
 
     [Parameter]
     public EventCallback<Link> LinkChanged { get; set; }
