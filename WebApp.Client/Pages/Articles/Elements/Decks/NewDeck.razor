@@ -1,0 +1,24 @@
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Enums
+@using AnkiBooks.ApplicationCore.Interfaces
+@using AnkiBooks.ApplicationCore.Services
+
+@inherits NewArticleElementBase<Deck>
+
+@inject IDeckService DeckService
+
+<DeckForm  InitialArticleElement="@InitialArticleElement()"
+            EditingExisting="false"
+            ParentSubmitMethod="@SubmitForm" />
+
+@code {
+    private async Task SubmitForm(Deck newDeck)
+    {
+        newDeck.OrdinalPosition = OrdinalPosition;
+
+        Deck? createdDeck = await DeckService.PostDeck(newDeck);
+        ArgumentNullException.ThrowIfNull(createdDeck);
+
+        await AddArticleElementToArticle(createdDeck);
+    }
+}

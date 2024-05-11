@@ -1,15 +1,17 @@
 @using AnkiBooks.ApplicationCore.Entities
+
+@inherits ArticleElementFormBase<MarkdownContent>
+
 @inject IJSRuntime JS
 
-<EditForm Model="MarkdownContent" OnValidSubmit="SubmitForm">
+<EditForm Model="ArticleElement" OnValidSubmit="SubmitForm">
 <DataAnnotationsValidator />
 <ValidationSummary />
 
 <div id="@ContainerDomId">
     <div class="d-flex flex-column">
 
-        <InputTextArea class="border-secondary mb-2"
-                        @bind-Value="MarkdownContent.Text" rows="5" />
+        <InputTextArea class="border-secondary mb-2" @bind-Value="ArticleElement.Text" rows="5"/>
 
         <div class="d-flex justify-content-center">
             <button class="btn btn-primary" type="submit">
@@ -22,33 +24,6 @@
 </EditForm>
 
 @code {
-    [Parameter]
-    public MarkdownContent StartingMarkdown { get; set; } = null!;
-
-    protected override void OnInitialized()
-    {
-        MarkdownContent = StartingMarkdown;
-    }
-
-    [Parameter]
-    public bool EditingExisting { get; set; }
-
-    private string SubmitButtonText()
-    {
-        return EditingExisting ? "Update" : "Create";
-    }
-
-    [Parameter]
-    public Func<MarkdownContent, Task> ParentSubmitMethod { get; set; } = null!;
-
-    public async Task SubmitForm()
-    {
-        await ParentSubmitMethod.Invoke(MarkdownContent);
-    }
-
-    [SupplyParameterFromForm]
-    public MarkdownContent MarkdownContent { get; set; } = null!;
-
     private IJSObjectReference? module;
 
     private string ContainerDomId = Guid.NewGuid().ToString();

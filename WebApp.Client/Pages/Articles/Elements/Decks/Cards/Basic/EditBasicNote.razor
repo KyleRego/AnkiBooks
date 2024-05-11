@@ -5,11 +5,11 @@
 @using AnkiBooks.ApplicationCore.Interfaces
 @using AnkiBooks.ApplicationCore.Services
 
-@using AnkiBooks.WebApp.Client.Pages.Articles.Decks.Cards
+@using AnkiBooks.WebApp.Client.Pages.Articles.Elements.Decks.Cards
 
-@inherits EditCardBase<ClozeNote>
+@inherits EditCardBase<BasicNote>
 
-<ClozeNoteForm  StartingCard="@InitialCard"
+<BasicNoteForm  StartingCard="@InitialCard"
                 EditingExisting="true"
                 ParentSubmitMethod="@SubmitForm"
                 ParentCancelMethod="@Cancel" />

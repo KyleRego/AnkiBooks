@@ -1,10 +1,10 @@
 @using AnkiBooks.ApplicationCore.Entities
 
-@using AnkiBooks.WebApp.Client.Pages.Articles.Decks.Cards
+@using AnkiBooks.WebApp.Client.Pages.Articles.Elements.Decks.Cards
 
 @if (Editing == true)
 {
-    <EditDeck StartingDeck="@Deck" @bind-Editing="@Editing" />
+    <EditDeck InitialArticleElement="@Deck" @bind-Editing="@Editing" />
 }
 else
 {

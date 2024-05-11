@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.ApplicationCore.Services;
 
-namespace AnkiBooks.WebApp.Client.Pages.Articles.Decks.Cards;
+namespace AnkiBooks.WebApp.Client.Pages.Articles.Elements.Decks.Cards;
 
 public class EditCardBase<T> : ComponentBase where T : Card
 {
@@ -11,13 +11,13 @@ public class EditCardBase<T> : ComponentBase where T : Card
     public required ICardService CardService { get; set; }
 
     [Parameter]
-    public T? InitialCard { get; set; }
+    public required T InitialCard { get; set; }
 
     [Parameter]
-    public bool EditingCard { get; set; }
+    public required bool EditingCard { get; set; }
 
     [Parameter]
-    public EventCallback<bool> EditingCardChanged { get; set; }
+    public required EventCallback<bool> EditingCardChanged { get; set; }
 
     protected async Task SubmitForm(T editedCard)
     {

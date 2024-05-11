@@ -4,7 +4,7 @@ using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.ApplicationCore.Services;
 using AnkiBooks.ApplicationCore.Enums;
 
-namespace AnkiBooks.WebApp.Client.Pages.Articles.Decks.Cards;
+namespace AnkiBooks.WebApp.Client.Pages.Articles.Elements.Decks.Cards;
 
 public class NewCardBase<T> : ComponentBase where T : Card, new()
 {
@@ -12,19 +12,19 @@ public class NewCardBase<T> : ComponentBase where T : Card, new()
     public required ICardService CardService { get; set; }
 
     [Parameter]
-    public string DeckId { get; set; } = null!;
+    public required string DeckId { get; set; }
 
     [Parameter]
-    public List<Card> Cards { get; set; } = null!;
+    public required List<Card> Cards { get; set; }
 
     [Parameter]
-    public CardType? DropDownItemSelected { get; set; }
+    public required EventCallback<List<Card>> CardsChanged { get; set; }
 
     [Parameter]
-    public EventCallback<CardType?> DropDownItemSelectedChanged { get; set; }
+    public required CardType? DropDownItemSelected { get; set; }
 
     [Parameter]
-    public EventCallback<List<Card>> CardsChanged { get; set; }
+    public required EventCallback<CardType?> DropDownItemSelectedChanged { get; set; }
 
     protected T StartingCard()
     {

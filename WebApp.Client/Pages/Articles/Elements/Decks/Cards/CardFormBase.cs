@@ -1,15 +1,15 @@
 using AnkiBooks.ApplicationCore.Entities;
 using Microsoft.AspNetCore.Components;
 
-namespace AnkiBooks.WebApp.Client.Pages.Articles.Decks.Cards;
+namespace AnkiBooks.WebApp.Client.Pages.Articles.Elements.Decks.Cards;
 
 public class CardFormBase<T> : ComponentBase where T : Card
 {
     [Parameter]
-    public T? StartingCard { get; set; }
+    public required T StartingCard { get; set; }
 
     [SupplyParameterFromForm]
-    public T? Card { get; set; }
+    public required T Card { get; set; }
 
     protected override void OnInitialized()
     {
@@ -17,14 +17,13 @@ public class CardFormBase<T> : ComponentBase where T : Card
     }
 
     [Parameter]
-    public Func<T, Task> ParentSubmitMethod { get; set; } = null!;
+    public required Func<T, Task> ParentSubmitMethod { get; set; }
 
     [Parameter]
-    public Func<Task> ParentCancelMethod { get; set; } = null!;
+    public required Func<Task> ParentCancelMethod { get; set; }
 
     protected async Task SubmitForm()
     {
-        ArgumentNullException.ThrowIfNull(Card);
         await ParentSubmitMethod.Invoke(Card);
     }
 
@@ -34,5 +33,5 @@ public class CardFormBase<T> : ComponentBase where T : Card
     }
 
     [Parameter]
-    public bool EditingExisting { get; set; }
+    public required bool EditingExisting { get; set; }
 }
