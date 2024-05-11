@@ -25,3 +25,11 @@
 .bottom-0 {
     bottom: 0;
 }
+
+.top-4 {
+    top: 1rem;
+}
+
+.right-4 {
+    right: 1rem;
+}

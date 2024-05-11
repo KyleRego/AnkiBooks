@@ -8,21 +8,7 @@
 
 @inherits NewArticleElementBase<MarkdownContent>
 
-@inject IMarkdownContentService MarkdownContentService
-
 <MarkdownForm   InitialArticleElement="@InitialArticleElement()"
                 EditingExisting="false"
                 ParentSubmitMethod="@SubmitForm"
                 ParentCancelMethod="@Cancel"  />
-
-@code {
-    private async Task SubmitForm(MarkdownContent newMarkdownContent)
-    {
-        newMarkdownContent.OrdinalPosition = OrdinalPosition;
-
-        MarkdownContent? createdContent = await MarkdownContentService.PostMarkdownContent(newMarkdownContent);
-        ArgumentNullException.ThrowIfNull(createdContent);
-
-        await AddArticleElementToArticle(createdContent);
-    }
-}

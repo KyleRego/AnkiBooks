@@ -8,20 +8,7 @@
 
 @inherits EditArticleElementBase<Deck>
 
-@inject IDeckService DeckService
-
 <DeckForm   InitialArticleElement="@InitialArticleElement"
             EditingExisting="true"
             ParentSubmitMethod="@SubmitForm"
             ParentCancelMethod="@Cancel"  />
-
-@code {
-    private async Task SubmitForm(Deck editedDeck)
-    {
-        Deck? updatedDeck = await DeckService.PutDeck(editedDeck);
-        ArgumentNullException.ThrowIfNull(updatedDeck);
-
-        Editing = false;
-        await EditingChanged.InvokeAsync(Editing);
-    }
-}

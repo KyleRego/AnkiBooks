@@ -5,21 +5,7 @@
 
 @inherits NewArticleElementBase<Deck>
 
-@inject IDeckService DeckService
-
 <DeckForm  InitialArticleElement="@InitialArticleElement()"
             EditingExisting="false"
             ParentSubmitMethod="@SubmitForm"
             ParentCancelMethod="@Cancel" />
-
-@code {
-    private async Task SubmitForm(Deck newDeck)
-    {
-        newDeck.OrdinalPosition = OrdinalPosition;
-
-        Deck? createdDeck = await DeckService.PostDeck(newDeck);
-        ArgumentNullException.ThrowIfNull(createdDeck);
-
-        await AddArticleElementToArticle(createdDeck);
-    }
-}

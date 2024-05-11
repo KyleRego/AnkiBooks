@@ -8,20 +8,7 @@
 
 @inherits EditArticleElementBase<MarkdownContent>
 
-@inject IMarkdownContentService MarkdownContentService
-
 <MarkdownForm   InitialArticleElement="@InitialArticleElement"
                 EditingExisting="true"
                 ParentSubmitMethod="@SubmitForm"
                 ParentCancelMethod="@Cancel"  />
-
-@code {
-    private async Task SubmitForm(MarkdownContent editedMarkdown)
-    {
-        MarkdownContent? updatedMarkdown = await MarkdownContentService.PutMarkdownContent(editedMarkdown);
-        ArgumentNullException.ThrowIfNull(updatedMarkdown);
-
-        Editing = false;
-        await EditingChanged.InvokeAsync(Editing);
-    }
-}

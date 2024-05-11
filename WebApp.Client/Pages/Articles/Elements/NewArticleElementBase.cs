@@ -3,11 +3,15 @@ using Microsoft.AspNetCore.Components;
 using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.ApplicationCore.Enums;
 using AnkiBooks.ApplicationCore;
+using AnkiBooks.ApplicationCore.Services;
 
 namespace AnkiBooks.WebApp.Client.Pages.Articles.Elements;
 
 public class NewArticleElementBase<T> : ComponentBase where T : ArticleElement, new()
 {
+    [Inject]
+    public required IArticleElementService ArticleElementService { get; set; }
+
     [CascadingParameter(Name="ArticleId")]
     public required string ArticleId { get; set; }
 
@@ -34,9 +38,14 @@ public class NewArticleElementBase<T> : ComponentBase where T : ArticleElement, 
         };
     }
 
-    protected async Task AddArticleElementToArticle(ArticleElement newArtElement)
+    protected async Task SubmitForm(T newArtElement)
     {
-        ElementsContainer.Add(newArtElement);
+        newArtElement.OrdinalPosition = OrdinalPosition;
+
+        T? createdArtElement = (T?)await ArticleElementService.PostArticleElement(newArtElement);
+        ArgumentNullException.ThrowIfNull(createdArtElement);
+
+        ElementsContainer.Add(createdArtElement);
         await ElementsContainerChanged.InvokeAsync(ElementsContainer);
         DropDownItemSelected = null;
         await DropDownItemSelectedChanged.InvokeAsync(DropDownItemSelected);

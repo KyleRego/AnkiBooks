@@ -63,8 +63,7 @@ builder.Services.AddScoped<IUserArticleService, UserArticleService>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<ILinkService, LinkService>();
 builder.Services.AddScoped<IUserIdProvider, UserIdProvider>();
-builder.Services.AddScoped<IMarkdownContentService, MarkdownContentService>();
-builder.Services.AddScoped<IDeckService, DeckService>();
+builder.Services.AddScoped<IArticleElementService, ArticleElementService>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
