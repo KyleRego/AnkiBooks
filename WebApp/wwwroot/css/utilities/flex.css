@@ -10,6 +10,10 @@
     flex-wrap: wrap;
 }
 
+.flex-no-wrap {
+    flex-wrap: nowrap;
+}
+
 .justify-content-around {
     justify-content: space-around;
 }

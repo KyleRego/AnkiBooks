@@ -9,33 +9,49 @@
     }
     else
     {
-        <div class="d-flex justify-content-start align-items-center">
+        <div class="d-flex justify-content-between align-items-center">
             <div class="font-size-3xl pr-4">
                 @Article.Title
             </div>
 
-            <div class="w-5 h-5" role="button" title="Edit article title" @onclick="StartEditingTitle">
-                <Edit />
+            <div class="d-flex flex-row justify-content-start">
+                <div class="w-5 h-5 mr-2" role="button" title="Edit article title" @onclick="StartEditingTitle">
+                    <Edit />
+                </div>
+
+                <div role="button" class="w-5 h-5" title="Options (TODO)">
+                    <Gear />
+                </div>
             </div>
         </div>
     }
 </div>
 
 <div class="px-4">
-    Sources:
+    <div class="mb-2">
+        Sources:
+    </div>
     <ul class="pl-8 list-style-outside list-style-type-disk">
         @foreach(Link l in Article.Links)
         {
             Link link = l;
 
             <li>
-                <ArticleLink @bind-Link="@link" />
+                <div class="d-flex flex-row align-items-center">
+                    <div class="mr-2">
+                        <ArticleLink @bind-Link="@link" />
+                    </div>
+
+                    <div role="button" class="w-5 h-5" title="Options (TODO)">
+                        <Gear />
+                    </div>
+                </div>
             </li>
-        }     
+        }
     </ul>
 </div>
 
-<div class="p-4">
+<div class="px-4 my-2">
 @if (addingSource == false)
 {
     <div    role="button" @onclick="StartAddingSource"

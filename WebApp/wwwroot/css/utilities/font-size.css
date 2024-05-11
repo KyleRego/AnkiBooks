@@ -14,9 +14,17 @@
     font-size: 60px;
 }
 
+.font-size-8xl {
+    font-size: 72px;
+}
+
 @media (min-width: 640px) {
     .sm\:font-size-4xl {
         font-size: 36px;
+    }
+
+    .sm\:font-size-6xl {
+        font-size: 60px;
     }
 }
 

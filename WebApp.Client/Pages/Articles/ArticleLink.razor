@@ -2,20 +2,18 @@
 
 @if (editing == false)
 {
-<div class="d-flex flex-row justify-content-start align-items-center">
+<div class="d-flex flex-row justify-content-start align-items-center" title="@(Link.Name)" >
     <a href="@Link.Url" class="pr-2">
         @(Link.Name ?? Link.Url)
     </a>
-    <div role="button" title="Edit source" class="w-4 h-4" @onclick="StartEditing">
+    <div role="button" title="Edit source" class="w-5 h-5" @onclick="StartEditing">
         <Edit />
     </div>
 </div>
 }
 else
 {
-    <EditArticleLink @bind-Link:get="Link"
-                        @bind-Link:set="LinkChanged"
-                        @bind-Editing="editing" />
+    <EditArticleLink @bind-Link:get="@Link" @bind-Link:set="@LinkChanged" @bind-Editing="@editing" />
 }
 
 @code {

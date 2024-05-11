@@ -37,3 +37,13 @@
 .w-84 {
     width: 22rem;
 }
+
+.w-100-minus-w-64 {
+    width: calc(100% - 16rem);
+}
+
+@media (min-width: 768px) {
+    .md\:w-100-minus-w-64 {
+        width: calc(100% - 16rem);
+    }
+}

@@ -7,7 +7,7 @@ namespace AnkiBooks.ApplicationCore.Entities;
 public class Article : EntityBase
 {
     [Required]
-    public string Title { get; set; } = "New article";
+    public string Title { get; set; } = "";
 
     [Required]
     public bool Public { get; set; } = false;
