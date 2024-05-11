@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 using AnkiBooks.ApplicationCore.Identity;
 using AnkiBooks.ApplicationCore.Services;
+using AnkiBooks.ApplicationCore.Repository;
 
 using AnkiBooks.Infrastructure.Data;
 using AnkiBooks.Infrastructure.Repository;
@@ -13,7 +14,6 @@ using AnkiBooks.WebApp.Components.Account;
 using AnkiBooks.WebApp.Services;
 
 using AnkiBooks.WebApp.Client;
-using AnkiBooks.ApplicationCore.Repository;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

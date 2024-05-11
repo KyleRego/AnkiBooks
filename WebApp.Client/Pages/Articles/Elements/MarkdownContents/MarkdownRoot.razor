@@ -3,13 +3,13 @@
 @using AnkiBooks.ApplicationCore.Services
 
 @using AnkiBooks.WebApp.Client.Services
+@using AnkiBooks.WebApp.Client.Pages.Articles.Elements
 
-@inject DraggedItemHolder<ArticleElement> draggedItemHolder
-@inject IArticleElementService ArticleElementService
+@inherits ArticleElementRootBase<MarkdownContent>
 
 @if (Editing == true)
 {
-    <EditMarkdown InitialArticleElement="@MarkdownContent" @bind-Editing="@Editing" />
+    <EditMarkdown InitialArticleElement="@ArticleElement" @bind-Editing="@Editing" />
 }
 else
 {
@@ -25,7 +25,7 @@ else
         @if (showingOptions == false)
         {
             <div class="d-flex flex-row justify-content-start">
-                <div class="w-5 h-5 mr-2" role="button" title="Edit markdown" @onclick="BeginEditing">
+                <div class="w-5 h-5 mr-2" role="button" title="Edit markdown" @onclick="StartEditing">
                     <Edit />
                 </div>
 
@@ -39,84 +39,12 @@ else
             <div class="position-relative top-4 right-4 px-2 border-primary">
                 <ul>
                     <li class="my-2" draggable="true" @ondrag="HandleDrag">Drag element</li>
-                    <li class="my-2">Delete markdown</li>
+                    <li class="my-2" @onclick="DeleteArticleElement">Delete markdown</li>
                 </ul>
             </div>
         }
     </div>
 
-    <RenderMarkdown Text="@MarkdownContent.Text" />
+    <RenderMarkdown Text="@ArticleElement.Text" />
 </div>
-}
-
-@code {
-    private bool showingOptions = false;
-
-    private void ShowOptions()
-    {
-        showingOptions = true;
-    }
-
-    [Parameter]
-    public MarkdownContent MarkdownContent { get; set; } = null!;
-
-    [Parameter]
-    public OrderedElementsContainer<ArticleElement> ElementsContainer { get; set; } = null!;
-
-    [Parameter]
-    public EventCallback<OrderedElementsContainer<ArticleElement>> ElementsContainerChanged { get; set; }
-
-    public bool Editing { get; set; } = false;
-
-    private void BeginEditing()
-    {
-        Editing = true;
-    }
-
-    private void HandleDrag()
-    {
-        draggedItemHolder.DraggedItem = MarkdownContent;
-    }
-
-    private void HandleDragEnd()
-    {
-        draggedItemHolder.DraggedItem = null;
-    }
-
-    private int nestedDragLevels = 0;
-
-    private void HandleDragEnter()
-    {
-        ArticleElement? draggedItem = draggedItemHolder.DraggedItem;
-
-        if (draggedItem == null) return;
-        if (draggedItem == MarkdownContent) return;
-        nestedDragLevels += 1;
-    }
-
-    private void HandleDragLeave()
-    {
-        ArticleElement? draggedItem = draggedItemHolder.DraggedItem;
-
-        if (draggedItem == null) return;
-        if (draggedItem == MarkdownContent) return;
-        nestedDragLevels -= 1;
-    }
-
-    private async Task HandleDrop()
-    {
-        nestedDragLevels = 0;
-        ArticleElement? droppedItem = draggedItemHolder.DraggedItem;
-
-        if (droppedItem == null) return;
-        if (droppedItem == MarkdownContent) return;
-
-        droppedItem.OrdinalPosition = MarkdownContent.OrdinalPosition;
-
-        ArticleElement? updatedItem = (ArticleElement?)await ArticleElementService.PutArticleElement(droppedItem);
-        ArgumentNullException.ThrowIfNull(updatedItem);
-
-        ElementsContainer.UpdatePosition(droppedItem);
-        await ElementsContainerChanged.InvokeAsync(ElementsContainer);
-    }
 }

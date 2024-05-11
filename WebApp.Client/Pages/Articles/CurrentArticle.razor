@@ -40,17 +40,16 @@
                         <div class="my-4">
                             @switch(element)
                             {
-                                case MarkdownContent mdContent:
-                                    <MarkdownRoot   MarkdownContent="@mdContent"
-                                            @bind-ElementsContainer="@ElementsContainer" />
+                                case MarkdownContent markdown:
+                                    <MarkdownRoot ArticleElement="@markdown" @bind-ElementsContainer="@ElementsContainer" />
                                     break;
 
                                 case Deck deck:
-                                    <DeckRoot  Deck="@deck" @bind-ElementsContainer="@ElementsContainer" />
+                                    <DeckRoot ArticleElement="@deck" @bind-ElementsContainer="@ElementsContainer" />
                                     break;
 
                                 default:
-                                    break;
+                                    throw new ApplicationException();
                             }
                         </div>
 

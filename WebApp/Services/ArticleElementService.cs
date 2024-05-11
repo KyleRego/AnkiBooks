@@ -5,7 +5,7 @@ namespace AnkiBooks.WebApp.Services;
 
 public class ArticleElementService : IArticleElementService
 {
-    public Task DeleteArticleElement(string artElementId)
+    public Task DeleteArticleElement(ArticleElement artElement)
     {
         throw new NotImplementedException();
     }

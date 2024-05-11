@@ -8,5 +8,5 @@ public interface IArticleElementService
 
     public Task<ArticleElement?> PutArticleElement(ArticleElement artElement);
 
-    public Task DeleteArticleElement(string artElementId);
+    public Task DeleteArticleElement(ArticleElement articleElement);
 }

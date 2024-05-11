@@ -2,31 +2,61 @@
 
 @using AnkiBooks.WebApp.Client.Pages.Articles.Elements.Decks.Cards
 
+@using AnkiBooks.WebApp.Client.Pages.Articles.Elements
+
+@inherits ArticleElementRootBase<Deck>
+
+
 @if (Editing == true)
 {
-    <EditDeck InitialArticleElement="@Deck" @bind-Editing="@Editing" />
+    <EditDeck InitialArticleElement="@ArticleElement" @bind-Editing="@Editing" />
 }
 else
 {
-    <div class="d-flex flex-row justify-content-between align-items-center">
+    <div class="@(nestedDragLevels != 0 ? "dragover-highlight" : "")
+                d-flex flex-row justify-content-between align-items-center"
+                @ondragenter="HandleDragEnter"
+                @ondragenter:preventDefault
+                ondragover="event.preventDefault();"
+                @ondragleave="HandleDragLeave"
+                @ondragleave:preventDefault
+                @ondrop="HandleDrop">
         <div class="font-size-2xl mr-4">
-            @Deck.Name
+            @ArticleElement.Name
         </div>
 
-        <div class="w-5 h-5 flex-shrink-0" role="button" title="Edit deck" @onclick="BeginEditing" >
-            <Edit />
-        </div>
+        @if (showingOptions == false)
+        {
+            <div class="d-flex flex-row justify-content-start">
+                <div class="w-5 h-5 mr-2" role="button" title="Edit markdown" @onclick="StartEditing">
+                    <Edit />
+                </div>
+
+                <div role="button" class="w-5 h-5" title="Options" @onclick="ShowOptions">
+                    <Gear />
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="position-relative top-4 right-4 px-2 border-primary">
+                <ul>
+                    <li class="my-2" draggable="true" @ondrag="HandleDrag">Drag element</li>
+                    <li class="my-2" @onclick="DeleteArticleElement">Delete deck</li>
+                </ul>
+            </div>
+        }
     </div>
 
-    @if (!String.IsNullOrWhiteSpace(@Deck.Description))
+    @if (!String.IsNullOrWhiteSpace(@ArticleElement.Description))
     {
         <p class="my-4">
-            @Deck.Description    
+            @ArticleElement.Description    
         </p>
     }
 
     <div class="my-4 d-flex flex-row justify-content-center">
-        <NewCardSelect DeckId="@Deck.Id" @bind-Cards="@Cards" />
+        <NewCardSelect DeckId="@ArticleElement.Id" @bind-Cards="@Cards" />
     </div>
 
     <div class="my-4">
@@ -76,29 +106,13 @@ else
 }
 
 @code {
-    [Parameter]
-    public Deck Deck { get; set; } = null!;
-
     public List<Card> Cards { get; set; } = [];
 
     protected override void OnParametersSet()
     {
-        Cards = Deck.Cards();
+        Cards = ArticleElement.Cards();
     }
 
-    [Parameter]
-    public OrderedElementsContainer<ArticleElement> ElementsContainer { get; set; } = null!;
-
-    [Parameter]
-    public EventCallback<OrderedElementsContainer<ArticleElement>> ElementsContainerChanged { get; set; }
-
-    public bool Editing { get; set; } = false;
-
-    private void BeginEditing()
-    {
-        Editing = true;
-    }
-    
     private bool cardsRevealed = true;
 
     private void ShowCards()

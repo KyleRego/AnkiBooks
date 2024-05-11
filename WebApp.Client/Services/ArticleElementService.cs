@@ -8,9 +8,21 @@ namespace AnkiBooks.WebApp.Client.Services;
 
 public class ArticleElementService(HttpClient httpClient) : HttpServiceBase(httpClient), IArticleElementService
 {
-    public Task DeleteArticleElement(string artElementId)
+    public async Task DeleteArticleElement(ArticleElement artElement)
     {
-        throw new NotImplementedException();
+        switch(artElement)
+        {
+            case MarkdownContent md:
+                await DeleteMarkdownContent(md.Id);
+                return;
+
+            case Deck deck:
+                await DeleteDeck(deck.Id);
+                return;
+
+            default:
+                throw new ApplicationException();
+        }
     }
 
     public async Task<ArticleElement?> PostArticleElement(ArticleElement artElement)
