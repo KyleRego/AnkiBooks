@@ -26,7 +26,7 @@ else
     }
 
     <div class="my-4 d-flex flex-row justify-content-center">
-        <NewCard DeckId="@Deck.Id" @bind-Cards="@Cards" />
+        <NewCardSelect DeckId="@Deck.Id" @bind-Cards="@Cards" />
     </div>
 
     <div class="my-4">
@@ -64,7 +64,7 @@ else
 @if (cardsRevealed == true)
 {
     <div class="my-4 d-flex flex-row justify-content-around align-items-center flex-no-wrap overflow-x-scroll">
-        @for (int i = 0; i < Cards.Count; i++)
+        @for (int i = Cards.Count - 1; i >= 0; i--)
         {
             Card card = Cards[i];
 

@@ -25,7 +25,9 @@
             <div>
                 @if (elements.Count == 0)
                 {
-                    <NewArticleElement @bind-ElementsContainer="@ElementsContainer" OrdinalPosition="@(0)" />
+                    <div class="my-4 d-flex justify-content-center">
+                        <NewArticleElementSelect @bind-ElementsContainer="@ElementsContainer" OrdinalPosition="@(0)" />
+                    </div>
                 }
                 else
                 {
@@ -52,7 +54,9 @@
                             }
                         </div>
 
-                        <NewArticleElement @bind-ElementsContainer="@ElementsContainer" OrdinalPosition="@(j + 1)" />
+                        <div class="my-4 d-flex justify-content-center">
+                            <NewArticleElementSelect @bind-ElementsContainer="@ElementsContainer" OrdinalPosition="@(j + 1)" />
+                        </div>
                     }
                 }
             </div>

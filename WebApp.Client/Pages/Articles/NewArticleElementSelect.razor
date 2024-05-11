@@ -7,13 +7,11 @@
 
 @if (dropDownItemSelected == null)
 {
-    <div class="my-1 d-flex justify-content-center">
-        <InputSelect @bind-Value="dropDownItemSelected" name="new-element">
-            <option value="" selected>New element</option>
-            <option value="@ArticleElementType.Deck">Deck</option>
-            <option value="@ArticleElementType.MarkdownContent">Markdown</option>
-        </InputSelect>
-    </div>
+    <InputSelect @bind-Value="dropDownItemSelected" name="new-element">
+        <option value="" selected>New element</option>
+        <option value="@ArticleElementType.Deck">Deck</option>
+        <option value="@ArticleElementType.MarkdownContent">Markdown</option>
+    </InputSelect>
 }
 else
 {
@@ -35,7 +33,6 @@ else
 
         default:
             break;
-
     }
 }
 
