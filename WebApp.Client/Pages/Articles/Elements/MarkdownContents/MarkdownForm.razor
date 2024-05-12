@@ -40,7 +40,7 @@
         if (firstRender)
         {
             module = await JS.InvokeAsync<IJSObjectReference>("import",
-                "./Pages/Articles/MarkdownContents/MarkdownForm.razor.js");
+                "./Pages/Articles/Elements/MarkdownContents/MarkdownForm.razor.js");
             await module.InvokeVoidAsync("setupEventHandlers", ContainerDomId);
         }
     }

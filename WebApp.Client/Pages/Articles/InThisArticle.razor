@@ -43,9 +43,8 @@
                 @for(int j = 0; j < elements.Count; j++)
                 {
                     ArticleElement element = elements[j];
-                    bool beingDraggedOver = false;
 
-                    <li class=""
+                    <li tabindex="0"
                         draggable="true"
                         @ondragstart="@(e => HandleDragStart(element))"
                         @ondragend="HandleDragEnd"

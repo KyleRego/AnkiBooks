@@ -18,28 +18,32 @@
 }
 else
 {
-    <div class="d-flex flex-row">
-        @switch(Card)
-        {
-            case BasicNote bn:
-                <DeckBasicNote BasicNote="@bn" AnswerRevealed="answerRevealed" />
-                break;
+    <div>
+        <CardHeader @bind-EditingCard="editingCard" />
+        <div>
+            @switch(Card)
+            {
+                case BasicNote bn:
+                    <DeckBasicNote BasicNote="@bn" AnswerRevealed="AnswerRevealed" />
+                    break;
 
-            case ClozeNote cn:
-                <DeckClozeNote ClozeNote="@cn" AnswerRevealed="answerRevealed" />
-                break;
-        }
-
-        <CardRightSide @bind-EditingCard="editingCard" />
+                case ClozeNote cn:
+                    <DeckClozeNote ClozeNote="@cn" AnswerRevealed="AnswerRevealed" />
+                    break;
+            }
+        </div>
     </div>
-    <CardFooter Card="@Card" @bind-AnswerRevealed="answerRevealed" />
 }
 
 @code {
     [Parameter]
-    public Card Card { get; set; } = null!;
+    public required Card Card { get; set; }
 
-    private bool answerRevealed;
+    [Parameter]
+    public required bool AnswerRevealed { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> AnswerRevealedChanged { get; set; }
 
     private bool editingCard;
 }
