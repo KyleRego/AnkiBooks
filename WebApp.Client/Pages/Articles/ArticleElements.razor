@@ -18,57 +18,52 @@
 {
     List<ArticleElement> elements = ElementsContainer.OrderedElements;
 
-    <CascadingValue Value="@Article.Id" Name="ArticleId">
-        <article class="px-4">
-            <div>
-                @if (elements.Count == 0)
+    <article class="px-4">
+        <div>
+            @if (elements.Count == 0)
+            {
+                <div class="my-4 d-flex justify-content-center">
+                    <NewArticleElementSelect @bind-ElementsContainer:get="@ElementsContainer"
+                                                @bind-ElementsContainer:set="@ElementsContainerChanged"
+                                                OrdinalPosition="@(0)" />
+                </div>
+            }
+            else
+            {
+                for (int j = 0; j < elements.Count; j++)
                 {
+                    ArticleElement element = elements[j];
+
+                    <div class="my-4" id="@(element.DomId())">
+                        @switch(element)
+                        {
+                            case MarkdownContent markdown:
+                                <MarkdownRoot ArticleElement="@markdown"
+                                                @bind-ElementsContainer:get="@ElementsContainer"
+                                                @bind-ElementsContainer:set="@ElementsContainerChanged" />
+                                break;
+
+                            case Deck deck:
+                                <DeckRoot ArticleElement="@deck"
+                                            @bind-ElementsContainer:get="@ElementsContainer"
+                                            @bind-ElementsContainer:set="@ElementsContainerChanged" />
+                                break;
+
+                            default:
+                                throw new ApplicationException();
+                        }
+                    </div>
+
                     <div class="my-4 d-flex justify-content-center">
                         <NewArticleElementSelect @bind-ElementsContainer:get="@ElementsContainer"
-                                                 @bind-ElementsContainer:set="@ElementsContainerChanged"
-                                                 OrdinalPosition="@(0)" />
+                                                    @bind-ElementsContainer:set="@ElementsContainerChanged"
+                                                    OrdinalPosition="@(j + 1)" />
                     </div>
                 }
-                else
-                {
-                    List<ArticleElement> elements = ElementsContainer.OrderedElements;
-
-                    for (int j = 0; j < elements.Count; j++)
-                    {
-                        ArticleElement element = elements[j];
-
-                        <div class="my-4">
-                            @switch(element)
-                            {
-                                case MarkdownContent markdown:
-                                    <MarkdownRoot ArticleElement="@markdown"
-                                                  @bind-ElementsContainer:get="@ElementsContainer"
-                                                  @bind-ElementsContainer:set="@ElementsContainerChanged" />
-                                    break;
-
-                                case Deck deck:
-                                    <DeckRoot ArticleElement="@deck"
-                                              @bind-ElementsContainer:get="@ElementsContainer"
-                                              @bind-ElementsContainer:set="@ElementsContainerChanged" />
-                                    break;
-
-                                default:
-                                    throw new ApplicationException();
-                            }
-                        </div>
-
-                        <div class="my-4 d-flex justify-content-center">
-                            <NewArticleElementSelect @bind-ElementsContainer:get="@ElementsContainer"
-                                                     @bind-ElementsContainer:set="@ElementsContainerChanged"
-                                                     OrdinalPosition="@(j + 1)" />
-                        </div>
-                    }
-                }
-            </div>
-        </article>
-    </CascadingValue>
+            }
+        </div>
+    </article>
 }
-
 
 @code {
     [Parameter]

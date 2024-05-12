@@ -14,11 +14,11 @@
                 @switch (element)
                 {
                     case Deck deck:
-                        <a>@deck.Name</a>
+                        <a href="/articles/@(ArticleId)#@(element.DomId())">@deck.Name</a>
                         break;
 
                     case MarkdownContent markdown:
-                        <a>@(markdown.Name())</a>
+                        <a href="/articles/@(ArticleId)#@(element.DomId())">@(markdown.Name())</a>
                         break;
 
                     default:
@@ -31,6 +31,9 @@
 }
 
 @code {
+    [CascadingParameter(Name="ArticleId")]
+    public required string ArticleId { get; set; }
+
     [Parameter]
     public required OrderedElementsContainer<ArticleElement> ElementsContainer { get; set; }
 

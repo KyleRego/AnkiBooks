@@ -2,11 +2,13 @@
 
 <PageTitle>@Article.Title</PageTitle>
 
-<ArticleHeader @bind-Article:get="Article" @bind-Article:set="ArticleChanged" />
+<CascadingValue Value="@Article.Id" Name="ArticleId">
+    <ArticleHeader @bind-Article:get="Article" @bind-Article:set="ArticleChanged" />
 
-<InThisArticle @bind-ElementsContainer="elementsContainer" />
+    <InThisArticle @bind-ElementsContainer="elementsContainer" />
 
-<ArticleElements Article="@Article" @bind-ElementsContainer="elementsContainer" />
+    <ArticleElements Article="@Article" @bind-ElementsContainer="elementsContainer" />
+</CascadingValue>
 
 @code {
     [Parameter]

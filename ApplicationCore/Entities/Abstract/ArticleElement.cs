@@ -13,4 +13,9 @@ public abstract class ArticleElement : EntityBase, IArticleElement, IOrdinalChil
 
     [Required]
     public int OrdinalPosition { get; set; }
+
+    public string DomId()
+    {
+        return $"article-{ArticleId}-element-{OrdinalPosition}";
+    }
 }
