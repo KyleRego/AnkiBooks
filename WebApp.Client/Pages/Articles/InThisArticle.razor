@@ -1,33 +1,68 @@
 @using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Services
+
+@using AnkiBooks.WebApp.Client.Services
+
+@inject ILogger<InThisArticle> logger
+@inject DraggedItemHolder<ArticleElement> DraggedItemHolder
+@inject IArticleElementService ArticleElementService
 
 @if (ElementsContainer != null)
 {
     List<ArticleElement> elements = ElementsContainer.OrderedElements;
-    <div class="my-4 px-4">
+
+    @if (reorderingElements == false)
+    {
+    <div class="m-4">
         <div class="mb-2">
             In this article:
         </div>
-        <ul class="pl-8 list-style-outside list-style-type-disk">
+        <ol class="pl-8 list-style-outside list-style-type-disk">
         @foreach(ArticleElement element in elements)
         {
             <li>
-                @switch (element)
-                {
-                    case Deck deck:
-                        <a href="/articles/@(ArticleId)#@(element.DomId())">@deck.Name</a>
-                        break;
-
-                    case MarkdownContent markdown:
-                        <a href="/articles/@(ArticleId)#@(element.DomId())">@(markdown.Name())</a>
-                        break;
-
-                    default:
-                        throw new ApplicationException();
-                }
+                <a href="/articles/@(ArticleId)#@(element.DomId())">@element.ElementName()</a>
             </li>
         }
-        </ul>
+        </ol>
     </div>
+
+    <div class="m-4">
+        <button class="btn btn-primary" @onclick="StartReorderingElements">
+            Reorder elements
+        </button>
+    </div>
+    }
+    else
+    {
+        <div class="m-4">
+            <div class="mb-2">
+                Drag and drop to reorder:
+            </div>
+            <ol class="pl-8 list-style-outside list-style-type-disk">
+                @for(int j = 0; j < elements.Count; j++)
+                {
+                    ArticleElement element = elements[j];
+                    bool beingDraggedOver = false;
+
+                    <li class=""
+                        draggable="true"
+                        @ondragstart="@(e => HandleDragStart(element))"
+                        @ondragend="HandleDragEnd"
+                        ondragover="event.preventDefault();"
+                        @ondrop="@(e => HandleDrop(element))">
+                        @element.ElementName()
+                    </li>
+                }
+            </ol>
+        </div>
+
+        <div class="m-4">
+            <button class="btn btn-primary" @onclick="EndReorderingElements">
+                Done
+            </button>
+        </div>
+    }
 }
 
 @code {
@@ -39,4 +74,45 @@
 
     [Parameter]
     public required EventCallback<OrderedElementsContainer<ArticleElement>> ElementsContainerChanged { get; set; }
+
+    private bool reorderingElements = false;
+
+    private void StartReorderingElements()
+    {
+        reorderingElements = true;
+    }
+
+    private void EndReorderingElements()
+    {
+        reorderingElements = false;
+    }
+
+    private void HandleDragStart(ArticleElement draggedElement)
+    {  
+        logger.LogInformation("drag start");
+        DraggedItemHolder.DraggedItem = draggedElement;
+    }
+
+    private void HandleDragEnd()
+    {
+        logger.LogInformation("drag end");
+        DraggedItemHolder.DraggedItem = null;
+    }
+
+    private async Task HandleDrop(ArticleElement dropTarget)
+    {
+        logger.LogInformation("drop");
+        ArticleElement? droppedItem = DraggedItemHolder.DraggedItem;
+
+        if (droppedItem == null) return;
+        if (droppedItem == dropTarget) return;
+
+        droppedItem.OrdinalPosition = dropTarget.OrdinalPosition;
+
+        ArticleElement? updatedItem = await ArticleElementService.PutArticleElement(droppedItem);
+        ArgumentNullException.ThrowIfNull(updatedItem);
+
+        ElementsContainer.UpdatePosition(droppedItem);
+        await ElementsContainerChanged.InvokeAsync(ElementsContainer);
+    }
 }

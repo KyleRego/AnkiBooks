@@ -13,3 +13,7 @@
 .bg-tertiary {
     background: var(--ab-bg-tertiary-dark)
 }
+
+.bg-droptarget {
+    background-color: crimson;
+}

@@ -13,17 +13,10 @@
 }
 else
 {
-    <div class="@(nestedDragLevels != 0 ? "dragover-highlight" : "")
-                d-flex flex-row justify-content-between align-items-center"
-                @ondragenter="HandleDragEnter"
-                @ondragenter:preventDefault
-                ondragover="event.preventDefault();"
-                @ondragleave="HandleDragLeave"
-                @ondragleave:preventDefault
-                @ondrop="HandleDrop">
-        <div class="font-size-2xl mr-4">
+    <div class="d-flex flex-row justify-content-between align-items-center">
+        <h2 class="font-size-2xl">
             @ArticleElement.Name
-        </div>
+        </h2>
 
         @if (showingOptions == false)
         {
@@ -42,7 +35,6 @@ else
             <div class="position-relative top-4 right-4 px-2 border-primary">
                 <ul>
                     <li class="my-2" @onclick="CancelShowingOptions">Cancel</li>
-                    <li class="my-2" draggable="true" @ondrag="HandleDrag">Drag element</li>
                     <li class="my-2" @onclick="DeleteArticleElement">Delete deck</li>
                 </ul>
             </div>

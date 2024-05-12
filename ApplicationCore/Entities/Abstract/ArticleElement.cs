@@ -18,4 +18,6 @@ public abstract class ArticleElement : EntityBase, IArticleElement, IOrdinalChil
     {
         return $"article-{ArticleId}-element-{OrdinalPosition}";
     }
+
+    public abstract string ElementName();
 }

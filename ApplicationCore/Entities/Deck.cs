@@ -7,7 +7,7 @@ namespace AnkiBooks.ApplicationCore.Entities;
 public class Deck : ArticleElement
 {
     [Required]
-    public string Name { get; set; } = "New deck";
+    public string Name { get; set; } = "";
 
     public string Description { get; set; } = "";
 
@@ -20,5 +20,10 @@ public class Deck : ArticleElement
         return BasicNotes.Cast<Card>()
             .Concat(ClozeNotes.Cast<Card>())
             .ToList();
+    }
+
+    public override string ElementName()
+    {
+        return Name;
     }
 }
