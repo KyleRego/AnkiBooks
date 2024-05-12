@@ -10,11 +10,9 @@
 @using AnkiBooks.WebApp.Client.Pages.Articles.Elements.Decks
 
 @inject IUserArticleService UserArticleService
-@inject ILogger<CurrentArticle> Logger
+@inject ILogger<ArticleElements> Logger
 @inject PersistentComponentState ApplicationState
 @inject AuthenticationStateProvider AuthenticationStateProvider
-
-<PageTitle>@Article.Title</PageTitle>
 
 @if (ElementsContainer != null)
 {
@@ -26,7 +24,9 @@
                 @if (elements.Count == 0)
                 {
                     <div class="my-4 d-flex justify-content-center">
-                        <NewArticleElementSelect @bind-ElementsContainer="@ElementsContainer" OrdinalPosition="@(0)" />
+                        <NewArticleElementSelect @bind-ElementsContainer:get="@ElementsContainer"
+                                                 @bind-ElementsContainer:set="@ElementsContainerChanged"
+                                                 OrdinalPosition="@(0)" />
                     </div>
                 }
                 else
@@ -41,11 +41,15 @@
                             @switch(element)
                             {
                                 case MarkdownContent markdown:
-                                    <MarkdownRoot ArticleElement="@markdown" @bind-ElementsContainer="@ElementsContainer" />
+                                    <MarkdownRoot ArticleElement="@markdown"
+                                                  @bind-ElementsContainer:get="@ElementsContainer"
+                                                  @bind-ElementsContainer:set="@ElementsContainerChanged" />
                                     break;
 
                                 case Deck deck:
-                                    <DeckRoot ArticleElement="@deck" @bind-ElementsContainer="@ElementsContainer" />
+                                    <DeckRoot ArticleElement="@deck"
+                                              @bind-ElementsContainer:get="@ElementsContainer"
+                                              @bind-ElementsContainer:set="@ElementsContainerChanged" />
                                     break;
 
                                 default:
@@ -54,7 +58,9 @@
                         </div>
 
                         <div class="my-4 d-flex justify-content-center">
-                            <NewArticleElementSelect @bind-ElementsContainer="@ElementsContainer" OrdinalPosition="@(j + 1)" />
+                            <NewArticleElementSelect @bind-ElementsContainer:get="@ElementsContainer"
+                                                     @bind-ElementsContainer:set="@ElementsContainerChanged"
+                                                     OrdinalPosition="@(j + 1)" />
                         </div>
                     }
                 }
@@ -68,10 +74,9 @@
     [Parameter]
     public Article Article { get; set; } = null!;
 
-    private OrderedElementsContainer<ArticleElement>? ElementsContainer;
+    [Parameter]
+    public required OrderedElementsContainer<ArticleElement> ElementsContainer { get; set; }
 
-    protected override void OnParametersSet()
-    {
-        ElementsContainer = new(Article.OrderedElements());
-    }
+    [Parameter]
+    public EventCallback<OrderedElementsContainer<ArticleElement>> ElementsContainerChanged { get; set; }
 }

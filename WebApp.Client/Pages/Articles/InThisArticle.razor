@@ -1,0 +1,39 @@
+@using AnkiBooks.ApplicationCore.Entities
+
+@if (ElementsContainer != null)
+{
+    List<ArticleElement> elements = ElementsContainer.OrderedElements;
+    <div class="my-4 px-4">
+        <div class="mb-2">
+            In this article:
+        </div>
+        <ul class="pl-8 list-style-outside list-style-type-disk">
+        @foreach(ArticleElement element in elements)
+        {
+            <li>
+                @switch (element)
+                {
+                    case Deck deck:
+                        <a>@deck.Name</a>
+                        break;
+
+                    case MarkdownContent markdown:
+                        <a>@(markdown.Name())</a>
+                        break;
+
+                    default:
+                        throw new ApplicationException();
+                }
+            </li>
+        }
+        </ul>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public required OrderedElementsContainer<ArticleElement> ElementsContainer { get; set; }
+
+    [Parameter]
+    public required EventCallback<OrderedElementsContainer<ArticleElement>> ElementsContainerChanged { get; set; }
+}

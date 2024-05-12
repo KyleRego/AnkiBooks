@@ -45,6 +45,11 @@ public class ArticleElementRootBase<T> : ComponentBase where T : ArticleElement
         showingOptions = true;
     }
 
+    protected void CancelShowingOptions()
+    {
+        showingOptions = false;
+    }
+
     protected async Task DeleteArticleElement()
     {
         await ArticleElementService.DeleteArticleElement(ArticleElement);

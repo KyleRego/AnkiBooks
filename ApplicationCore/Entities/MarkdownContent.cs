@@ -7,4 +7,9 @@ public class MarkdownContent : ArticleElement
 {
     [Required]
     public string? Text { get; set; }
+
+    public string Name()
+    {
+        return Text?.Split("\n")[0] ?? "Empty markdown";
+    }
 }

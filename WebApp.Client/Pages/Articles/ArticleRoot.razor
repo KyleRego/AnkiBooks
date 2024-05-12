@@ -1,0 +1,24 @@
+@using AnkiBooks.ApplicationCore.Entities
+
+<PageTitle>@Article.Title</PageTitle>
+
+<ArticleHeader @bind-Article:get="Article" @bind-Article:set="ArticleChanged" />
+
+<InThisArticle @bind-ElementsContainer="elementsContainer" />
+
+<ArticleElements Article="@Article" @bind-ElementsContainer="elementsContainer" />
+
+@code {
+    [Parameter]
+    public required Article Article { get; set; }
+
+    [Parameter]
+    public EventCallback<Article> ArticleChanged { get; set; }
+
+    private OrderedElementsContainer<ArticleElement>? elementsContainer;
+
+    protected override void OnParametersSet()
+    {
+        elementsContainer = new(Article.OrderedElements());
+    }
+}

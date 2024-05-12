@@ -36,9 +36,7 @@
     @if (currentArticle != null)
     {
         <div class="w-100 md:w-100-minus-w-64">
-            <ArticleHeader @bind-Article="@currentArticle" />
-
-            <CurrentArticle Article="@currentArticle" />
+            <ArticleRoot @bind-Article="@currentArticle" />
         </div>
     }
 </div>
@@ -46,13 +44,6 @@
 @code {
     [Parameter]
     public string? Id { get; set; }
-
-    private void ToggleArticlesSidebar()
-    {
-        articlesSidebarExpanded = !articlesSidebarExpanded;
-    }
-
-    private bool articlesSidebarExpanded = true;
 
     private Article? currentArticle;
 
