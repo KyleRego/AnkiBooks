@@ -69,7 +69,7 @@ else
         <div class="d-flex flex-row justify-content-center mt-2">
             @if (currentCardAnswerRevealed == false)
             {
-                <button tabindex="0" type="button" class="btn btn-primary" @onclick="HandleAnswer">
+                <button tabindex="0" type="button" class="btn btn-primary" @onclick="HandleAnswer" @ref="answerButton">
                     Answer 🫥
                 </button>
             }
@@ -78,7 +78,7 @@ else
                 <button tabindex="0" type="button" class="btn btn-primary mr-4" @onclick="HandleFeedback">
                     Bad ☹️
                 </button>
-                <button tabindex="0" type="button" class="btn btn-primary" @onclick="HandleFeedback">
+                <button tabindex="0" type="button" class="btn btn-primary" @onclick="HandleFeedback" @ref="goodButton">
                     Good 😀
                 </button>
             }
@@ -114,15 +114,25 @@ else
         }
     }
 
-    private void HandleAnswer()
+    private ElementReference answerButton;
+    private ElementReference goodButton;
+
+    private async Task HandleAnswer()
     {
         currentCardAnswerRevealed = true;
+        await Task.Delay(100);
+        await goodButton.FocusAsync();
     }
 
-    private void HandleFeedback()
+    private async Task HandleFeedback()
     {
         currentCardAnswerRevealed = false;
         currentCardIndex += 1;
         currentCard = GetNextCard();
+        if (currentCard != null)
+        {
+            await Task.Delay(100);
+            await answerButton.FocusAsync();
+        }
     }
 }
