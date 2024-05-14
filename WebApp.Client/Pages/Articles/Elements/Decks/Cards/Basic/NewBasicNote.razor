@@ -6,57 +6,9 @@
 @using AnkiBooks.ApplicationCore.Interfaces
 @using AnkiBooks.ApplicationCore.Services
 
-@inject ILogger<NewBasicNote> Logger
-@inject ICardService CardService
+@inherits NewCardBase<BasicNote>
 
-<BasicNoteForm  StartingCard="@StartingBasicNote()"
+<BasicNoteForm  StartingCard="@StartingCard()"
                 EditingExisting="false"
                 ParentSubmitMethod="@SubmitForm"
                 ParentCancelMethod="@Cancel" />
-
-@code {
-    [Parameter]
-    public string DeckId { get; set; } = null!;
-
-    [Parameter]
-    public List<Card> Cards { get; set; } = null!;
-
-    [Parameter]
-    public CardType? DropDownItemSelected { get; set; }
-
-    [Parameter]
-    public EventCallback<CardType?> DropDownItemSelectedChanged { get; set; }
-
-    [Parameter]
-    public EventCallback<List<Card>> CardsChanged { get; set; }
-
-    private BasicNote StartingBasicNote()
-    {
-        return new()
-        {
-            DeckId = DeckId
-        };
-    }
-
-    private async Task SubmitForm(BasicNote newBasicNote)
-    {
-        ArgumentNullException.ThrowIfNull(newBasicNote.Front);
-        ArgumentNullException.ThrowIfNull(newBasicNote.Back);
-        ArgumentNullException.ThrowIfNull(newBasicNote.DeckId);
-
-        BasicNote? createdBasicNote = (BasicNote?)await CardService.PostCard(newBasicNote);
-        ArgumentNullException.ThrowIfNull(createdBasicNote);
-
-        DropDownItemSelected = null;
-        await DropDownItemSelectedChanged.InvokeAsync(DropDownItemSelected);
-
-        Cards.Add(createdBasicNote);
-        await CardsChanged.InvokeAsync(Cards);
-    }
-
-    private async Task Cancel()
-    {
-        DropDownItemSelected = null;
-        await DropDownItemSelectedChanged.InvokeAsync(DropDownItemSelected);
-    }
-}

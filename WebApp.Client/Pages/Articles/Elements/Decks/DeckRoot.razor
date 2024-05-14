@@ -1,8 +1,10 @@
 @using AnkiBooks.ApplicationCore.Entities
-
-@using AnkiBooks.WebApp.Client.Pages.Articles.Elements.Decks.Cards
+@using AnkiBooks.ApplicationCore.Enums
 
 @using AnkiBooks.WebApp.Client.Pages.Articles.Elements
+@using AnkiBooks.WebApp.Client.Pages.Articles.Elements.Decks.Cards
+@using AnkiBooks.WebApp.Client.Pages.Articles.Elements.Decks.Cards.Basic
+@using AnkiBooks.WebApp.Client.Pages.Articles.Elements.Decks.Cards.Cloze
 
 @inherits ArticleElementRootBase<Deck>
 
@@ -51,42 +53,91 @@ else
         @(Cards.Count) cards
     </div>
 
-    <div class="my-4 d-flex flex-row justify-content-center">
-        <NewCardSelect DeckId="@ArticleElement.Id" @bind-Cards="@Cards" />
-    </div>
-}
-
-@if (currentCard == null)
-{
-    <p class="my-4 text-center">Congratulations! You have completed studying this deck (no cards are due right now).</p>
-}
-else
-{
-    <div class="my-4">
-        <div class="d-flex flex-row justify-content-center">
-            <CardRoot Card="@currentCard" @bind-AnswerRevealed="currentCardAnswerRevealed" />
-        </div>
-        <div class="d-flex flex-row justify-content-center mt-2">
-            @if (currentCardAnswerRevealed == false)
+    <div class="my-4 d-flex flex-row justify-content-start align-items-center">
+        <div class="mr-4">
+            @if (studyingDeck == false)
             {
-                <button tabindex="0" type="button" class="btn btn-primary" @onclick="HandleAnswer" @ref="answerButton">
-                    Answer 🫥
+                <button type="button" class="btn btn-primary" title="Study deck" @onclick="StudyDeck">
+                    Study deck
                 </button>
             }
             else
             {
-                <button tabindex="0" type="button" class="btn btn-primary mr-4" @onclick="HandleFeedback">
-                    Bad ☹️
-                </button>
-                <button tabindex="0" type="button" class="btn btn-primary" @onclick="HandleFeedback" @ref="goodButton">
-                    Good 😀
+                <button type="button" class="btn btn-primary" title="Done studying" @onclick="CancelStudyDeck">
+                    Done studying
                 </button>
             }
         </div>
+        @if (newCardSelection == null)
+        {
+            <div>
+                <InputSelect @bind-Value="newCardSelection" name="new-card">
+                    <option value="" selected>New card</option>
+                    <option value="@CardType.BasicNote">Basic</option>
+                    <option value="@CardType.ClozeNote">Cloze</option>
+                </InputSelect>
+            </div>
+        }
     </div>
+
+    @if (studyingDeck == true)
+    {
+        <div class="my-4">
+            @if (currentCard == null)
+            {
+                <p class="text-center">Congratulations! You have completed studying this deck (no cards are due right now).</p>
+            }
+            else
+            {
+                <div class="d-flex flex-row justify-content-center">
+                    <CardRoot Card="@currentCard" @bind-AnswerRevealed="currentCardAnswerRevealed" />
+                </div>
+                <div class="d-flex flex-row justify-content-center mt-2">
+                    @if (currentCardAnswerRevealed == false)
+                    {
+                        <button tabindex="0" type="button" class="btn btn-primary" @onclick="HandleAnswer" @ref="answerButton">
+                            Answer 🫥
+                        </button>
+                    }
+                    else
+                    {
+                        <button tabindex="0" type="button" class="btn btn-primary mr-4" @onclick="HandleFeedback">
+                            Bad ☹️
+                        </button>
+                        <button tabindex="0" type="button" class="btn btn-primary" @onclick="HandleFeedback" @ref="goodButton">
+                            Good 😀
+                        </button>
+                    }
+                </div>
+            }
+        </div>
+    }
+
+    @if (newCardSelection != null)
+    {
+        @switch (newCardSelection)
+        {
+            case CardType.BasicNote:
+                <NewBasicNote DeckId="@ArticleElement.Id"
+                                        @bind-NewCardSelection="newCardSelection"
+                                        @bind-Cards="Cards" />
+                break;
+
+            case CardType.ClozeNote:
+                <NewClozeNote DeckId="@ArticleElement.Id"
+                                        @bind-NewCardSelection="newCardSelection"
+                                        @bind-Cards="Cards" />
+                break;
+
+            default:
+                break;
+        }
+    }
 }
 
 @code {
+    private CardType? newCardSelection = null;
+
     public required List<Card> Cards { get; set; }
 
     private int currentCardIndex = 0;
@@ -95,8 +146,22 @@ else
 
     private bool currentCardAnswerRevealed = false;
 
+    private bool studyingDeck = false;
+
+    private async Task StudyDeck()
+    {
+        studyingDeck = true;
+        await FocusAnswerButton();
+    }
+
+    private void CancelStudyDeck()
+    {
+        studyingDeck = false;
+    }
+
     protected override void OnParametersSet()
     {
+        studyingDeck = false;
         Cards = ArticleElement.Cards();
         currentCardIndex = 0;
         currentCard = GetNextCard();
@@ -115,13 +180,25 @@ else
     }
 
     private ElementReference answerButton;
+
+    private async Task FocusAnswerButton()
+    {
+        await Task.Delay(100);
+        await answerButton.FocusAsync();
+    }
+
     private ElementReference goodButton;
+
+    private async Task FocusGoodButton()
+    {
+        await Task.Delay(100);
+        await goodButton.FocusAsync();
+    }
 
     private async Task HandleAnswer()
     {
         currentCardAnswerRevealed = true;
-        await Task.Delay(100);
-        await goodButton.FocusAsync();
+        await FocusGoodButton();
     }
 
     private async Task HandleFeedback()
@@ -131,8 +208,7 @@ else
         currentCard = GetNextCard();
         if (currentCard != null)
         {
-            await Task.Delay(100);
-            await answerButton.FocusAsync();
+            await FocusAnswerButton();
         }
     }
 }

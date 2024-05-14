@@ -21,10 +21,10 @@ public class NewCardBase<T> : ComponentBase where T : Card, new()
     public required EventCallback<List<Card>> CardsChanged { get; set; }
 
     [Parameter]
-    public required CardType? DropDownItemSelected { get; set; }
+    public required CardType? NewCardSelection { get; set; }
 
     [Parameter]
-    public required EventCallback<CardType?> DropDownItemSelectedChanged { get; set; }
+    public required EventCallback<CardType?> NewCardSelectionChanged { get; set; }
 
     protected T StartingCard()
     {
@@ -37,20 +37,20 @@ public class NewCardBase<T> : ComponentBase where T : Card, new()
     protected async Task SubmitForm(T newCard)
     {
         ArgumentNullException.ThrowIfNull(newCard.DeckId);
-        
-        ClozeNote? createdClozeNote = (ClozeNote?)await CardService.PostCard(newCard);
-        ArgumentNullException.ThrowIfNull(createdClozeNote);
 
-        DropDownItemSelected = null;
-        await DropDownItemSelectedChanged.InvokeAsync(DropDownItemSelected);
+        T? createdCard = (T?)await CardService.PostCard(newCard);
+        ArgumentNullException.ThrowIfNull(createdCard);
 
-        Cards.Add(createdClozeNote);
+        NewCardSelection = null;
+        await NewCardSelectionChanged.InvokeAsync(NewCardSelection);
+
+        Cards.Add(createdCard);
         await CardsChanged.InvokeAsync(Cards);
     }
 
     protected async Task Cancel()
     {
-        DropDownItemSelected = null;
-        await DropDownItemSelectedChanged.InvokeAsync(DropDownItemSelected);
+        NewCardSelection = null;
+        await NewCardSelectionChanged.InvokeAsync(NewCardSelection);
     }
 }
