@@ -53,3 +53,7 @@
 .h-58 {
     height: 14.5rem;
 }
+
+.min-h-58 {
+    min-height: 14.5rem;
+}

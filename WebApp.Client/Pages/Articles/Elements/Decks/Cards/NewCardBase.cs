@@ -44,7 +44,7 @@ public class NewCardBase<T> : ComponentBase where T : Card, new()
         NewCardSelection = null;
         await NewCardSelectionChanged.InvokeAsync(NewCardSelection);
 
-        Cards.Add(createdCard);
+        Cards.Insert(0, createdCard);
         await CardsChanged.InvokeAsync(Cards);
     }
 
