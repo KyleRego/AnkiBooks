@@ -1,5 +1,6 @@
 @import "./components/button.css";
 
+@import "./utilities/align-items.css";
 @import "./utilities/background-color.css";
 @import "./utilities/border.css";
 @import "./utilities/color.css";
@@ -13,6 +14,7 @@
 @import "./utilities/font-size.css";
 @import "./utilities/font-weight.css";
 @import "./utilities/height.css";
+@import "./utilities/justify-content.css";
 @import "./utilities/list-style.css";
 @import "./utilities/margin.css";
 @import "./utilities/min-width.css";

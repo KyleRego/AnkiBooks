@@ -1,0 +1,54 @@
+@using AnkiBooks.ApplicationCore.Entities
+
+<div class="my-4 px-4">
+    <div class="mb-2">
+        Sources:
+    </div>
+    <ul class="pl-8 list-style-outside list-style-type-disk">
+        @foreach(Link l in Article.Links)
+        {
+            Link link = l;
+
+            <li>
+                <div>
+                    <ArticleLink @bind-Link="@link" />
+                </div>
+            </li>
+        }
+    </ul>
+</div>
+
+<div class="px-4 my-2">
+    @if (addingSource == false)
+    {
+        <div    role="button" @onclick="StartAddingSource"
+                class="d-flex flex-row justify-content-start align-items-center">
+            <div class="w-4 h-4"><Plus /></div>
+            <div class="pl-2">New link</div>
+        </div>
+    }
+    else
+    {
+        <NewArticleLink @bind-Article:get="@Article" @bind-Article:set="ArticleChanged" @bind-AddingSource="@addingSource" />
+    }
+</div>
+
+@code {
+    [Parameter]
+    public required Article Article { get; set; }
+
+    [Parameter]
+    public EventCallback<Article> ArticleChanged { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        addingSource = false;
+    }
+
+    private bool addingSource = false;
+
+    private void StartAddingSource()
+    {
+        addingSource = true;
+    }
+}

@@ -13,35 +13,3 @@
 .flex-no-wrap {
     flex-wrap: nowrap;
 }
-
-.justify-content-around {
-    justify-content: space-around;
-}
-
-.justify-content-between {
-    justify-content: space-between;
-}
-
-.justify-content-center {
-    justify-content: center;
-}
-
-.justify-content-end {
-    justify-content: end;
-}
-
-.align-items-stretch {
-    align-items: stretch;
-}
-
-.align-items-center {
-    align-items: center;
-}
-
-.align-items-baseline {
-    align-items: baseline;
-}
-
-.align-items-end {
-    align-items: end;
-}

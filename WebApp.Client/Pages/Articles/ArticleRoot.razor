@@ -5,6 +5,8 @@
 <CascadingValue Value="@Article.Id" Name="ArticleId">
     <ArticleHeader @bind-Article:get="Article" @bind-Article:set="ArticleChanged" />
 
+    <ArticleSources @bind-Article:get="Article" @bind-Article:set="ArticleChanged" />
+
     <InThisArticle @bind-ElementsContainer="elementsContainer" />
 
     <ArticleElements Article="@Article" @bind-ElementsContainer="elementsContainer" />

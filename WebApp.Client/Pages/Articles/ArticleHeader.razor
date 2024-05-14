@@ -27,45 +27,6 @@
     }
 </div>
 
-<div class="my-4 px-4">
-    <div class="mb-2">
-        Sources:
-    </div>
-    <ul class="pl-8 list-style-outside list-style-type-disk">
-        @foreach(Link l in Article.Links)
-        {
-            Link link = l;
-
-            <li>
-                <div class="d-flex flex-row align-items-center">
-                    <div class="mr-2">
-                        <ArticleLink @bind-Link="@link" />
-                    </div>
-
-                    <div role="button" class="w-5 h-5" title="Options (TODO)">
-                        <Gear />
-                    </div>
-                </div>
-            </li>
-        }
-    </ul>
-</div>
-
-<div class="px-4 my-2">
-    @if (addingSource == false)
-    {
-        <div    role="button" @onclick="StartAddingSource"
-                class="d-flex flex-row justify-content-start align-items-center">
-            <div class="w-4 h-4"><Plus /></div>
-            <div class="pl-2">New link</div>
-        </div>
-    }
-    else
-    {
-        <NewArticleLink @bind-Article:get="@Article" @bind-Article:set="ArticleChanged" @bind-AddingSource="@addingSource" />
-    }
-</div>
-
 @code {
     [Parameter]
     public Article Article { get; set; } = null!;
@@ -76,7 +37,6 @@
     protected override void OnParametersSet()
     {
         editingTitle = false;
-        addingSource = false;
     }
 
     private bool editingTitle = false;
@@ -84,12 +44,5 @@
     private void StartEditingTitle()
     {
         editingTitle = true;
-    }
-
-    private bool addingSource = false;
-
-    private void StartAddingSource()
-    {
-        addingSource = true;
     }
 }

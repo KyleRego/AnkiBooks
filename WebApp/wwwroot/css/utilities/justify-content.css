@@ -1,0 +1,21 @@
+.justify-content-around {
+    justify-content: space-around;
+}
+
+.justify-content-between {
+    justify-content: space-between;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.justify-content-end {
+    justify-content: end;
+}
+
+@media (min-width: 640px) {
+    .sm\:justify-content-start {
+        justify-content: start;
+    }
+}

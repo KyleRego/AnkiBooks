@@ -2,12 +2,17 @@
 
 @if (editing == false)
 {
-<div class="d-flex flex-row justify-content-start align-items-center" title="@(Link.Name)" >
-    <a href="@Link.Url" class="pr-2">
+<div class="d-flex flex-row sm:justify-content-start justify-content-between align-items-center" title="@(Link.Name)" >
+    <a href="@Link.Url" class="mr-2">
         @(Link.Name ?? Link.Url)
     </a>
-    <div role="button" title="Edit source" class="w-5 h-5" @onclick="StartEditing">
-        <Edit />
+    <div class="d-flex flex-row justify-content-start">
+        <div role="button" class="w-5 h-5 mr-2" title="Edit source" @onclick="StartEditing">
+            <Edit />
+        </div>
+        <div role="button" class="w-5 h-5" title="Options (TODO)">
+            <Gear />
+        </div>
     </div>
 </div>
 }

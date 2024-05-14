@@ -10,3 +10,7 @@
 ::deep .dragover-highlight {
     background-color: rgb(72, 173, 255);
 }
+
+::deep pre {
+    overflow-x: scroll;
+}
