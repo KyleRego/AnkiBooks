@@ -5,7 +5,8 @@
 
 @if (editingCard == true)
 {
-    switch(Card)
+    <div class="w-84 h-58">
+    @switch(Card)
     {
         case BasicNote bn:
             <EditBasicNote InitialCard="@bn" @bind-EditingCard="editingCard" />
@@ -15,22 +16,20 @@
             <EditClozeNote InitialCard="@cn" @bind-EditingCard="editingCard" />
             break;
     }
+    </div>
 }
 else
 {
     <div class="d-flex flex-row justify-content-start">
-        <div class="w-5">
-            @* This adds space to the left of the card, keeping it centered *@
-        </div>
-        <div>
+        <div class="border-primary w-84 h-48">
             @switch(Card)
             {
                 case BasicNote bn:
-                    <DeckBasicNote BasicNote="@bn" AnswerRevealed="AnswerRevealed" />
+                    <DeckBasicNote BasicNote="@bn" AnswerRevealed="@answerRevealed" />
                     break;
 
                 case ClozeNote cn:
-                    <DeckClozeNote ClozeNote="@cn" AnswerRevealed="AnswerRevealed" />
+                    <DeckClozeNote ClozeNote="@cn" AnswerRevealed="@answerRevealed" />
                     break;
             }
         </div>
@@ -40,6 +39,24 @@ else
             </div>
         </div>
     </div>
+
+    <div class="d-flex flex-row justify-content-center mt-2">
+        @if (answerRevealed == false)
+        {
+            <button tabindex="0" type="button" class="btn btn-primary" @onclick="HandleAnswer">
+                Answer 🫥
+            </button>
+        }
+        else
+        {
+            <button tabindex="0" type="button" class="btn btn-primary mr-4">
+                Bad ☹️
+            </button>
+            <button tabindex="0" type="button" class="btn btn-primary">
+                Good 😀
+            </button>
+        }
+    </div>
 }
 
 @code {
@@ -47,10 +64,17 @@ else
     public required Card Card { get; set; }
 
     [Parameter]
-    public required bool AnswerRevealed { get; set; }
+    public required List<Card> Cards { get; set; }
 
     [Parameter]
-    public EventCallback<bool> AnswerRevealedChanged { get; set; }
+    public EventCallback<List<Card>> CardsChanged { get; set; }
+
+    public bool answerRevealed = false;
+
+    private void HandleAnswer()
+    {
+        answerRevealed = true;
+    }
 
     private bool editingCard;
 

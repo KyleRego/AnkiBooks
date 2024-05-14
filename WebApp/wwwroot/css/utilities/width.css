@@ -1,4 +1,4 @@
-.w-100 {
+.w-100-percent {
     width: 100%;
 }
 
@@ -38,12 +38,12 @@
     width: 22rem;
 }
 
-.w-100-minus-w-64 {
+.w-100-percent-minus-w-64 {
     width: calc(100% - 16rem);
 }
 
 @media (min-width: 768px) {
-    .md\:w-100-minus-w-64 {
+    .md\:w-100-percent-minus-w-64 {
         width: calc(100% - 16rem);
     }
 }

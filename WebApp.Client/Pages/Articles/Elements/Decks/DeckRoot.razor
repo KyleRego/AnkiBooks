@@ -49,24 +49,9 @@ else
         </p>
     }
 
-    <div class="my-4">
-        @(Cards.Count) cards
-    </div>
-
     <div class="my-4 d-flex flex-row justify-content-start align-items-center">
         <div class="mr-4">
-            @if (studyingDeck == false)
-            {
-                <button type="button" class="btn btn-primary" title="Study deck" @onclick="StudyDeck">
-                    Study deck
-                </button>
-            }
-            else
-            {
-                <button type="button" class="btn btn-primary" title="Done studying" @onclick="CancelStudyDeck">
-                    Done studying
-                </button>
-            }
+            @(Cards.Count) cards
         </div>
         @if (newCardSelection == null)
         {
@@ -80,38 +65,16 @@ else
         }
     </div>
 
-    @if (studyingDeck == true)
-    {
-        <div class="my-4">
-            @if (currentCard == null)
-            {
-                <p class="text-center">Congratulations! You have completed studying this deck (no cards are due right now).</p>
-            }
-            else
-            {
-                <div class="d-flex flex-row justify-content-center">
-                    <CardRoot Card="@currentCard" @bind-AnswerRevealed="currentCardAnswerRevealed" />
-                </div>
-                <div class="d-flex flex-row justify-content-center mt-2">
-                    @if (currentCardAnswerRevealed == false)
-                    {
-                        <button tabindex="0" type="button" class="btn btn-primary" @onclick="HandleAnswer" @ref="answerButton">
-                            Answer 🫥
-                        </button>
-                    }
-                    else
-                    {
-                        <button tabindex="0" type="button" class="btn btn-primary mr-4" @onclick="HandleFeedback">
-                            Bad ☹️
-                        </button>
-                        <button tabindex="0" type="button" class="btn btn-primary" @onclick="HandleFeedback" @ref="goodButton">
-                            Good 😀
-                        </button>
-                    }
-                </div>
-            }
-        </div>
-    }
+    <div class="my-4 d-flex flex-row flex-no-wrap justify-content-start align-items-end overflow-x-scroll">
+        @for (int j = 0; j < Cards.Count; j++)
+        {
+            Card card = Cards[j];
+
+            <div class="mr-5 mb-4 flex-shrink-0">
+                <CardRoot Card="@card" @bind-Cards="Cards" />
+            </div>
+        }
+    </div>
 
     @if (newCardSelection != null)
     {
@@ -140,75 +103,8 @@ else
 
     public required List<Card> Cards { get; set; }
 
-    private int currentCardIndex = 0;
-
-    private Card? currentCard;
-
-    private bool currentCardAnswerRevealed = false;
-
-    private bool studyingDeck = false;
-
-    private async Task StudyDeck()
-    {
-        studyingDeck = true;
-        await FocusAnswerButton();
-    }
-
-    private void CancelStudyDeck()
-    {
-        studyingDeck = false;
-    }
-
     protected override void OnParametersSet()
     {
-        studyingDeck = false;
         Cards = ArticleElement.Cards();
-        currentCardIndex = 0;
-        currentCard = GetNextCard();
-    }
-
-    private Card? GetNextCard()
-    {
-        if (currentCardIndex < Cards.Count)
-        {
-            return Cards[currentCardIndex];
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    private ElementReference answerButton;
-
-    private async Task FocusAnswerButton()
-    {
-        await Task.Delay(100);
-        await answerButton.FocusAsync();
-    }
-
-    private ElementReference goodButton;
-
-    private async Task FocusGoodButton()
-    {
-        await Task.Delay(100);
-        await goodButton.FocusAsync();
-    }
-
-    private async Task HandleAnswer()
-    {
-        currentCardAnswerRevealed = true;
-        await FocusGoodButton();
-    }
-
-    private async Task HandleFeedback()
-    {
-        currentCardAnswerRevealed = false;
-        currentCardIndex += 1;
-        currentCard = GetNextCard();
-        if (currentCard != null)
-        {
-            await FocusAnswerButton();
-        }
     }
 }
