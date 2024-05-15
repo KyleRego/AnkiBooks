@@ -1,58 +1,23 @@
 @page "/"
 @layout MainLayout
 
-@implements IDisposable
-
-@using AnkiBooks.ApplicationCore.Entities
-@using AnkiBooks.ApplicationCore.Services
-@using AnkiBooks.WebApp.Client.Layout
-@using AnkiBooks.WebApp.Client.Shared.Heroicons
-@using AnkiBooks.WebApp.Client.Services
-
-@inject IBookService BookService
-@inject PersistentComponentState ApplicationState
+@using AnkiBooks.WebApp.Client.Pages.Articles
 
 <PageTitle>Anki Books</PageTitle>
 
-<div class="d-flex justify-content-center align-items-center h-screen-minus-header">
-    <div>
-        <div>Welcome to</div>
-        <h1 class="color-secondary font-size-8xl sm:font-size-6xl font-bold">
-            Anki Books
-        </h1>
-    </div>
-</div>
+<AuthorizeView>
+    <Authorized>
+        <ArticlesPage />
+    </Authorized>
 
-@code {
-    private List<Book>? publicBooks;
-
-    private PersistingComponentStateSubscription persistingSubscription;
-
-    protected override async Task OnParametersSetAsync()
-    {
-        persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
-
-        if (!ApplicationState.TryTakeFromJson<List<Book>>(nameof(publicBooks), out var restored))
-        {
-            publicBooks = await BookService.GetPublicBooks();
-        }
-        else
-        {
-            publicBooks = restored;
-        }
-
-        ArgumentNullException.ThrowIfNull(publicBooks);
-    }
-
-    private Task PersistData()
-    {
-        ApplicationState.PersistAsJson(nameof(publicBooks), publicBooks);
-
-        return Task.CompletedTask;
-    }
-
-    void IDisposable.Dispose()
-    {
-        persistingSubscription.Dispose();
-    }
-}
+    <NotAuthorized>
+        <div class="d-flex justify-content-center align-items-center h-screen-minus-header">
+            <div>
+                <div>Welcome to</div>
+                <h1 class="color-secondary font-size-8xl sm:font-size-6xl font-bold">
+                    Anki Books
+                </h1>
+            </div>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>

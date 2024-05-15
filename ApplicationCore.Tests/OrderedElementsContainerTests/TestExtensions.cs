@@ -1,5 +1,4 @@
 using AnkiBooks.ApplicationCore.Entities;
-using AnkiBooks.ApplicationCore.Interfaces;
 
 namespace AnkiBooks.ApplicationCore.Tests.OrderedElementsContainerTests;
 

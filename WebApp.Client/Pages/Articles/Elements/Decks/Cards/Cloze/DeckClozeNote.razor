@@ -1,20 +1,7 @@
 @using AnkiBooks.ApplicationCore.Entities
 
-<div class="border-primary text-center w-72 d-flex flex-column justify-content-center align-items-center p-4" >
-
-    <div>
-        @ClozeNote.Text
-
-        @if (AnswerRevealed == true)
-        {
-            <span> this is a cloze note</span>
-        }
-        else
-        {
-            <span> [...]</span>
-        }
-    </div>
-    
+<div class="w-100-percent h-100-percent d-flex justify-content-center align-items-center p-4">
+    @(AnswerRevealed == false ? ClozeNote.ClozeFrontText() : ClozeNote.ClozeBackText())
 </div>
 
 @code {

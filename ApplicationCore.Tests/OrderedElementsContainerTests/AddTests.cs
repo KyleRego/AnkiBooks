@@ -1,7 +1,5 @@
 using AnkiBooks.ApplicationCore.Entities;
-using AnkiBooks.ApplicationCore;
 using AnkiBooks.ApplicationCore.Interfaces;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace AnkiBooks.ApplicationCore.Tests.OrderedElementsContainerTests;
 
