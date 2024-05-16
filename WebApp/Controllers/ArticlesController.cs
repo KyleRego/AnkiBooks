@@ -26,7 +26,7 @@ public class ArticlesController(IArticleRepository articleRepository,
     public async Task<ActionResult<Article>> GetArticle(string id)
     {
         Article? article = await _articleRepository.GetArticleAsync(id);
-        logger.LogInformation(JsonSerializer.Serialize(article));
+
         if (article == null)
         {
             return NotFound();

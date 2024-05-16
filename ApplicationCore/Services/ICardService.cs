@@ -8,5 +8,5 @@ public interface ICardService
 
     public Task<Card?> PutCard(Card card);
 
-    public Task DeleteCard(string cardId);
+    public Task DeleteCard(Card card);
 }

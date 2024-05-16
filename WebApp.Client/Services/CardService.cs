@@ -72,8 +72,32 @@ public class CardService(HttpClient httpClient) : HttpServiceBase(httpClient), I
         return JsonSerializer.Deserialize<ClozeNote>(responseBody, _jsonOptions);
     }
 
-    public Task DeleteCard(string cardId)
+    public async Task DeleteCard(Card card)
     {
-        throw new NotImplementedException();
+        switch(card)
+        {
+            case BasicNote bn:
+                await DeleteBasicNote(bn.Id);
+                return;
+
+            case ClozeNote cn:
+                await DeleteClozeNote(cn.Id);
+                return;
+
+            default:
+                throw new ApplicationException();
+        }
+    }
+
+    private async Task DeleteBasicNote(string basicNoteId)
+    {
+        HttpResponseMessage response = await _httpClient.DeleteAsync($"api/BasicNotes/{basicNoteId}");
+        response.EnsureSuccessStatusCode();
+    }
+
+    private async Task DeleteClozeNote(string clozeNoteId)
+    {
+        HttpResponseMessage response = await _httpClient.DeleteAsync($"api/ClozeNotes/{clozeNoteId}");
+        response.EnsureSuccessStatusCode();
     }
 }
