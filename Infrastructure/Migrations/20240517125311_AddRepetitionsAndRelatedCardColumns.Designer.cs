@@ -3,6 +3,7 @@ using System;
 using AnkiBooks.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240517125311_AddRepetitionsAndRelatedCardColumns")]
+    partial class AddRepetitionsAndRelatedCardColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
@@ -123,7 +126,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cards");
+                    b.ToTable("Card");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Card");
 
@@ -486,7 +489,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.Repetition", b =>
                 {
                     b.HasOne("AnkiBooks.ApplicationCore.Entities.Card", "Card")
-                        .WithMany("Repetitions")
+                        .WithMany()
                         .HasForeignKey("CardId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -610,11 +613,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Links");
 
                     b.Navigation("MarkdownContents");
-                });
-
-            modelBuilder.Entity("AnkiBooks.ApplicationCore.Entities.Card", b =>
-                {
-                    b.Navigation("Repetitions");
                 });
 
             modelBuilder.Entity("AnkiBooks.ApplicationCore.Identity.ApplicationRole", b =>

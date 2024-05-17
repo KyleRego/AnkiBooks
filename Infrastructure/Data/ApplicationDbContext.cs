@@ -17,11 +17,16 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Book> Books { get; set; }
 
     public DbSet<Article> Articles { get; set; }
-    public DbSet<ArticleElement> ArticleElements { get; set; }
+    
+    public DbSet<Card> Cards { get; set; }
     public DbSet<BasicNote> BasicNotes { get; set; }
     public DbSet<ClozeNote> ClozeNotes { get; set; }
+
+    public DbSet<ArticleElement> ArticleElements { get; set; }
     public DbSet<Deck> Decks { get; set; }
     public DbSet<MarkdownContent> MarkdownContents { get; set; }
+
+    public DbSet<Repetition> Repetitions { get; set; }
 
     public DbSet<Link> Links { get; set; }
 

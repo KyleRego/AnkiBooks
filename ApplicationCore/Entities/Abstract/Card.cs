@@ -10,4 +10,17 @@ public class Card : EntityBase, ICard
 
     [JsonIgnore]
     public Deck? Deck { get; set; }
+
+    public IEnumerable<Repetition> Repetitions { get; set; } = [];
+
+    [Required]
+    public float EasinessFactor { get; set; } = 2.5F;
+
+    [Required]
+    public int InterRepetitionInterval { get; set; } = 0;
+
+    [Required]
+    public int SuccessfulRecallStreak { get; set; } = 0;
+
+    public DateTimeOffset? LastReviewedAt { get; set; }
 }

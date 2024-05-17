@@ -14,6 +14,7 @@ using AnkiBooks.WebApp.Components.Account;
 using AnkiBooks.WebApp.Services;
 
 using AnkiBooks.WebApp.Client;
+using AnkiBooks.ApplicationCore.Interfaces;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +59,7 @@ builder.Services.AddScoped<IClozeNoteRepository, ClozeNoteRepository>();
 builder.Services.AddScoped<IDeckRepository, DeckRepository>();
 builder.Services.AddScoped<IMarkdownContentRepository, MarkdownContentRepository>();
 builder.Services.AddScoped<ILinkRepository, LinkRepository>();
+builder.Services.AddScoped<IRepetitionRepository, RepetitionRepository>();
 
 builder.Services.AddScoped<IUserArticleService, UserArticleService>();
 builder.Services.AddScoped<IBookService, BookService>();
@@ -65,6 +67,8 @@ builder.Services.AddScoped<ILinkService, LinkService>();
 builder.Services.AddScoped<IUserIdProvider, UserIdProvider>();
 builder.Services.AddScoped<IArticleElementService, ArticleElementService>();
 builder.Services.AddScoped<ICardService, CardService>();
+builder.Services.AddScoped<IRepetitionService, RepetitionService>();
+
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
