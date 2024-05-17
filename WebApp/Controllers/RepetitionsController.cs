@@ -6,16 +6,23 @@ namespace AnkiBooks.WebApp.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class RepetitionsController(IRepetitionRepository repository) : ControllerBase
+public class RepetitionsController(ICardRepository cardRepository, IRepetitionRepository repRepository) : ControllerBase
 {
-    private readonly IRepetitionRepository _repository = repository;
+    private readonly ICardRepository _cardRepository = cardRepository;
+    private readonly IRepetitionRepository _repRepository = repRepository;
 
     [HttpPost]
     public async Task<ActionResult<Repetition>> PostRepetition(Repetition rep)
     {
-        // Need to work out authorization
-        // Check card id of repetition is for a card the user can access
+        Card? card = await _cardRepository.GetCard(rep.CardId);
+        if (card == null) return BadRequest();
+        // TODO: Check card id of repetition is for a card the user can access
 
-        return await _repository.InsertRepetition(rep);
+        int successStreak = await _cardRepository.GetSuccessfulRepetitionsStreak(card);
+
+        card.UpdateSelfForRepetition(rep.Grade, successStreak);
+        await _cardRepository.UpdateCardAsync(card);
+
+        return await _repRepository.InsertRepetition(rep);
     }
 }
