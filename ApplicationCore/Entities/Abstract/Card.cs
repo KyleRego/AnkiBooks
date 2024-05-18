@@ -1,4 +1,6 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+
 using AnkiBooks.ApplicationCore.Enums;
 using AnkiBooks.ApplicationCore.Interfaces;
 
@@ -11,6 +13,9 @@ public class Card : EntityBase, ICard
 
     [JsonIgnore]
     public Deck? Deck { get; set; }
+
+    [NotMapped]
+    public bool ShowingAnswer { get; set; } = false;
 
     public List<Repetition> Repetitions { get; set; } = [];
 
