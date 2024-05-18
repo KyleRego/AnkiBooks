@@ -17,6 +17,8 @@
 }
 else
 {
+    @if (dueCards.Count > 0)
+    {
     <div class="my-4 d-flex flex-row flex-no-wrap justify-content-start align-items-end overflow-x-scroll">
         @for (int j = 0; j < dueCards.Count; j++)
         {
@@ -27,6 +29,11 @@ else
             </div>
         }
     </div>
+    }
+    else
+    {
+        <p>Congratulations, no cards are currently due</p>
+    }
 }
 
 @code {
@@ -44,9 +51,7 @@ else
         }
         else
         {
-            @* This is not working, it may be the same issue with the serializing a list of an abstract type *@
-            @* dueCards = restored; *@
-            dueCards = await CardService.GetDueCards();
+            dueCards = restored;
         }
 
         ArgumentNullException.ThrowIfNull(dueCards);

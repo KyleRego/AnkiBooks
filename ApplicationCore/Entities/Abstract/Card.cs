@@ -6,6 +6,8 @@ using AnkiBooks.ApplicationCore.Interfaces;
 
 namespace AnkiBooks.ApplicationCore.Entities;
 
+[JsonDerivedType(typeof(BasicNote), typeDiscriminator: "BasicNote")]
+[JsonDerivedType(typeof(ClozeNote), typeDiscriminator: "ClozeNote")]
 public class Card : EntityBase, ICard
 {
     [Required]
