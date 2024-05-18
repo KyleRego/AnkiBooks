@@ -9,4 +9,6 @@ public interface ICardService
     public Task<Card?> PutCard(Card card);
 
     public Task DeleteCard(Card card);
+
+    public Task<List<Card>?> GetDueCards();
 }

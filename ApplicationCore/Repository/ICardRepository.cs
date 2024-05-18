@@ -8,5 +8,7 @@ public interface ICardRepository
 
     Task<int> GetSuccessfulRepetitionsStreak(Card card);
 
-    Task<Card> UpdateCardAsync(Card card); 
+    Task<Card> UpdateCardAsync(Card card);
+
+    Task<List<Card>> GetDueCards(string userId);
 }

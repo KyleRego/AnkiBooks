@@ -11,28 +11,19 @@ namespace AnkiBooks.WebApp.Controllers;
 [Route("api/user/Articles")]
 [ApiController]
 public class UserArticlesController(IUserArticleRepository repository,
-                                    ILogger<UserArticlesController> logger) : ControllerBase
+                                    ILogger<UserArticlesController> logger) : ApplicationController
 {
     private readonly IUserArticleRepository _repository = repository;
     private readonly ILogger<UserArticlesController> _logger = logger;
-
-    private string? CurrentUserId()
-    {
-        return HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-    }
 
     // GET: api/user/Articles
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Article>>> GetArticles()
     {
-        _logger.LogCritical("made it here");
         string? userId = CurrentUserId();
         if (userId == null) return BadRequest("User ID not in claims");
-        _logger.LogInformation("What the heck");
 
-        List<Article> articles = await _repository.GetArticlesAsync(userId);
-        _logger.LogInformation(articles.ToString());
-        return articles;
+        return await _repository.GetArticlesAsync(userId);
     }
 
     // GET: api/user/Articles/5

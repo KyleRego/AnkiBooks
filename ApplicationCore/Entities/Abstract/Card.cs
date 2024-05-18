@@ -25,7 +25,11 @@ public class Card : EntityBase, ICard
     [Required]
     public int InterRepetitionInterval { get; set; } = 0;
 
-    public void UpdateSelfForRepetition(Grade grade, int successStreak)
+    // TODO: DRY this method call by putting it somewhere maybe in its own class
+    [Required]
+    public long DueAt { get; set; } = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+
+    public void UpdateSelfAfterRepetition(Grade grade, int successStreak)
     {
         if (grade == Grade.Good)
         {
@@ -48,9 +52,11 @@ public class Card : EntityBase, ICard
             EasinessFactor = 0;
         }
 
-        // If there were 6 grades, qFactor would be 1-6 (see SM2 algorithm)
-        // Since there are 2 grades, take them to represent 4 and 2
-        int q = grade == Grade.Good ? 4 : 2;
+        DueAt = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds() + InterRepetitionInterval * 86400;
+
+        // If there were 6 grades, q could be 1 to 6 (see SM2 algorithm)
+        // Since Anki Books uses 2 grades, take them to represent 2 and 5
+        int q = grade == Grade.Bad ? 2 : 5;
 
         EasinessFactor += 0.1F - (5 - q) * (0.08F + (5 - q) * 0.02F);
 

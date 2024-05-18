@@ -1,0 +1,66 @@
+@page "/study"
+
+@implements IDisposable
+
+@layout MainLayout
+
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Services
+
+@inject ICardService CardService
+@inject ILogger<Study> logger
+@inject PersistentComponentState ApplicationState
+
+@if (dueCards == null)
+{
+    <p>Requesting due cards...</p>
+}
+else
+{
+    <div class="my-4 d-flex flex-row flex-no-wrap justify-content-start align-items-end overflow-x-scroll">
+        @for (int j = 0; j < dueCards.Count; j++)
+        {
+            Card card = dueCards[j];
+
+            <div class="mr-5 mb-4 flex-shrink-0">
+                <AnkiBooks.WebApp.Client.Pages.Articles.Elements.Decks.Cards.CardRoot Card="@card" @bind-Cards="dueCards" />
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<Card>? dueCards;
+
+    private PersistingComponentStateSubscription persistingSubscription;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
+
+        if (!ApplicationState.TryTakeFromJson<List<Card>>(nameof(dueCards), out var restored))
+        {
+            dueCards = await CardService.GetDueCards();
+        }
+        else
+        {
+            @* This is not working, it may be the same issue with the serializing a list of an abstract type *@
+            @* dueCards = restored; *@
+            dueCards = await CardService.GetDueCards();
+        }
+
+        ArgumentNullException.ThrowIfNull(dueCards);
+    }
+
+    private Task PersistData()
+    {
+        ApplicationState.PersistAsJson(nameof(dueCards), dueCards);
+
+        return Task.CompletedTask;
+    }
+
+    void IDisposable.Dispose()
+    {
+        persistingSubscription.Dispose();
+    }
+}

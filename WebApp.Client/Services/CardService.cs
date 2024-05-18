@@ -100,4 +100,16 @@ public class CardService(HttpClient httpClient) : HttpServiceBase(httpClient), I
         HttpResponseMessage response = await _httpClient.DeleteAsync($"api/ClozeNotes/{clozeNoteId}");
         response.EnsureSuccessStatusCode();
     }
+
+    public async Task<List<Card>?> GetDueCards()
+    {
+        HttpRequestMessage request = new(HttpMethod.Get, $"api/DueCards");
+        request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
+
+        HttpResponseMessage response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+
+        string responseBody = await response.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<List<Card>>(responseBody, _jsonOptions);
+    }
 }

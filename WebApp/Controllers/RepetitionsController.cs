@@ -20,7 +20,7 @@ public class RepetitionsController(ICardRepository cardRepository, IRepetitionRe
 
         int successStreak = await _cardRepository.GetSuccessfulRepetitionsStreak(card);
 
-        card.UpdateSelfForRepetition(rep.Grade, successStreak);
+        card.UpdateSelfAfterRepetition(rep.Grade, successStreak);
         await _cardRepository.UpdateCardAsync(card);
 
         return await _repRepository.InsertRepetition(rep);

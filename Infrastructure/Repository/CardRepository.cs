@@ -15,6 +15,14 @@ public class CardRepository(ApplicationDbContext dbContext) : ICardRepository
         return await _dbContext.Cards.FirstOrDefaultAsync(c => c.Id == cardId);
     }
 
+    public async Task<List<Card>> GetDueCards(string userId)
+    {
+        long currentTime = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+
+        // TODO: This needs to take into account the userId and perform some joins
+        return await _dbContext.Cards.Where(card => card.DueAt < currentTime).ToListAsync();
+    }
+
     public async Task<int> GetSuccessfulRepetitionsStreak(Card card)
     {
         Repetition? mostRecentFailedRep = await _dbContext.Repetitions
