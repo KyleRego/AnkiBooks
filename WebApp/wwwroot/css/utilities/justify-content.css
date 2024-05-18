@@ -18,4 +18,18 @@
     .sm\:justify-content-start {
         justify-content: start;
     }
+
+    .sm\:justify-content-between {
+        justify-content: space-between;
+    }
+}
+
+@media (min-width: 768px) {
+    .md\:justify-content-start {
+        justify-content: start;
+    }
+
+    .md\:justify-content-between {
+        justify-content: space-between;
+    }
 }
