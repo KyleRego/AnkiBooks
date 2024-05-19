@@ -26,6 +26,9 @@
 else
 {
     <div class="d-flex flex-row justify-content-start">
+        <div class="w-5">
+            @* This adds space to the left of the card to keep it centered *@
+        </div>
         <div class="border-primary w-84 h-48">
             @switch(Card)
             {
@@ -48,7 +51,6 @@ else
             </div>
         </div>
     </div>
-
     <div class="d-flex flex-row justify-content-center mt-2">
         @if (Card.ShowingAnswer == false)
         {
@@ -72,18 +74,13 @@ else
     [Parameter]
     public required Card Card { get; set; }
 
-    [Parameter]
-    public required List<Card> Cards { get; set; }
-
-    [Parameter]
-    public EventCallback<List<Card>> CardsChanged { get; set; }
-
-    private bool editingCard;
-
     private void RevealAnswer()
     {
         Card.ShowingAnswer = true;
     }
+
+    [Parameter]
+    public Func<Card, Grade, Task>? ParentHandleGradeMethod { get; set; }
 
     private async Task HandleGrade(Grade grade)
     {
@@ -95,31 +92,20 @@ else
         Repetition? createdRep = await RepetitionService.PostRepetition(rep);
         ArgumentNullException.ThrowIfNull(createdRep);
 
-        switch(grade)
+        Card.ShowingAnswer = false;
+
+        if (ParentHandleGradeMethod != null)
         {
-            case Grade.Bad:
-                Card.ShowingAnswer = false;
-                Cards.Remove(Card);
-                Cards.Add(Card);
-                break;
-
-            case Grade.Good:
-                Cards.Remove(Card);
-                break;
-
-            default:
-                throw new ApplicationException();
+            await ParentHandleGradeMethod.Invoke(Card, grade);
         }
-
-        await CardsChanged.InvokeAsync(Cards);      
     }
+
+    private bool editingCard;
 
     private void StartEditing() => editingCard = true;
 
     private async Task DeleteCard()
     {
         await CardService.DeleteCard(Card);
-        Cards.Remove(Card);
-        await CardsChanged.InvokeAsync(Cards);
     }
 }

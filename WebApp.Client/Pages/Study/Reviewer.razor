@@ -1,0 +1,61 @@
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Enums
+@using AnkiBooks.ApplicationCore.Services
+
+@inject IRepetitionService RepetitionService
+
+@if (currentCard != null)
+{
+    <div class="d-flex justify-content-center align-items-center">
+        <div>
+            <AnkiBooks.WebApp.Client.Pages.Articles.Elements.Decks.Cards.CardRoot
+                    Card="@currentCard"
+                    ParentHandleGradeMethod="@HandleGrade" />
+        </div>
+    </div>
+}
+else
+{
+    <p>
+        No cards are due :) go to <a href="/articles">articles</a>?
+    </p>
+}
+
+@code {
+    private Card? currentCard;
+
+    [Parameter]
+    public required List<Card> Cards { get; set; }
+
+    private void SetCurrentCard()
+    {
+        currentCard = (Cards.Count > 0) ? Cards[0] : null;  
+    }
+
+    protected override void OnParametersSet()
+    {
+        SetCurrentCard();
+    }
+
+    private Task HandleGrade(Card card, Grade grade)
+    {
+        switch(grade)
+        {
+            case Grade.Good:
+                Cards.Remove(card);
+                break;
+
+            case Grade.Bad:
+                Cards.Remove(card);
+                Cards.Add(card);
+                break;
+
+            default:
+                throw new ApplicationException();
+        }
+
+        SetCurrentCard();
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+}

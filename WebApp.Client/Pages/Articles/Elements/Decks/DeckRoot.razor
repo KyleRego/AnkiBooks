@@ -92,7 +92,7 @@ else
             Card card = Cards[j];
 
             <div class="mr-5 mb-4 flex-shrink-0">
-                <CardRoot Card="@card" @bind-Cards="Cards" />
+                <CardRoot Card="@card" ParentHandleGradeMethod="@HandleGrade" />
             </div>
         }
     </div>
@@ -106,5 +106,14 @@ else
     protected override void OnParametersSet()
     {
         Cards = ArticleElement.Cards();
+    }
+
+    private Task HandleGrade(Card card, Grade grade)
+    {
+        Cards.Remove(card);
+        Cards.Add(card);
+
+        StateHasChanged();
+        return Task.CompletedTask;
     }
 }
