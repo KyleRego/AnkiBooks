@@ -35,8 +35,12 @@ public class ArticleRepository(ApplicationDbContext dbContext) : IArticleReposit
     public async Task<Article?> GetArticleAsync(string articleId)
     {
         return await _dbContext.Articles
+                    .Include(a => a.Links)
                     .Include(a => a.Decks)
-                    .Include(a => a.MarkdownContents)
+                    .ThenInclude(d => d.BasicNotes)
+                    .Include(a => a.Decks)
+                    .ThenInclude(d => d.ClozeNotes)
+                    .Include(sec => sec.MarkdownContents)
                     .FirstOrDefaultAsync(a => a.Id == articleId);
     }
 
