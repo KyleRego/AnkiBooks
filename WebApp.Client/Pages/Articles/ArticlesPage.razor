@@ -5,7 +5,7 @@
 
 @layout MainLayout
 
-@inject IUserArticleService UserArticleService
+@inject IArticleService ArticleService
 @inject ILogger<ArticlesPage> Logger
 @inject PersistentComponentState ApplicationState
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -58,7 +58,7 @@
 
         if (!ApplicationState.TryTakeFromJson<Article>(nameof(currentArticle), out var restored))
         {
-            currentArticle = await UserArticleService.GetUserArticle(Id);
+            currentArticle = await ArticleService.GetArticle(Id);
         }
         else
         {

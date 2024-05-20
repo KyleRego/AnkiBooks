@@ -7,7 +7,7 @@
 @using System.Security.Claims
 @using AnkiBooks.ApplicationCore.Services
 
-@inject IUserArticleService UserArticleService
+@inject IArticleService ArticleService
 @inject ILogger<ArticlesTree> Logger
 @inject PersistentComponentState ApplicationState
 
@@ -50,7 +50,7 @@
 
         if (!ApplicationState.TryTakeFromJson<List<Article>>(nameof(articles), out var restored))
         {
-            articles = await UserArticleService.GetUserArticles();
+            articles = await ArticleService.GetUserArticles();
         }
         else
         {

@@ -1,15 +1,25 @@
-using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+
 using AnkiBooks.ApplicationCore.Entities;
-using AnkiBooks.ApplicationCore.Interfaces;
 using AnkiBooks.ApplicationCore.Repository;
 using AnkiBooks.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace AnkiBooks.Infrastructure.Repository;
 
 public class ArticleRepository(ApplicationDbContext dbContext) : IArticleRepository
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
+
+    public async Task<List<Article>> GetUserArticlesAsync(string userId)
+    {
+        // TODO: Look into a recursive way of doing this
+        return await _dbContext.Articles
+                            .Include(a => a.ChildArticles)
+                            .ThenInclude(ca => ca.ChildArticles)
+                            .ThenInclude(cca => cca.ChildArticles)
+                            .Where(a => a.ParentArticleId == null && a.UserId == userId)
+                            .ToListAsync();
+    }
 
     public async Task<List<Article>> GetArticlesAsync()
     {

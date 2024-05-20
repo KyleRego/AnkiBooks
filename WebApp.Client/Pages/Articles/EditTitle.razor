@@ -1,7 +1,7 @@
 @using AnkiBooks.ApplicationCore.Entities
 @using AnkiBooks.ApplicationCore.Services
 
-@inject IUserArticleService UserArticleService
+@inject IArticleService ArticleService
 @inject ILogger<EditTitle> logger
 
 <EditForm Model="FormArticle" OnValidSubmit="SubmitForm">
@@ -41,7 +41,7 @@
         ArgumentNullException.ThrowIfNull(FormArticle.Id);
         ArgumentNullException.ThrowIfNull(FormArticle.Title);
 
-        Article? updatedArticle = await UserArticleService.PatchUserArticle(FormArticle);
+        Article? updatedArticle = await ArticleService.PatchArticle(FormArticle);
         ArgumentNullException.ThrowIfNull(updatedArticle);
 
         Article.Title = updatedArticle.Title;

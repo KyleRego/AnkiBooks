@@ -5,6 +5,8 @@ namespace AnkiBooks.ApplicationCore.Repository;
 public interface IArticleRepository
 {
     Task<List<Article>> GetArticlesAsync();
+    Task<List<Article>> GetUserArticlesAsync(string userId);
+
     Task<Article?> GetArticleAsync(string articleId);
     Task<Article> InsertArticleAsync(Article article);
     Task DeleteArticleAsync(Article article);

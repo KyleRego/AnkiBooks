@@ -11,7 +11,7 @@ CommonServices.Configure(builder.Services, builder.Configuration);
 builder.Services.AddAuthorizationCore();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddSingleton<AuthenticationStateProvider, PersistentAuthenticationStateProvider>();
-builder.Services.AddScoped<IUserArticleService, UserArticleService>();
+builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<ILinkService, LinkService>();
 builder.Services.AddScoped<ICardService, CardService>();

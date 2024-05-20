@@ -51,7 +51,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.EnableSensitiveDataLogging();
     }
 );
-builder.Services.AddScoped<IUserArticleRepository, UserArticleRepository>();
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IBasicNoteRepository, BasicNoteRepository>();
@@ -62,7 +61,7 @@ builder.Services.AddScoped<ILinkRepository, LinkRepository>();
 builder.Services.AddScoped<IRepetitionRepository, RepetitionRepository>();
 builder.Services.AddScoped<ICardRepository, CardRepository>();
 
-builder.Services.AddScoped<IUserArticleService, UserArticleService>();
+builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<ILinkService, LinkService>();
 builder.Services.AddScoped<IUserIdProvider, UserIdProvider>();

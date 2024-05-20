@@ -1,57 +1,56 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 using AnkiBooks.ApplicationCore.Entities;
-using System.Text.Json;
 using AnkiBooks.ApplicationCore.Repository;
 
 namespace AnkiBooks.WebApp.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
-public class ArticlesController(IArticleRepository articleRepository,
-                                ILogger<ArticlesController> logger) : ControllerBase
+public class ArticlesController(IArticleRepository repository,
+                                    ILogger<ArticlesController> logger) : ApplicationController
 {
-    private readonly IArticleRepository _articleRepository = articleRepository;
+    private readonly IArticleRepository _repository = repository;
+    private readonly ILogger<ArticlesController> _logger = logger;
 
-    // GET: api/Articles
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Article>>> GetArticles()
+    [HttpGet("api/UserArticles")]
+    public async Task<ActionResult<IEnumerable<Article>>> GetUserArticles()
     {
-        List<Article> articles = await _articleRepository.GetArticlesAsync();
-        return articles;
+        string? userId = CurrentUserId();
+        if (userId == null) return BadRequest("User ID not in claims");
+
+        return await _repository.GetUserArticlesAsync(userId);
     }
 
-    // GET: api/Articles/5
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Article>> GetArticle(string id)
+    [HttpGet("api/Articles/{articleId}")]
+    public async Task<ActionResult<Article>> GetArticle(string articleId)
     {
-        Article? article = await _articleRepository.GetArticleAsync(id);
+        string? userId = CurrentUserId();
+        if (userId == null) return BadRequest("User ID not in claims");
 
-        if (article == null)
-        {
-            return NotFound();
-        }
+        Article? article = await _repository.GetArticleAsync(articleId);
+        if (article == null) return NotFound();
 
         return article;
     }
 
-    // PUT: api/Articles/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutArticle(string id, Article article)
+    [HttpPatch("api/Articles/{articleId}")]
+    public async Task<ActionResult<Article>> PatchArticle(string articleId, Article article)
     {
-        if (id != article.Id)
-        {
-            return BadRequest();
-        }
+        if (articleId != article.Id) return BadRequest();
+        string? userId = CurrentUserId();
+        if (userId == null) return BadRequest("User ID not in claims");
+
+        if (!await ArticleExists(articleId)) return NotFound();
 
         try
         {
-            await _articleRepository.UpdateArticleAsync(article);
+            return await _repository.UpdateArticleAsync(article);
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!await ArticleExists(id))
+            if (!await ArticleExists(articleId))
             {
                 return NotFound();
             }
@@ -60,18 +59,18 @@ public class ArticlesController(IArticleRepository articleRepository,
                 throw;
             }
         }
-
-        return NoContent();
     }
 
-    // POST: api/Articles
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPost]
+    [HttpPost("api/Articles")]
     public async Task<ActionResult<Article>> PostArticle(Article article)
     {
+        string? userId = CurrentUserId();
+        if (userId == null) return BadRequest("User ID not in claims");
+
         try
         {
-            await _articleRepository.InsertArticleAsync(article);
+            await _repository.InsertArticleAsync(article);
         }
         catch (DbUpdateException)
         {
@@ -85,27 +84,26 @@ public class ArticlesController(IArticleRepository articleRepository,
             }
         }
 
-        return CreatedAtAction("GetArticle", new { id = article.Id }, article);
+        return CreatedAtAction(nameof(GetArticle), new { articleId = article.Id }, article);
     }
 
-    // DELETE: api/Articles/5
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteArticle(string id)
+    [HttpDelete("api/Articles/{articleId}")]
+    public async Task<IActionResult> DeleteArticle(string articleId)
     {
-        Article? article = await _articleRepository.GetArticleAsync(id);
+        string? userId = CurrentUserId();
+        if (userId == null) return BadRequest("User ID not in claims");
 
-        if (article == null)
-        {
-            return NotFound();
-        }
+        // TODO: Look into the eager loading here, and cascade deleting later
+        Article? article = await _repository.GetArticleAsync(articleId);
+        if (article == null) return NotFound();
 
-        await _articleRepository.DeleteArticleAsync(article);
+        await _repository.DeleteArticleAsync(article);
 
         return NoContent();
     }
 
-    private async Task<bool> ArticleExists(string id)
+    private async Task<bool> ArticleExists(string articleId)
     {
-        return await _articleRepository.ArticleExists(id);
+        return await _repository.ArticleExists(articleId);
     }
 }

@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Components.WebAssembly.Http;
 
 namespace AnkiBooks.WebApp.Client.Services;
 
-public class UserArticleService(HttpClient httpClient) : HttpServiceBase(httpClient), IUserArticleService
+public class ArticleService(HttpClient httpClient) : HttpServiceBase(httpClient), IArticleService
 {
-    public async Task<Article?> GetUserArticle(string articleId)
+    public async Task<Article?> GetArticle(string articleId)
     {
-        HttpRequestMessage request = new(HttpMethod.Get, $"api/user/Articles/{articleId}");
+        HttpRequestMessage request = new(HttpMethod.Get, $"api/Articles/{articleId}");
         request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
 
         HttpResponseMessage response = await _httpClient.SendAsync(request);
@@ -22,7 +22,7 @@ public class UserArticleService(HttpClient httpClient) : HttpServiceBase(httpCli
 
     public async Task<List<Article>?> GetUserArticles()
     {
-        HttpRequestMessage request = new(HttpMethod.Get, $"api/user/Articles");
+        HttpRequestMessage request = new(HttpMethod.Get, $"api/UserArticles");
         request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
 
         HttpResponseMessage response = await _httpClient.SendAsync(request);
@@ -32,9 +32,9 @@ public class UserArticleService(HttpClient httpClient) : HttpServiceBase(httpCli
         return JsonSerializer.Deserialize<List<Article>>(responseBody, _jsonOptions);
     }
 
-    public async Task<Article?> PostUserArticle(Article article)
+    public async Task<Article?> PostArticle(Article article)
     {
-        HttpRequestMessage request = new(HttpMethod.Post, $"api/user/Articles")
+        HttpRequestMessage request = new(HttpMethod.Post, $"api/Articles")
         {
             Content = new StringContent(JsonSerializer.Serialize(article),
                                         new MediaTypeHeaderValue("application/json"))
@@ -48,9 +48,9 @@ public class UserArticleService(HttpClient httpClient) : HttpServiceBase(httpCli
         return JsonSerializer.Deserialize<Article>(responseBody, _jsonOptions);
     }
 
-    public async Task<Article?> PatchUserArticle(Article article)
+    public async Task<Article?> PatchArticle(Article article)
     {
-        HttpRequestMessage request = new(HttpMethod.Patch, $"api/user/Articles/{article.Id}")
+        HttpRequestMessage request = new(HttpMethod.Patch, $"api/Articles/{article.Id}")
         {
             Content = new StringContent(JsonSerializer.Serialize(article),
                                         new MediaTypeHeaderValue("application/json"))

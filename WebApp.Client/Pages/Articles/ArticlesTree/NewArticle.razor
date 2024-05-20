@@ -4,7 +4,7 @@
 @using AnkiBooks.WebApp.Client.Shared.Heroicons
 @using System.Security.Claims
 
-@inject IUserArticleService UserArticleService
+@inject IArticleService ArticleService
 @inject NavigationManager Navigation
 @inject IConfiguration Config
 @inject ILogger<NewArticle> Logger
@@ -85,7 +85,7 @@
         ArgumentNullException.ThrowIfNullOrWhiteSpace(Article.Title);
         Article.ParentArticleId = ParentArticle?.Id;
 
-        Article? article = await UserArticleService.PostUserArticle(Article);
+        Article? article = await ArticleService.PostArticle(Article);
         ArgumentNullException.ThrowIfNull(article);
         Articles.Add(article);
         await ArticlesChanged.InvokeAsync(Articles);
