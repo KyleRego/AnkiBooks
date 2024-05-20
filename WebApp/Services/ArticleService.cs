@@ -5,7 +5,7 @@ using AnkiBooks.ApplicationCore.Services;
 namespace AnkiBooks.WebApp.Services;
 
 public class ArticleService(IArticleRepository repository,
-                                IUserIdProvider userIdProvider) : IArticleService
+                            IUserIdProvider userIdProvider) : IArticleService
 {
     private readonly IArticleRepository _repository = repository;
     private readonly IUserIdProvider _userIdProvider = userIdProvider;
@@ -32,6 +32,11 @@ public class ArticleService(IArticleRepository repository,
     }
 
     public Task<Article?> PatchArticle(Article article)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteArticle(string articleId)
     {
         throw new NotImplementedException();
     }

@@ -8,7 +8,7 @@ namespace AnkiBooks.WebApp.Controllers;
 
 [ApiController]
 public class ArticlesController(IArticleRepository repository,
-                                    ILogger<ArticlesController> logger) : ApplicationController
+                                ILogger<ArticlesController> logger) : ApplicationController
 {
     private readonly IArticleRepository _repository = repository;
     private readonly ILogger<ArticlesController> _logger = logger;
@@ -96,6 +96,8 @@ public class ArticlesController(IArticleRepository repository,
         // TODO: Look into the eager loading here, and cascade deleting later
         Article? article = await _repository.GetArticleAsync(articleId);
         if (article == null) return NotFound();
+
+        // TODO: Need to look into policy-based authorization or something
 
         await _repository.DeleteArticleAsync(article);
 

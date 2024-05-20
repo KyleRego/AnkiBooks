@@ -63,4 +63,13 @@ public class ArticleService(HttpClient httpClient) : HttpServiceBase(httpClient)
         string responseBody = await response.Content.ReadAsStringAsync();
         return JsonSerializer.Deserialize<Article>(responseBody, _jsonOptions);
     }
+
+    public async Task DeleteArticle(string articleId)
+    {
+        HttpRequestMessage request = new(HttpMethod.Delete, $"api/Articles/{articleId}");
+        request.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
+
+        HttpResponseMessage response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+    }
 }

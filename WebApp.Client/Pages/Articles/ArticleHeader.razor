@@ -1,11 +1,15 @@
 @using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Services
+
+@inject IArticleService ArticleService
+@inject NavigationManager Navigation
 
 <div class="m-4">
-    @if (editingTitle == true)
+    @if (editing == true)
     {
         <EditTitle @bind-Article:get="@Article"
                             @bind-Article:set="@ArticleChanged"
-                            @bind-EditingTitle="editingTitle" />
+                            @bind-EditingTitle="editing" />
     }
     else
     {
@@ -14,35 +18,65 @@
                 @Article.Title
             </h1>
 
-            <div class="d-flex flex-row justify-content-start">
-                <div class="w-5 h-5 mr-2" role="button" title="Edit article title" @onclick="StartEditingTitle">
-                    <Edit />
-                </div>
+            @if (showingOptions == false)
+            {
+                <div class="d-flex flex-row justify-content-start">
+                    <div class="w-5 h-5 mr-2" role="button" title="Edit markdown" @onclick="StartEditing">
+                        <Edit />
+                    </div>
 
-                <div role="button" class="w-5 h-5" title="Options (TODO)">
-                    <Gear />
+                    <div role="button" class="w-5 h-5" title="Options" @onclick="ShowOptions">
+                        <Gear />
+                    </div>
                 </div>
-            </div>
+            }
+            else
+            {
+                <div class="position-relative top-4 right-4 px-2 border-primary">
+                    <ul>
+                        <li class="my-2" @onclick="CancelShowingOptions">Cancel</li>
+                        <li class="my-2" @onclick="DeleteArticle">Delete article</li>
+                    </ul>
+                </div>
+            }
         </div>
     }
 </div>
 
 @code {
     [Parameter]
-    public Article Article { get; set; } = null!;
+    public required Article Article { get; set; }
 
     [Parameter]
     public EventCallback<Article?> ArticleChanged { get; set; }
 
     protected override void OnParametersSet()
     {
-        editingTitle = false;
+        editing = false;
     }
 
-    private bool editingTitle = false;
+    private bool editing = false;
 
-    private void StartEditingTitle()
+    private void StartEditing()
     {
-        editingTitle = true;
+        editing = true;
+    }
+
+    private bool showingOptions = false;
+
+    private void ShowOptions()
+    {
+        showingOptions = true;
+    }
+
+    private void CancelShowingOptions()
+    {
+        showingOptions = false;
+    }
+
+    private async Task DeleteArticle()
+    {
+        await ArticleService.DeleteArticle(Article.Id);
+        Navigation.NavigateTo("articles");
     }
 }
