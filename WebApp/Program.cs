@@ -14,7 +14,6 @@ using AnkiBooks.WebApp.Components.Account;
 using AnkiBooks.WebApp.Services;
 
 using AnkiBooks.WebApp.Client;
-using AnkiBooks.ApplicationCore.Interfaces;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

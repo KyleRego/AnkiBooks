@@ -1,10 +1,29 @@
+@using Ganss.Xss
+
 @using AnkiBooks.ApplicationCore.Entities
 
 <div class="w-100-percent h-100-percent d-flex justify-content-center align-items-center p-4">
-    @(AnswerRevealed == false ? ClozeNote.ClozeFrontText() : ClozeNote.ClozeBackText())
+    <div>
+        @cardText
+    </div>
 </div>
 
 @code {
+    private MarkupString cardText;
+
+    private HtmlSanitizer sanitizer = new();
+
+    protected override void OnParametersSet()
+    {
+        sanitizer.AllowedAttributes.Add("class");
+
+        string unsafeHtml = (AnswerRevealed == false ? ClozeNote.ClozeFrontHtml() : ClozeNote.ClozeBackHtml());
+
+        string sanitizedHtml = sanitizer.Sanitize(unsafeHtml);
+
+        cardText = (MarkupString)(sanitizedHtml);
+    }
+
     [Parameter]
     public ClozeNote ClozeNote { get; set; } = null!;
 

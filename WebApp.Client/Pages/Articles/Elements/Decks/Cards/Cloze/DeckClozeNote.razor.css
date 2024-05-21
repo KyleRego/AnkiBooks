@@ -1,0 +1,3 @@
+::deep .cloze-question, ::deep .cloze-answer {
+    color: var(--ab-color-cloze);
+}

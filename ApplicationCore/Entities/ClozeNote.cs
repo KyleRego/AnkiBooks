@@ -22,8 +22,18 @@ public partial class ClozeNote : Card
         return Regex.Replace(Text, clozeMarkersRegex, clozeMarkersReplacement);
     }
 
+    public string ClozeFrontHtml()
+    {
+        return Regex.Replace(Text, clozeMarkersRegex, $"<span class=\"cloze-question\">{clozeMarkersReplacement}</span>");
+    }
+
     public string ClozeBackText()
     {
         return Regex.Replace(Text, clozeMarkersRegex, "$1");
+    }
+
+    public string ClozeBackHtml()
+    {
+        return Regex.Replace(Text, clozeMarkersRegex, "<span class=\"cloze-answer\">$1</span>");     
     }
 }

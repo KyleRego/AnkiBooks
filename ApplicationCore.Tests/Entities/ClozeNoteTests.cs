@@ -8,7 +8,7 @@ public class ClozeNoteTests
     // ClozeValid() tests 
 
     [Fact]
-    public void ClozeNoteIsNotValidWithoutClozeMarkers()
+    public void ClozeValidIsFalseWithoutClozeMarkers()
     {
         ClozeNote cn = new()
         {
@@ -19,11 +19,22 @@ public class ClozeNoteTests
     }
 
     [Fact]
-    public void ClozeNoteIsValidWithClozeMarkers()
+    public void ClozeValidIsTrueWithClozeMarkers()
     {
         ClozeNote cn = new()
         {
             Text = "A {{c1::cloze marker}} is in this one so it is valid"
+        };
+
+        Assert.True(cn.ValidCloze());
+    }
+
+    [Fact]
+    public void ClozeValidIsTrueWithMultipleClozeMarkers()
+    {
+        ClozeNote cn = new()
+        {
+            Text = "A {{c1::cloze marker}} is {{c2::in this}} one so it is valid"
         };
 
         Assert.True(cn.ValidCloze());
@@ -53,8 +64,10 @@ public class ClozeNoteTests
         Assert.Equal("Multiple [...] are in [...].", cn.ClozeFrontText());
     }
 
+    // ClozeBackText() Tests
+
     [Fact]
-    public void ClozeBackShowsTheInsideOfClozeMarkers()
+    public void ClozeBackTextShowsTheInsideOfClozeMarkers()
     {
         ClozeNote cn = new()
         {
@@ -65,7 +78,7 @@ public class ClozeNoteTests
     }
 
     [Fact]
-    public void ClozeBackShowsInsidesOfAllClozeMarkers()
+    public void ClozeBackTextShowsInsidesOfAllClozeMarkers()
     {
         ClozeNote cn = new()
         {
@@ -73,5 +86,18 @@ public class ClozeNoteTests
         };
 
         Assert.Equal("Multiple cloze markers are in this one.", cn.ClozeBackText());
+    }
+
+    // ClozeBackHtml() tests
+
+    [Fact]
+    public void ClozeBackHtmlShowsAnswersInSpan()
+    {
+        ClozeNote cn = new()
+        {
+            Text = "Multiple {{c1::cloze markers}} are in {{c2::this one}}."
+        };
+
+        Assert.Equal("Multiple <span class=\"cloze-answer\">cloze markers</span> are in <span class=\"cloze-answer\">this one</span>.", cn.ClozeBackHtml());
     }
 }
