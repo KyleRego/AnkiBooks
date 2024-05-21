@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Ganss.Xss;
 
 namespace AnkiBooks.ApplicationCore.Entities;
 
@@ -9,6 +10,12 @@ public partial class ClozeNote : Card
 
     private readonly string clozeMarkersRegex = "{{c\\d::(.*?)}}";
     private readonly string clozeMarkersReplacement = "[...]";
+    private readonly HtmlSanitizer sanitizer = new();
+
+    public ClozeNote()
+    {
+        sanitizer.AllowedAttributes.Add("class");
+    }
 
     public bool ValidCloze()
     {
@@ -24,7 +31,8 @@ public partial class ClozeNote : Card
 
     public string ClozeFrontHtml()
     {
-        return Regex.Replace(Text, clozeMarkersRegex, $"<span class=\"cloze-question\">{clozeMarkersReplacement}</span>");
+        string sanitizedText = sanitizer.Sanitize(Text);
+        return Regex.Replace(sanitizedText, clozeMarkersRegex, $"<span class=\"cloze-question\">{clozeMarkersReplacement}</span>");
     }
 
     public string ClozeBackText()
@@ -34,6 +42,7 @@ public partial class ClozeNote : Card
 
     public string ClozeBackHtml()
     {
-        return Regex.Replace(Text, clozeMarkersRegex, "<span class=\"cloze-answer\">$1</span>");     
+        string sanitizedText = sanitizer.Sanitize(Text);
+        return Regex.Replace(sanitizedText, clozeMarkersRegex, "<span class=\"cloze-answer\">$1</span>");     
     }
 }

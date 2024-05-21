@@ -43,7 +43,7 @@ public class ClozeNoteTests
     // ClozeFrontText() tests
 
     [Fact]
-    public void ClozeNoteFrontReplacesOneClozeMarkers()
+    public void ClozeFrontTextReplacesOneClozeMarkers()
     {
         ClozeNote cn = new()
         {
@@ -54,7 +54,7 @@ public class ClozeNoteTests
     }
 
     [Fact]
-    public void ClozeNoteFrontReplacesAllClozeMarkers()
+    public void ClozeFrontTextReplacesAllClozeMarkers()
     {
         ClozeNote cn = new()
         {
@@ -64,7 +64,31 @@ public class ClozeNoteTests
         Assert.Equal("Multiple [...] are in [...].", cn.ClozeFrontText());
     }
 
-    // ClozeBackText() Tests
+    // ClozeFrontHtml() tests
+
+    [Fact]
+    public void ClozeFrontHtmlShowsClozePlaceholdersInSpans()
+    {
+        ClozeNote cn = new()
+        {
+            Text = "A {{c1::cloze }} ."
+        };
+
+        Assert.Equal("A <span class=\"cloze-question\">[...]</span> .", cn.ClozeFrontHtml());
+    }
+
+    [Fact]
+    public void ClozeFrontHtmlSanitizesText()
+    {
+        ClozeNote cn = new()
+        {
+            Text = "A {{c1::cloze }}<script>alert(\"hello world\")</script>"
+        };
+
+        Assert.Equal("A <span class=\"cloze-question\">[...]</span>", cn.ClozeFrontHtml());
+    }
+
+    // ClozeBackText() tests
 
     [Fact]
     public void ClozeBackTextShowsTheInsideOfClozeMarkers()
@@ -99,5 +123,16 @@ public class ClozeNoteTests
         };
 
         Assert.Equal("Multiple <span class=\"cloze-answer\">cloze markers</span> are in <span class=\"cloze-answer\">this one</span>.", cn.ClozeBackHtml());
+    }
+
+    [Fact]
+    public void ClozeBackHtmlSanitizesText()
+    {
+        ClozeNote cn = new()
+        {
+            Text = "Test cloze {{c1::<script>'hello world'</script>}} 1"
+        };
+
+        Assert.Equal("Test cloze <span class=\"cloze-answer\"></span> 1", cn.ClozeBackHtml());
     }
 }
