@@ -36,17 +36,17 @@ public class ArticlesController(IArticleRepository repository,
         Article? article = await _repository.GetArticleAsync(articleId);
         if (article == null) return NotFound();
 
-        AuthorizationResult authorizationResult = await _authorizationService.AuthorizeAsync(HttpContext.User, article, "ArticlePolicy");
+        AuthorizationResult authorizationResult = await _authorizationService.AuthorizeAsync(user, article, "UserOwnsArticle");
 
         if (authorizationResult.Succeeded)
         {
-            logger.LogInformation("Article authorization was successful");
+            _logger.LogInformation("Article authorization was successful");
             return article;
         }
         else
         {
-            logger.LogInformation("Article authorization failed");
-            return new ForbidResult();
+            _logger.LogInformation("Article authorization failed");
+            return NotFound();
         }
     }
 

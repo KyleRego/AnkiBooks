@@ -7,10 +7,10 @@ using AnkiBooks.WebApp.Policies.Requirements;
 
 namespace AnkiBooks.WebApp.Policies.Handlers;
 
-public class ArticleAuthorizationHandler : AuthorizationHandler<ArticleAuthorizationRequirement, Article>
+public class UserOwnsArticleHandler : AuthorizationHandler<UserOwnsArticleRequirement, Article>
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
-                                                    ArticleAuthorizationRequirement requirement,
+                                                    UserOwnsArticleRequirement requirement,
                                                     Article resource)
     {
         if (context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value == resource.UserId)

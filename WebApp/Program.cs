@@ -36,11 +36,10 @@ builder.Services.AddScoped<IdentityRedirectManager>();
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("ArticlePolicy", policy =>
-        policy.Requirements.Add(new ArticleAuthorizationRequirement()));
+    options.AddPolicy("UserOwnsArticle", policy => policy.Requirements.Add(new UserOwnsArticleRequirement()));
 });
 
-builder.Services.AddSingleton<IAuthorizationHandler, ArticleAuthorizationHandler>();
+builder.Services.AddSingleton<IAuthorizationHandler, UserOwnsArticleHandler>();
 
 builder.Services.AddAuthentication(options =>
     {
