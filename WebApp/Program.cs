@@ -14,6 +14,10 @@ using AnkiBooks.WebApp.Components.Account;
 using AnkiBooks.WebApp.Services;
 
 using AnkiBooks.WebApp.Client;
+using AnkiBooks.WebApp.Policies.Requirements;
+using AnkiBooks.WebApp.Policies.Handlers;
+using Microsoft.AspNetCore.Authorization;
+using AnkiBooks.ApplicationCore.Entities;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +34,14 @@ builder.Services.AddScoped<AuthenticationStateProvider, PersistingServerAuthenti
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ArticlePolicy", policy =>
+        policy.Requirements.Add(new ArticleAuthorizationRequirement()));
+});
+
+builder.Services.AddSingleton<IAuthorizationHandler, ArticleAuthorizationHandler>();
+
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultScheme = IdentityConstants.ApplicationScheme;
