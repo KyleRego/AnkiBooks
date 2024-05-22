@@ -3,25 +3,19 @@ using Ganss.Xss;
 
 namespace AnkiBooks.ApplicationCore.Entities;
 
-public partial class ClozeNote : Card
+public class ClozeNote : Card
 {
     [Required]
+    [RegularExpression($".*{clozeMarkersRegex}.*", ErrorMessage = "Text must have at least one {{{{c1::cloze test}}}}.")]
     public string Text { get; set; } = "";
 
-    private readonly string clozeMarkersRegex = "{{c\\d::(.*?)}}";
-    private readonly string clozeMarkersReplacement = "[...]";
+    private const string clozeMarkersRegex = "{{c\\d::(.*?)}}";
+    private const string clozeMarkersReplacement = "[...]";
     private readonly HtmlSanitizer sanitizer = new();
 
     public ClozeNote()
     {
         sanitizer.AllowedAttributes.Add("class");
-    }
-
-    public bool ValidCloze()
-    {
-        if (string.IsNullOrWhiteSpace(Text)) return false;
-
-        return Regex.IsMatch(Text, clozeMarkersRegex);
     }
 
     public string ClozeFrontText()

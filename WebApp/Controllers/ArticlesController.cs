@@ -83,6 +83,7 @@ public class ArticlesController(IArticleRepository repository,
     {
         string? userId = CurrentUserId();
         if (userId == null) return BadRequest("User ID not in claims");
+        article.UserId = userId;
 
         try
         {

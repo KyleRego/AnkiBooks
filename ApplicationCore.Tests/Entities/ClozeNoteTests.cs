@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.ApplicationCore.Interfaces;
 
@@ -5,39 +6,49 @@ namespace AnkiBooks.ApplicationCore.Tests.Entities;
 
 public class ClozeNoteTests
 {
-    // ClozeValid() tests 
-
     [Fact]
     public void ClozeValidIsFalseWithoutClozeMarkers()
     {
-        ClozeNote cn = new()
+        ClozeNote cn = new() { Text = "A sentence without cloze markers" };
+        ValidationContext context = new(cn, null, null)
         {
-            Text = "A sentence without cloze markers"
+            MemberName = "Text"
         };
+        ICollection<ValidationResult> failedValidations = [];
 
-        Assert.False(cn.ValidCloze());
+        bool result = Validator.TryValidateProperty(cn.Text, context, failedValidations);
+
+        Assert.False(result);
     }
 
     [Fact]
     public void ClozeValidIsTrueWithClozeMarkers()
     {
-        ClozeNote cn = new()
+        ClozeNote cn = new() { Text = "A {{c1::cloze marker}} is in this one so it is valid" };
+        ValidationContext context = new(cn, null, null)
         {
-            Text = "A {{c1::cloze marker}} is in this one so it is valid"
+            MemberName = "Text"
         };
+        ICollection<ValidationResult> failedValidations = [];
 
-        Assert.True(cn.ValidCloze());
+        bool result = Validator.TryValidateProperty(cn.Text, context, failedValidations);
+
+        Assert.True(result);
     }
 
     [Fact]
     public void ClozeValidIsTrueWithMultipleClozeMarkers()
     {
-        ClozeNote cn = new()
+        ClozeNote cn = new() { Text = "A {{c1::cloze marker}} is {{c2::in this}} one so it is valid" };
+        ValidationContext context = new(cn, null, null)
         {
-            Text = "A {{c1::cloze marker}} is {{c2::in this}} one so it is valid"
+            MemberName = "Text"
         };
+        ICollection<ValidationResult> failedValidations = [];
 
-        Assert.True(cn.ValidCloze());
+        bool result = Validator.TryValidateProperty(cn.Text, context, failedValidations);
+
+        Assert.True(result);
     }
 
     // ClozeFrontText() tests

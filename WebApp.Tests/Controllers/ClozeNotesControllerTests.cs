@@ -12,7 +12,28 @@ public class ClozeNotesControllerTests(TestServerFactory<Program> factory) : ICl
     private readonly TestServerFactory<Program> _factory = factory;
 
     [Fact]
-    public async Task PostClozeNote()
+    public async Task PostClozeNoteCreatesNote()
+    {
+        using IServiceScope scope = _factory.Services.CreateScope();
+        ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        Deck deck = await dbContext.CreateDeck();
+
+        ClozeNote clozeNote = new()
+        {
+            Text = "a {{c1::cloze}} note",
+            DeckId = deck.Id
+        };
+
+        HttpClient client = _factory.CreateClient();
+
+        HttpResponseMessage response = await client.PostAsJsonAsync("api/ClozeNotes", clozeNote);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task PostClozeNoteWithInvalidDataCausesAutomatic400Response()
     {
         using IServiceScope scope = _factory.Services.CreateScope();
         ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -29,6 +50,6 @@ public class ClozeNotesControllerTests(TestServerFactory<Program> factory) : ICl
 
         HttpResponseMessage response = await client.PostAsJsonAsync("api/ClozeNotes", clozeNote);
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 }
