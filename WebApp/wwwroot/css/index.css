@@ -17,12 +17,14 @@
 @import "./utilities/justify-content.css";
 @import "./utilities/list-style.css";
 @import "./utilities/margin.css";
+@import "./utilities/min-height.css";
 @import "./utilities/min-width.css";
 @import "./utilities/overflow.css";
 @import "./utilities/padding.css";
 @import "./utilities/position.css";
 @import "./utilities/text-align.css";
 @import "./utilities/visibility.css";
+@import "./utilities/white-space.css";
 @import "./utilities/width.css";
 @import "./utilities/word-break.css";
 

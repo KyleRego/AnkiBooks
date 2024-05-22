@@ -1,96 +1,27 @@
-.border-primary {
-    border: 2px;
-    border-color: var(--ab-border-primary-dark);
-    border-style: solid;
+.border-width-thin {
+    border-width: 1px;
 }
 
-.border-secondary {
-    border: 1px;
-    border-color: var(--ab-border-color-secondary);
-    border-style: solid;
+.border-width-thin-r {
+    border-right: 1px;
 }
 
-.border-highlight {
-    border: 1px;
-    border-color: rgb(51, 255, 51);
-    border-style: solid;
-}
-
-.border-primary-thin {
-    border: 1px;
-    border-color: var(--ab-border-primary-dark);
-    border-style: solid;
-}
-
-.border-top-primary {
-    border-top: 2px;
-    border-color: var(--ab-border-primary-dark);
-    border-style: solid;    
-}
-
-.border-top-primary-thin {
-    border-top: 1px;
-    border-color: var(--ab-border-primary-dark);
-    border-style: solid;
-}
-
-.border-bottom-primary {
-    border-bottom: 2px;
-    border-color: var(--ab-border-primary-dark);
-    border-style: solid;
-}
-
-.border-bottom-primary-thin {
-    border-bottom: 1px;
-    border-color: var(--ab-border-primary-dark);
-    border-style: solid;
-}
-
-.border-right-primary {
-    border-right: 2px;
-    border-color: var(--ab-border-primary-dark);
-    border-style: solid;
-}
-
-.border-primary-x {
-    border-left: 2px;
-    border-right: 2px;
-    border-color: var(--ab-border-primary-dark);
-    border-style: solid;
-}
-
-.border-primary-b {
-    border-bottom: 2px;
-    border-color: var(--ab-border-primary-dark);
-    border-style: solid;
-}
-
-.border-primary-t {
-    border-top: 2px;
-    border-color: var(--ab-border-primary-dark);
-    border-style: solid;
-}
-
-.border-right-primary-spacing {
-    border-right: 2px;
-    border-color: transparent;
-    border-style: solid;
-}
-
-.border-left-primary-thin {
+.border-width-thin-l {
     border-left: 1px;
-    border-color: var(--ab-border-primary-dark);
+}
+
+.border-width-thin-t {
+    border-top: 1px;
+}
+
+.border-width-thin-b {
+    border-bottom: 1px;
+}
+
+.border-color-primary {
+    border-color: var(--ab-color-cloze);
+}
+
+.border-style-solid {
     border-style: solid;
-}
-
-.border-bottom-secondary {
-    border-bottom: 2px;
-    border-color: var(--ab-border-secondary-dark);
-    border-style: solid;  
-}
-
-.border-right-secondary {
-    border-right: 2px;
-    border-color: var(--ab-border-secondary-dark);
-    border-style: solid;     
 }
