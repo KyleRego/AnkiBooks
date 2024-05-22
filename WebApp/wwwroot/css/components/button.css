@@ -1,26 +1,13 @@
-.btn {
+.button-primary {
     padding-top: 0.2rem;
     padding-bottom: 0.2rem;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
-
-    border-radius: 0.5rem;
-}
-
-.btn-primary {
     color: white;
     background-color: var(--ab-bg-secondary);
-    border: 1px solid var(--ab-border-color-secondary);
+    border: 1px solid var(--ab-color-cloze);
 }
 
-.btn-primary:hover, .btn-primary:active {
+.button-primary:hover, .button-primary:active {
     background-color: var(--ab-bg-secondary-alt);
-}
-
-.btn-lg {
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    border-radius: 0.25rem;
 }
