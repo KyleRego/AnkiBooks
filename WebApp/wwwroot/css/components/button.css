@@ -4,10 +4,12 @@
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     color: white;
-    background-color: var(--ab-bg-secondary);
+    background-color: var(--ab-bg-primary);
     border: 1px solid var(--ab-color-cloze);
 }
 
 .button-primary:hover, .button-primary:active {
-    background-color: var(--ab-bg-secondary-alt);
+    background-color: white;
+    color: black;
+    border: 1px solid black;
 }
