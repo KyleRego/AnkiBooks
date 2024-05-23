@@ -41,16 +41,10 @@ public class MarkdownContentsController(IMarkdownContentRepository mdContentRepo
         {
             return BadRequest();
         }
-        MarkdownContent? currentMarkdownContent = await _mdContentRepository.GetMarkdownContentAsync(id);
-
-        if (currentMarkdownContent == null)
-        {
-            return NotFound();
-        }
 
         try
         {
-            return await _mdContentRepository.UpdateOrderedElementAsync(currentMarkdownContent, mdContent);
+            return await _mdContentRepository.UpdateOrderedElementAsync(mdContent);
         }
         catch (DbUpdateConcurrencyException)
         {

@@ -10,21 +10,16 @@ namespace AnkiBooks.Infrastructure.Repository;
 public class DeckRepository(ApplicationDbContext dbContext)
                     : OrderedElementRepositoryBase<Deck>(dbContext), IDeckRepository
 {
-    protected override List<IOrdinalChild> GetAllOrdinalChildren(Deck mdContent)
+    protected override List<IOrdinalChild> GetAllOrdinalSiblings(Deck mdContent)
     {
         return _dbContext.ArticleElements.Where(
-            el => el.ArticleId == mdContent.ArticleId
+            el => el.ArticleId == mdContent.ArticleId && el.Id != mdContent.Id
         ).Cast<IOrdinalChild>().ToList();
     }
 
-    protected override void AddElementToDbContext(Deck element)
+    protected override int GetOriginalPosition(string elementId)
     {
-        _dbContext.Decks.Add(element);
-    }
-
-    protected override void RemoveElementFromDbContext(Deck element)
-    {
-        _dbContext.Decks.Remove(element);
+        return _dbContext.Decks.AsNoTracking().First(md => md.Id == elementId).OrdinalPosition;
     }
 
     public async Task<List<Deck>> GetDecksAsync()

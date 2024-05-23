@@ -10,21 +10,16 @@ namespace AnkiBooks.Infrastructure.Repository;
 public class MarkdownContentRepository(ApplicationDbContext dbContext)
                     : OrderedElementRepositoryBase<MarkdownContent>(dbContext), IMarkdownContentRepository
 {
-    protected override List<IOrdinalChild> GetAllOrdinalChildren(MarkdownContent mdContent)
+    protected override List<IOrdinalChild> GetAllOrdinalSiblings(MarkdownContent mdContent)
     {
         return _dbContext.ArticleElements.Where(
-            el => el.ArticleId == mdContent.ArticleId
+            el => el.ArticleId == mdContent.ArticleId && el.Id != mdContent.Id
         ).Cast<IOrdinalChild>().ToList();
     }
 
-    protected override void AddElementToDbContext(MarkdownContent element)
+    protected override int GetOriginalPosition(string elementId)
     {
-        _dbContext.MarkdownContents.Add(element);
-    }
-
-    protected override void RemoveElementFromDbContext(MarkdownContent element)
-    {
-        _dbContext.MarkdownContents.Remove(element);
+        return _dbContext.MarkdownContents.AsNoTracking().First(md => md.Id == elementId).OrdinalPosition;
     }
 
     public async Task<List<MarkdownContent>> GetMarkdownContentsAsync()

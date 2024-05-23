@@ -11,14 +11,20 @@ public abstract class OrderedElementRepositoryBase<T>(ApplicationDbContext dbCon
         : IOrderedElementRepository<T> where T : IOrdinalChild
 {
     protected readonly ApplicationDbContext _dbContext = dbContext;
-    protected abstract List<IOrdinalChild> GetAllOrdinalChildren(T element);
-    protected abstract void AddElementToDbContext(T element);
-    protected abstract void RemoveElementFromDbContext(T element);
+
+    /// <summary>
+    /// Retrieves the ordered siblings of element without including element
+    /// </summary>
+    /// <param name="element"></param>
+    /// <returns></returns>
+    protected abstract List<IOrdinalChild> GetAllOrdinalSiblings(T element);
+
+    protected abstract int GetOriginalPosition(string elementId);
 
     public async Task<T> InsertOrderedElementAsync(T newElement)
     {
-        List<IOrdinalChild> ordinalChildren = GetAllOrdinalChildren(newElement);
-        int ordinalElementsCount = ordinalChildren.Count;
+        List<IOrdinalChild> ordinalSiblings = GetAllOrdinalSiblings(newElement);
+        int ordinalElementsCount = ordinalSiblings.Count;
         int insertPosition = newElement.OrdinalPosition;
 
         if (insertPosition > ordinalElementsCount || insertPosition < 0)
@@ -27,14 +33,14 @@ public abstract class OrderedElementRepositoryBase<T>(ApplicationDbContext dbCon
         }
         else
         {
-            List<IOrdinalChild> siblingsToShift = ordinalChildren.Where(
+            List<IOrdinalChild> siblingsToShift = ordinalSiblings.Where(
                 e => e.OrdinalPosition >= insertPosition
             ).ToList();
 
             foreach (IOrdinalChild e in siblingsToShift) { e.OrdinalPosition += 1; }
         }
 
-        AddElementToDbContext(newElement);
+        _dbContext.Add(newElement);
 
         await _dbContext.SaveChangesAsync();
 
@@ -43,13 +49,13 @@ public abstract class OrderedElementRepositoryBase<T>(ApplicationDbContext dbCon
 
     public async Task DeleteOrderedElementAsync(T elementToDelete)
     {
-        List<IOrdinalChild> ordinalChildren = GetAllOrdinalChildren(elementToDelete);
-        int ordinalElementsCount = ordinalChildren.Count;
+        List<IOrdinalChild> ordinalSiblings = GetAllOrdinalSiblings(elementToDelete);
+
         int deletePosition = elementToDelete.OrdinalPosition;
 
-        RemoveElementFromDbContext(elementToDelete);
+        _dbContext.Remove(elementToDelete);
 
-        List<IOrdinalChild> siblingsToShift = ordinalChildren.Where(
+        List<IOrdinalChild> siblingsToShift = ordinalSiblings.Where(
             e => e.OrdinalPosition >= deletePosition
         ).ToList();
 
@@ -58,22 +64,21 @@ public abstract class OrderedElementRepositoryBase<T>(ApplicationDbContext dbCon
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<T> UpdateOrderedElementAsync(T curVersion, T newVersion)
+    public async Task<T> UpdateOrderedElementAsync(T newVersion)
     {
-        int origOrdPos = curVersion.OrdinalPosition;
+        int origOrdPos = GetOriginalPosition(newVersion.Id);
         int newOrdPos = newVersion.OrdinalPosition;
 
         if (newOrdPos == origOrdPos)
         {
-            _dbContext.Entry(curVersion).State = EntityState.Detached;
             _dbContext.Entry(newVersion).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
             return newVersion;
         }
         else
         {
-            List<IOrdinalChild> ordinalChildren = GetAllOrdinalChildren(curVersion);
-            int ordinalElementsCount = ordinalChildren.Count;
+            List<IOrdinalChild> ordinalSiblings = GetAllOrdinalSiblings(newVersion);
+            int ordinalElementsCount = ordinalSiblings.Count + 1;
 
             if (newOrdPos >= ordinalElementsCount || newOrdPos < 0)
             {
@@ -81,30 +86,23 @@ public abstract class OrderedElementRepositoryBase<T>(ApplicationDbContext dbCon
             }
             else
             {
-                curVersion.OrdinalPosition = ordinalElementsCount;
-
                 if (newOrdPos > origOrdPos)
                 {
-                    List<IOrdinalChild> siblingsToShiftDown = ordinalChildren.Where(
+                    List<IOrdinalChild> siblingsToShiftDown = ordinalSiblings.Where(
                         e => e.OrdinalPosition > origOrdPos && e.OrdinalPosition <= newOrdPos
                     ).ToList();
 
                     foreach (IOrdinalChild e in siblingsToShiftDown) { e.OrdinalPosition -= 1; }
-
-                    await _dbContext.SaveChangesAsync();
                 }
                 else
                 {
-                    List<IOrdinalChild> siblingsToShiftUp = ordinalChildren.Where(
+                    List<IOrdinalChild> siblingsToShiftUp = ordinalSiblings.Where(
                         e => e.OrdinalPosition >= newOrdPos && e.OrdinalPosition < origOrdPos
                     ).ToList();
 
                     foreach (IOrdinalChild e in siblingsToShiftUp) { e.OrdinalPosition += 1; }
-
-                    await _dbContext.SaveChangesAsync();
                 }
 
-                _dbContext.Entry(curVersion).State = EntityState.Detached;
                 _dbContext.Entry(newVersion).State = EntityState.Modified;
                 await _dbContext.SaveChangesAsync();
 

@@ -41,16 +41,10 @@ public class DecksController(IDeckRepository repository) : ControllerBase
         {
             return BadRequest();
         }
-        Deck? currentDeck = await _repository.GetDeckAsync(id);
-
-        if (currentDeck == null)
-        {
-            return NotFound();
-        }
 
         try
         {
-            return await _repository.UpdateOrderedElementAsync(currentDeck, deck);
+            return await _repository.UpdateOrderedElementAsync(deck);
         }
         catch (DbUpdateConcurrencyException)
         {

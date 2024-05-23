@@ -24,9 +24,11 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
             Description = "World20"
         };
 
+        dbContext.ChangeTracker.Clear();
+
         DeckRepository deckRepository = new(dbContext);
 
-        await deckRepository.UpdateOrderedElementAsync(deck, editDeck);
+        await deckRepository.UpdateOrderedElementAsync(editDeck);
 
         Deck updatedDeck = dbContext.Decks.First(d => d.Id == deck.Id);
         Assert.Equal("World20", updatedDeck.Description);
@@ -38,7 +40,9 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
         using var dbContext = InMemoryDbContext();
 
         Article article = await dbContext.CreateArticle(10);
-        Deck deck = article.Decks.First(d => d.OrdinalPosition == 2);  
+        Deck deck = article.Decks.First(d => d.OrdinalPosition == 2);
+
+        dbContext.ChangeTracker.Clear();
 
         DeckRepository repository = new(dbContext);
 
@@ -50,7 +54,7 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
                 ArticleId = article.Id
             };
         
-            await repository.UpdateOrderedElementAsync(deck, editDeck);
+            await repository.UpdateOrderedElementAsync(editDeck);
         });
 
         await Assert.ThrowsAsync<OrdinalPositionException>(async () => {
@@ -61,7 +65,7 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
                 ArticleId = article.Id
             };
 
-            await repository.UpdateOrderedElementAsync(deck, editDeck);
+            await repository.UpdateOrderedElementAsync(editDeck);
         });
     }
 
@@ -79,9 +83,12 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
             OrdinalPosition = 5,
             ArticleId = article.Id
         };
+
+        dbContext.ChangeTracker.Clear();
+
         DeckRepository repository = new(dbContext);
 
-        await repository.UpdateOrderedElementAsync(deck, editDeck);
+        await repository.UpdateOrderedElementAsync(editDeck);
 
         Deck updatedDeck = dbContext.Decks.First(bn => bn.Id == editDeck.Id);
 
@@ -103,9 +110,12 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
             OrdinalPosition = 1,
             ArticleId = article.Id
         };
+
+        dbContext.ChangeTracker.Clear();
+
         DeckRepository repository = new(dbContext);
 
-        await repository.UpdateOrderedElementAsync(deck, editDeck);
+        await repository.UpdateOrderedElementAsync(editDeck);
 
         Deck updatedDeck = dbContext.Decks.First(bn => bn.Id == editDeck.Id);
         Assert.Equal(1, updatedDeck.OrdinalPosition);
@@ -126,9 +136,12 @@ public class UpdateOrderedElementAsyncTests : RepositoryTestBase
             OrdinalPosition = 9,
             ArticleId = article.Id
         };
+
+        dbContext.ChangeTracker.Clear();
+
         DeckRepository repository = new(dbContext);
 
-        await repository.UpdateOrderedElementAsync(deck, editDeck);
+        await repository.UpdateOrderedElementAsync(editDeck);
 
         Deck updatedDeck = dbContext.Decks.First(bn => bn.Id == editDeck.Id);
         Assert.Equal(9, updatedDeck.OrdinalPosition);
