@@ -7,11 +7,23 @@
         Sources:
     </h2>
     <ul class="pl-8 mt-2 mb-4 list-style-outside list-style-type-disk">
-        @foreach(Link l in Article.Links.Slice(0, numberSourcesToDisplay))
+        @if (numberSourcesToDisplay >= Article.Links.Count)
         {
-            Link link = l;
+            @foreach(Link l in Article.Links)
+            {
+                Link link = l;
 
-            <li><ArticleSource @bind-Link="@link" /></li>
+                <li><ArticleSource @bind-Link="@link" /></li>
+            } 
+        }
+        else
+        {
+            @foreach(Link l in Article.Links.Slice(0, numberSourcesToDisplay))
+            {
+                Link link = l;
+
+                <li><ArticleSource @bind-Link="@link" /></li>
+            }
         }
     </ul>
 

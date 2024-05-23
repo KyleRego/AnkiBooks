@@ -28,7 +28,7 @@
     </div>
 
     <div class="m-4">
-        <button class="button-primary" @onclick="StartReorderingElements">
+        <button class="button-primary" title="Reorder elements" @onclick="StartReorderingElements">
             Reorder elements
         </button>
     </div>
@@ -36,9 +36,9 @@
     else
     {
         <div class="m-4">
-            <div class="mb-2">
+            <h2 class="font-size-xl mb-2">
                 Drag and drop to reorder:
-            </div>
+            </h2>
             <ol class="pl-8 list-style-outside list-style-type-disk">
                 @for(int j = 0; j < elements.Count; j++)
                 {
@@ -57,8 +57,8 @@
         </div>
 
         <div class="m-4">
-            <button class="button-primary" @onclick="EndReorderingElements">
-                Done
+            <button class="button-primary" title="Done reordering elements" @onclick="EndReorderingElements">
+                Done reordering elements
             </button>
         </div>
     }
