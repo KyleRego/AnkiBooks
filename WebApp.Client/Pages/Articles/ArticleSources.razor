@@ -27,7 +27,7 @@
         }
     </ul>
 
-    @if (numberSourcesToDisplay > 0)
+    @if (numberSourcesToDisplay > 0 && Article.Links.Count > 0)
     {
         <button class="button-primary mr-4" type="button" title="Show less sources" @onclick="ShowLessSources">
             Show less
