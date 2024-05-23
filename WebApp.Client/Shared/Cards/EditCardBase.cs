@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.ApplicationCore.Services;
 
-namespace AnkiBooks.WebApp.Client.Pages.Articles.Elements.Decks.Cards;
+namespace AnkiBooks.WebApp.Client.Shared.Cards;
 
 public class EditCardBase<T> : ComponentBase where T : Card
 {

@@ -18,12 +18,12 @@
 }
 else
 {
-    <EditArticleLink @bind-Link:get="@Link" @bind-Link:set="@LinkChanged" @bind-Editing="@editing" />
+    <EditSource @bind-Link:get="@Link" @bind-Link:set="@LinkChanged" @bind-Editing="@editing" />
 }
 
 @code {
     [Parameter]
-    public Link Link { get; set; } = null!;
+    public required Link Link { get; set; }
 
     [Parameter]
     public EventCallback<Link> LinkChanged { get; set; }

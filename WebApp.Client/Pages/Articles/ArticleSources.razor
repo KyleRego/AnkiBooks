@@ -1,37 +1,52 @@
 @using AnkiBooks.ApplicationCore.Entities
 
+@using AnkiBooks.WebApp.Client.Shared.Sources;
+
 <div class="my-4 px-4">
-    <div class="mb-2">
+    <h2 class="font-size-xl mb-2">
         Sources:
-    </div>
-    <ul class="pl-8 list-style-outside list-style-type-disk">
-        @foreach(Link l in Article.Links)
+    </h2>
+    <ul class="pl-8 mt-2 mb-4 list-style-outside list-style-type-disk">
+        @foreach(Link l in Article.Links.Slice(0, numberSourcesToDisplay))
         {
             Link link = l;
 
-            <li>
-                <div>
-                    <ArticleLink @bind-Link="@link" />
-                </div>
-            </li>
+            <li><ArticleSource @bind-Link="@link" /></li>
         }
     </ul>
-</div>
 
-<div class="px-4 my-2">
+    @if (numberSourcesToDisplay > 0)
+    {
+        <button class="button-primary mr-4" type="button" title="Show less sources" @onclick="ShowLessSources">
+            Show less
+        </button> 
+    }
+
+    @if (Article.Links.Count > numberSourcesToDisplay)
+    {
+        <button class="button-primary mr-4" type="button" title="Show more sources" @onclick="ShowMoreSources">
+            Show more
+        </button>
+
+        <button class="button-primary mr-4" type="button" title="Show more sources" @onclick="ShowAllSources">
+            Show all
+        </button>
+    }
+
     @if (addingSource == false)
     {
-        <div    role="button" @onclick="StartAddingSource"
-                class="d-flex flex-row justify-content-start align-items-center">
-            <div class="w-4 h-4"><Plus /></div>
-            <div class="pl-2">New link</div>
-        </div>
-    }
-    else
-    {
-        <NewArticleLink @bind-Article:get="@Article" @bind-Article:set="ArticleChanged" @bind-AddingSource="@addingSource" />
+        <button class="button-primary" type="button" title="New source" @onclick="StartAddingSource">
+            New source
+        </button>
     }
 </div>
+
+@if(addingSource == true)
+{
+    <div class="px-4">
+        <NewSource @bind-Article:get="@Article" @bind-Article:set="ArticleChanged" @bind-AddingSource="@addingSource" />
+    </div>
+}
 
 @code {
     [Parameter]
@@ -43,6 +58,31 @@
     protected override void OnParametersSet()
     {
         addingSource = false;
+    }
+
+    private int numberSourcesToDisplay = 5;
+
+    private void ShowMoreSources()
+    {
+        numberSourcesToDisplay += 5;
+    }
+
+    private void ShowLessSources()
+    {
+        int less = numberSourcesToDisplay -= 5;
+        if (less < 0)
+        {
+            numberSourcesToDisplay = 0;
+        }
+        else
+        {
+            numberSourcesToDisplay = less;
+        }
+    }
+
+    private void ShowAllSources()
+    {
+        numberSourcesToDisplay = Article.Links.Count;
     }
 
     private bool addingSource = false;

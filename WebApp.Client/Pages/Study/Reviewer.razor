@@ -2,15 +2,15 @@
 @using AnkiBooks.ApplicationCore.Enums
 @using AnkiBooks.ApplicationCore.Services
 
+@using AnkiBooks.WebApp.Client.Shared.Cards
+
 @inject IRepetitionService RepetitionService
 
 @if (currentCard != null)
 {
     <div class="d-flex justify-content-center align-items-center">
         <div>
-            <AnkiBooks.WebApp.Client.Pages.Articles.Elements.Decks.Cards.CardRoot
-                    Card="@currentCard"
-                    ParentHandleGradeMethod="@HandleGrade" />
+            <CardRoot Card="@currentCard" ParentHandleGradeMethod="@HandleGrade" />
         </div>
     </div>
 }

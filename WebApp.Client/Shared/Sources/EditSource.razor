@@ -1,0 +1,45 @@
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Services
+
+@inject ILinkService LinkService
+
+<SourceForm StartingLink="@Link"
+            EditingExisting="true"
+            ParentSubmitMethod="@Submit"
+            ParentCancelMethod="@Cancel" />
+
+@code {
+    [Parameter]
+    public required Link Link { get; set; }
+
+    [Parameter]
+    public EventCallback<Link> LinkChanged { get; set; }
+
+    [Parameter]
+    public bool Editing { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> EditingChanged { get; set; }
+
+    private async Task Submit(Link source)
+    {
+        ArgumentNullException.ThrowIfNull(source.Url);
+
+        // Validate URL here
+        Link? updatedLink = await LinkService.PutLink(source);
+        if (updatedLink != null)
+        {
+            Link = updatedLink;
+            await LinkChanged.InvokeAsync(Link);
+
+            Editing = false;
+            await EditingChanged.InvokeAsync(Editing);
+        }
+    }
+
+    private async Task Cancel()
+    {
+        Editing = false;
+        await EditingChanged.InvokeAsync(Editing);
+    }
+}

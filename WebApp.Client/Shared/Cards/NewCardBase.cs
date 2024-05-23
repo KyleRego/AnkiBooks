@@ -4,7 +4,7 @@ using AnkiBooks.ApplicationCore.Entities;
 using AnkiBooks.ApplicationCore.Services;
 using AnkiBooks.ApplicationCore.Enums;
 
-namespace AnkiBooks.WebApp.Client.Pages.Articles.Elements.Decks.Cards;
+namespace AnkiBooks.WebApp.Client.Shared.Cards;
 
 public class NewCardBase<T> : ComponentBase where T : Card, new()
 {

@@ -1,0 +1,53 @@
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Services
+
+@inject ILinkService LinkService
+
+<SourceForm StartingLink="@InitialLink()"
+            EditingExisting="false"
+            ParentSubmitMethod="@Submit"
+            ParentCancelMethod="@Cancel" />
+
+@code {
+    [Parameter]
+    public required Article Article { get; set; }
+
+    [Parameter]
+    public EventCallback<Article> ArticleChanged { get; set; }
+
+    private Link InitialLink()
+    {
+        return new()
+        {
+            ArticleId = Article.Id
+        };
+    }
+
+    private async Task Submit(Link source)
+    {
+        ArgumentNullException.ThrowIfNull(source.Url);
+        ArgumentNullException.ThrowIfNull(source.ArticleId);
+        // Validate URL here
+        Link? createdLink = await LinkService.PostLink(source);
+        if (createdLink != null)
+        {
+            Article.Links.Add(createdLink);
+            await ArticleChanged.InvokeAsync(Article);
+
+            AddingSource = false;
+            await AddingSourceChanged.InvokeAsync(AddingSource);
+        }
+    }
+
+    [Parameter]
+    public bool AddingSource { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> AddingSourceChanged { get; set; }
+
+    private async Task Cancel()
+    {
+        AddingSource = false;
+        await AddingSourceChanged.InvokeAsync(AddingSource);
+    }
+}

@@ -1,7 +1,7 @@
 using AnkiBooks.ApplicationCore.Entities;
 using Microsoft.AspNetCore.Components;
 
-namespace AnkiBooks.WebApp.Client.Pages.Articles.Elements.Decks.Cards;
+namespace AnkiBooks.WebApp.Client.Shared.Cards;
 
 public class CardFormBase<T> : ComponentBase where T : Card
 {
