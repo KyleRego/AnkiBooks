@@ -68,6 +68,7 @@ builder.Services.AddScoped<IMarkdownContentRepository, MarkdownContentRepository
 builder.Services.AddScoped<ILinkRepository, LinkRepository>();
 builder.Services.AddScoped<IRepetitionRepository, RepetitionRepository>();
 builder.Services.AddScoped<ICardRepository, CardRepository>();
+builder.Services.AddScoped<IInfoSourceRepository, InfoSourceRepository>();
 
 builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<IBookService, BookService>();
@@ -76,7 +77,7 @@ builder.Services.AddScoped<IUserIdProvider, UserIdProvider>();
 builder.Services.AddScoped<IArticleElementService, ArticleElementService>();
 builder.Services.AddScoped<ICardService, CardService>();
 builder.Services.AddScoped<IRepetitionService, RepetitionService>();
-
+builder.Services.AddScoped<IInfoSourceService, InfoSourceService>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

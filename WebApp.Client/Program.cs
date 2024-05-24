@@ -17,5 +17,6 @@ builder.Services.AddScoped<ILinkService, LinkService>();
 builder.Services.AddScoped<ICardService, CardService>();
 builder.Services.AddScoped<IArticleElementService, ArticleElementService>();
 builder.Services.AddScoped<IRepetitionService, RepetitionService>();
+builder.Services.AddScoped<IInfoSourceService, InfoSourceService>();
 
 await builder.Build().RunAsync();

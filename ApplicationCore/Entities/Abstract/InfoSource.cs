@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+
 using AnkiBooks.ApplicationCore.Identity;
 
 namespace AnkiBooks.ApplicationCore.Entities;
 
+[JsonDerivedType(typeof(Link), typeDiscriminator: "Link")]
 public abstract class InfoSource : EntityBase
 {
     [ForeignKey(nameof(User))]

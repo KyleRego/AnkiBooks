@@ -1,6 +1,6 @@
 @using AnkiBooks.ApplicationCore.Entities
 
-@using AnkiBooks.WebApp.Client.Shared.Sources;
+@using AnkiBooks.WebApp.Client.Shared.Sources.Links;
 
 <div class="my-4 px-4">
     <h2 class="font-size-xl mb-2">
@@ -13,7 +13,7 @@
             {
                 Link link = l;
 
-                <li><ArticleSource @bind-Link="@link" /></li>
+                <li><LinkSource @bind-Link="@link" /></li>
             } 
         }
         else
@@ -22,7 +22,7 @@
             {
                 Link link = l;
 
-                <li><ArticleSource @bind-Link="@link" /></li>
+                <li><LinkSource @bind-Link="@link" /></li>
             }
         }
     </ul>
@@ -56,7 +56,7 @@
 @if(addingSource == true)
 {
     <div class="px-4">
-        <NewSource @bind-Article:get="@Article" @bind-Article:set="ArticleChanged" @bind-AddingSource="@addingSource" />
+        <NewLink @bind-Article:get="@Article" @bind-Article:set="ArticleChanged" @bind-AddingSource="@addingSource" />
     </div>
 }
 

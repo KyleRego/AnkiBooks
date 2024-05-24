@@ -1,0 +1,86 @@
+@page "/sources"
+
+@implements IDisposable
+
+@using System.Text.Json
+@using AnkiBooks.ApplicationCore.Entities
+@using AnkiBooks.ApplicationCore.Services
+@using AnkiBooks.WebApp.Client.Shared.Sources.Links
+
+@inject IInfoSourceService InfoSourceService
+@inject PersistentComponentState ApplicationState
+@inject ILogger<SourcesPageRoot> logger
+
+<h1 class="font-size-3xl m-4">Sources:</h1>
+
+@if (sources == null)
+{
+    <p>Requesting sources...</p>
+}
+else
+{
+    <ol class="ml-8 mr-4 list-style-outside">
+        @foreach (InfoSource source in sources)
+        {
+            <li>
+            @switch(source)
+            {
+                case Link link:
+                    <LinkSource @bind-Link="@link" />
+                    break;
+
+                default:
+                    break;
+            }  
+            </li>
+        }
+    </ol>
+
+    <div class="m-4 d-flex justify-content-start">
+        <a class="mr-4" href="/sources?pageNumber=1">Page 1</a>
+        <a class="mr-4" href="/sources?pageNumber=2">Page 2</a>
+        <a href="/sources?pageNumber=3">Page 3</a>
+    </div>
+}
+
+@code {
+    [SupplyParameterFromQuery]
+    public int PageNumber { get; set; } = 1;
+
+    private List<InfoSource>? sources;
+
+    private PersistingComponentStateSubscription persistingSubscription;
+
+    protected override async Task OnInitializedAsync()
+    {
+        persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
+
+        if (!ApplicationState.TryTakeFromJson<List<InfoSource>?>(nameof(sources), out var restored))
+        {
+            sources = await InfoSourceService.GetInfoSources(PageNumber);
+        }
+        else
+        {
+            sources = restored;
+        }
+
+        ArgumentNullException.ThrowIfNull(sources);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        sources = await InfoSourceService.GetInfoSources(PageNumber);
+    }
+
+    private Task PersistData()
+    {
+        ApplicationState.PersistAsJson(nameof(sources), sources);
+
+        return Task.CompletedTask;
+    }
+
+    void IDisposable.Dispose()
+    {
+        persistingSubscription.Dispose();
+    }
+}

@@ -28,6 +28,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<Repetition> Repetitions { get; set; }
 
+    public DbSet<InfoSource> InfoSources { get; set; }
+
     public DbSet<Link> Links { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
