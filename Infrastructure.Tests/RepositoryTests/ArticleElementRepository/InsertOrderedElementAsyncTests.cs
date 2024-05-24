@@ -23,7 +23,7 @@ public class InsertOrderedElementAsyncTests : RepositoryTestBase
                 ArticleId = article.Id
             };
 
-            await deckRepository.InsertOrderedElementAsync(deck);
+            await deckRepository.InsertAsync(deck);
         });
 
         await Assert.ThrowsAsync<OrdinalPositionException>(async () => {
@@ -33,7 +33,7 @@ public class InsertOrderedElementAsyncTests : RepositoryTestBase
                 ArticleId = article.Id
             };
 
-            await deckRepository.InsertOrderedElementAsync(deck);
+            await deckRepository.InsertAsync(deck);
         });
     }
 
@@ -53,7 +53,7 @@ public class InsertOrderedElementAsyncTests : RepositoryTestBase
         
         DeckRepository deckRepository = new(dbContext);
 
-        await deckRepository.InsertOrderedElementAsync(deck);
+        await deckRepository.InsertAsync(deck);
 
         Deck insertedDeck = dbContext.Decks.First(d => d.Id == deck.Id);
 
@@ -78,7 +78,7 @@ public class InsertOrderedElementAsyncTests : RepositoryTestBase
         
         DeckRepository repository = new(dbContext);
 
-        await repository.InsertOrderedElementAsync(deck);
+        await repository.InsertAsync(deck);
 
         Deck insertedDeck = dbContext.Decks.First(d => d.Id == deck.Id);
 
@@ -102,7 +102,7 @@ public class InsertOrderedElementAsyncTests : RepositoryTestBase
 
         DeckRepository deckRepository = new(dbContext);
 
-        await deckRepository.InsertOrderedElementAsync(deck);
+        await deckRepository.InsertAsync(deck);
 
         Deck updatedDeck = dbContext.Decks.First(d => d.Id == deck.Id);
 

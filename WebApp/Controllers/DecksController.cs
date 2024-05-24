@@ -44,7 +44,7 @@ public class DecksController(IDeckRepository repository) : ControllerBase
 
         try
         {
-            return await _repository.UpdateOrderedElementAsync(deck);
+            return await _repository.UpdateAsync(deck);
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -66,7 +66,7 @@ public class DecksController(IDeckRepository repository) : ControllerBase
     {
         try
         {
-            await _repository.InsertOrderedElementAsync(deck);
+            await _repository.InsertAsync(deck);
         }
         catch (DbUpdateException)
         {
@@ -93,7 +93,7 @@ public class DecksController(IDeckRepository repository) : ControllerBase
             return NotFound();
         }
 
-        await _repository.DeleteOrderedElementAsync(deck);
+        await _repository.DeleteAsync(deck);
 
         return NoContent();
     }

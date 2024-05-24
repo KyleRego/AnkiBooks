@@ -8,20 +8,8 @@ using Microsoft.EntityFrameworkCore;
 namespace AnkiBooks.Infrastructure.Repository;
 
 public class DeckRepository(ApplicationDbContext dbContext)
-                    : OrderedElementRepositoryBase<Deck>(dbContext), IDeckRepository
+                    : ArticleElementRepository<Deck>(dbContext), IDeckRepository
 {
-    protected override List<IOrdinalChild> GetAllOrdinalSiblings(Deck mdContent)
-    {
-        return _dbContext.ArticleElements.Where(
-            el => el.ArticleId == mdContent.ArticleId && el.Id != mdContent.Id
-        ).Cast<IOrdinalChild>().ToList();
-    }
-
-    protected override int GetOriginalPosition(string elementId)
-    {
-        return _dbContext.Decks.AsNoTracking().First(md => md.Id == elementId).OrdinalPosition;
-    }
-
     public async Task<List<Deck>> GetDecksAsync()
     {
         return await _dbContext.Decks.ToListAsync();

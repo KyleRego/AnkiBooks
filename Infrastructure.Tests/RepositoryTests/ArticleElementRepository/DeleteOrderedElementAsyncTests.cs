@@ -16,7 +16,7 @@ public class DeleteOrderedElementAsyncTests : RepositoryTestBase
 
         DeckRepository repository = new(dbContext);
 
-        await repository.DeleteOrderedElementAsync(deck);
+        await repository.DeleteAsync(deck);
 
         Assert.Null(dbContext.BasicNotes.FirstOrDefault(d => d.Id == deck.Id));
 

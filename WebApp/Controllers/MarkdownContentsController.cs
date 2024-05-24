@@ -44,7 +44,7 @@ public class MarkdownContentsController(IMarkdownContentRepository mdContentRepo
 
         try
         {
-            return await _mdContentRepository.UpdateOrderedElementAsync(mdContent);
+            return await _mdContentRepository.UpdateAsync(mdContent);
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -66,7 +66,7 @@ public class MarkdownContentsController(IMarkdownContentRepository mdContentRepo
     {
         try
         {
-            await _mdContentRepository.InsertOrderedElementAsync(mdContent);
+            await _mdContentRepository.InsertAsync(mdContent);
         }
         catch (DbUpdateException)
         {
@@ -93,7 +93,7 @@ public class MarkdownContentsController(IMarkdownContentRepository mdContentRepo
             return NotFound();
         }
 
-        await _mdContentRepository.DeleteOrderedElementAsync(mdContent);
+        await _mdContentRepository.DeleteAsync(mdContent);
 
         return NoContent();
     }
