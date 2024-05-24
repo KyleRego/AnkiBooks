@@ -10,6 +10,10 @@
     align-items: baseline;
 }
 
+.align-items-start {
+    align-items: start;
+}
+
 .align-items-end {
     align-items: end;
 }

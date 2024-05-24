@@ -86,13 +86,13 @@ else
         }
     }
 
-    <div class="my-4 d-flex flex-row flex-no-wrap justify-content-start align-items-end overflow-x-scroll">
+    <div class="my-4 d-flex flex-row flex-no-wrap justify-content-start align-items-start overflow-x-scroll">
         @for (int j = 0; j < Cards.Count; j++)
         {
             Card card = Cards[j];
 
             <div class="mr-5 mb-4 flex-shrink-0">
-                <CardRoot Card="@card" ParentHandleGradeMethod="@HandleGrade" />
+                <ArticleCard Card="@card" ParentHandleGradeMethod="@HandleGrade" />
             </div>
         }
     </div>

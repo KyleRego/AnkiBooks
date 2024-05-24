@@ -10,17 +10,17 @@
 
 @if (editingCard == true)
 {
-    <div class="w-84 min-h-58">
-    @switch(Card)
-    {
-        case BasicNote bn:
-            <EditBasicNote InitialCard="@bn" @bind-EditingCard="editingCard" />
-            break;
+    <div class="w-84 min-h-48">
+        @switch(Card)
+        {
+            case BasicNote bn:
+                <EditBasicNote InitialCard="@bn" @bind-EditingCard="editingCard" />
+                break;
 
-        case ClozeNote cn:
-            <EditClozeNote InitialCard="@cn" @bind-EditingCard="editingCard" />
-            break;
-    }
+            case ClozeNote cn:
+                <EditClozeNote InitialCard="@cn" @bind-EditingCard="editingCard" />
+                break;
+        }
     </div>
 }
 else
@@ -29,7 +29,7 @@ else
         <div class="w-5">
             @* This adds space to the left of the card to keep it centered *@
         </div>
-        <div class="border-color-primary border-width-thin border-style-solid w-84 min-h-48 white-space-pre-wrap">
+        <div class="w-84 h-48 overflow-auto border-color-primary border-width-thin border-style-solid white-space-pre-wrap">
             @switch(Card)
             {
                 case BasicNote bn:
