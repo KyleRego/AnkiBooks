@@ -50,15 +50,14 @@ public class Card : EntityBase, ICard
         }
         else
         {
-            InterRepetitionInterval = 0;
-            EasinessFactor = 0;
+            InterRepetitionInterval = 1;
         }
 
         DueAt = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds() + InterRepetitionInterval * 86400;
 
-        // If there were 6 grades, q could be 1 to 6 (see SM2 algorithm)
+        // If there were 6 grades, q could be 0 to 5 (see SM2 algorithm)
         // Since Anki Books uses 2 grades, take them to represent 2 and 5
-        int q = grade == Grade.Bad ? 2 : 5;
+        int q = grade == Grade.Bad ? 1 : 4;
 
         EasinessFactor += 0.1F - (5 - q) * (0.08F + (5 - q) * 0.02F);
 
