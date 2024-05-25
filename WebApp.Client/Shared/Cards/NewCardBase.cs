@@ -21,10 +21,10 @@ public class NewCardBase<T> : ComponentBase where T : Card, new()
     public required EventCallback<List<Card>> CardsChanged { get; set; }
 
     [Parameter]
-    public required CardType? NewCardSelection { get; set; }
+    public required CardTypeEnum? NewCardSelection { get; set; }
 
     [Parameter]
-    public required EventCallback<CardType?> NewCardSelectionChanged { get; set; }
+    public required EventCallback<CardTypeEnum?> NewCardSelectionChanged { get; set; }
 
     protected T StartingCard()
     {

@@ -9,22 +9,22 @@
 {
     <InputSelect @bind-Value="dropDownItemSelected" name="new-card">
         <option value="" selected>New card</option>
-        <option value="@CardType.BasicNote">Basic</option>
-        <option value="@CardType.ClozeNote">Cloze</option>
+        <option value="@CardTypeEnum.BasicNote">Basic</option>
+        <option value="@CardTypeEnum.ClozeNote">Cloze</option>
     </InputSelect>
 }
 else
 {
     @switch (dropDownItemSelected)
     {
-        case CardType.BasicNote:
+        case CardTypeEnum.BasicNote:
             <NewBasicNote DeckId="@DeckId"
                                     @bind-DropDownItemSelected="dropDownItemSelected"
                                     @bind-Cards:get="@Cards"
                                     @bind-Cards:set="@CardsChanged" />
             break;
 
-        case CardType.ClozeNote:
+        case CardTypeEnum.ClozeNote:
             <NewClozeNote DeckId="@DeckId"
                                     @bind-DropDownItemSelected="dropDownItemSelected"
                                     @bind-Cards:get="@Cards"
@@ -40,7 +40,7 @@ else
     [Parameter]
     public string DeckId { get; set; } = null!;
 
-    private CardType? dropDownItemSelected = null;
+    private CardTypeEnum? dropDownItemSelected = null;
 
     [Parameter]
     public List<Card> Cards { get; set; } = null!;

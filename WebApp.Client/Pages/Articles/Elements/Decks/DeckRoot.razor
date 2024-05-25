@@ -58,8 +58,8 @@ else
             <div>
                 <InputSelect @bind-Value="newCardSelection" name="new-card">
                     <option value="" selected>New card</option>
-                    <option value="@CardType.BasicNote">Basic</option>
-                    <option value="@CardType.ClozeNote">Cloze</option>
+                    <option value="@CardTypeEnum.BasicNote">Basic</option>
+                    <option value="@CardTypeEnum.ClozeNote">Cloze</option>
                 </InputSelect>
             </div>
         }
@@ -69,13 +69,13 @@ else
     {
         @switch (newCardSelection)
         {
-            case CardType.BasicNote:
+            case CardTypeEnum.BasicNote:
                 <NewBasicNote DeckId="@ArticleElement.Id"
                                         @bind-NewCardSelection="newCardSelection"
                                         @bind-Cards="Cards" />
                 break;
 
-            case CardType.ClozeNote:
+            case CardTypeEnum.ClozeNote:
                 <NewClozeNote DeckId="@ArticleElement.Id"
                                         @bind-NewCardSelection="newCardSelection"
                                         @bind-Cards="Cards" />
@@ -99,7 +99,7 @@ else
 }
 
 @code {
-    private CardType? newCardSelection = null;
+    private CardTypeEnum? newCardSelection = null;
 
     public required List<Card> Cards { get; set; }
 

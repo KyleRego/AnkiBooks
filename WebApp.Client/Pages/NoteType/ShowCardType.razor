@@ -1,0 +1,20 @@
+@using AnkiBooks.ApplicationCore.Entities;
+
+@foreach (CardTemplateElement element in CardType.FrontTemplate.Elements)
+{
+    <div>
+        @if (element.NoteField != null)
+        {
+            @element.NoteField.Name
+        }
+        else
+        {
+            @element.Text
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public required CardType CardType { get; set; }
+}

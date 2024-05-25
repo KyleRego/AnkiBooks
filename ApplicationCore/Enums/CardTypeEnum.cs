@@ -1,6 +1,6 @@
 namespace AnkiBooks.ApplicationCore.Enums;
 
-public enum CardType
+public enum CardTypeEnum
 {
     BasicNote,
     ClozeNote

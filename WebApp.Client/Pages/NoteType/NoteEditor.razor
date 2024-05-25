@@ -1,0 +1,35 @@
+@using AnkiBooks.ApplicationCore.Entities;
+
+@if (exampleNote != null)
+{
+    <div class="p-2 border-color-primary border-width-thin border-style-solid">
+        <EditForm Model="@exampleNote">
+            @for (int i = 0; i < NoteType.Fields.Count; i++)
+            {
+                NoteField field = NoteType.Fields[i];
+
+                <div class="@(i != 0 ? "mt-1" : "")">
+                    <label>@field.Name</label>
+                    @* this throws an error *@
+                    @* <InputTextArea @bind-Value="@exampleNote.FieldValues[field.Name]" class="w-100-percent" rows="1" /> *@
+                </div>
+            }
+        </EditForm>
+    </div>
+
+    <div class="p-2 border-color-primary border-width-thin border-style-solid">
+
+    </div>
+}
+
+@code {
+    [Parameter]
+    public required NoteType NoteType { get; set; }
+
+    private Note? exampleNote;
+
+    protected override void OnParametersSet()
+    {
+        exampleNote = new(NoteType);
+    }
+}

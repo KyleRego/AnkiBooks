@@ -1,0 +1,184 @@
+@using AnkiBooks.ApplicationCore.Entities;
+
+@page "/note_types"
+
+<div class="m-4">
+@if (noteType != null)
+{
+    <h1 class="mb-2">
+        Note type
+    </h1>
+
+    <InputText class="w-100" @bind-Value="@noteType.Name" />
+
+    <div class="my-4">
+        <h2>
+            Fields
+        </h2>
+
+        @foreach (NoteField field in noteType.Fields)
+        {
+            <div class="my-2 d-flex align-items-center">
+                <InputText class="w-100" @bind-Value="@field.Name" />
+
+                <div role="button" class="ml-2 w-5 h-5" title="Remove" @onclick="@(() => RemoveField(field))" >
+                    <Delete />
+                </div>
+            </div>
+        }
+
+        <button type="button" class="button-primary mt-2" title="Add field" @onclick="AddField">
+            Add field
+        </button>
+    </div>
+
+    <div class="my-4">
+        <h2>Example note editor:</h2>
+
+        <NoteEditor NoteType="noteType" />
+    </div>
+
+    <div>
+        <h2>
+            Card types
+        </h2>
+
+        @foreach (CardType cardType in noteType.CardTypes)
+        {
+            <div class="my-2 d-flex align-items-center">
+                <InputText class="w-100" @bind-Value="@cardType.Name" />
+            </div>
+
+            <h3>
+                Front template:
+            </h3>
+
+            @foreach (CardTemplateElement element in cardType.FrontTemplate.Elements)
+            {
+                <div>
+                    @if (element.NoteField != null)
+                    {
+                        @element.NoteField.Name
+                    }
+                    else
+                    {
+                        @element.Text
+                    }
+                </div>
+            }
+
+            <h3>
+                Back template:
+            </h3>
+
+            @foreach (CardTemplateElement element in cardType.BackTemplate.Elements)
+            {
+                <div>
+                    @if (element.NoteField != null)
+                    {
+                        @element.NoteField.Name
+                    }
+                    else
+                    {
+                        @element.Text
+                    }
+                </div>
+            }
+
+            <h4>
+                Example card:
+            </h4>
+
+            <ShowCardType CardType="@cardType" />
+        }
+    </div>
+}
+
+</div>
+
+<button type="button" class="button-primary mt-2" title="Save note type">
+    Save note type
+</button>
+
+@code {
+    private NoteType? noteType;
+
+    private void AddField()
+    {
+        noteType.Fields.Add(
+            new()
+            {
+                Name = "New field"
+            }
+        );
+    }
+
+    private void RemoveField(NoteField field)
+    {
+        noteType.Fields.Remove(field);
+    }
+
+    protected override void OnInitialized()
+    {
+        noteType = initialNoteType();
+    }
+
+    private NoteType initialNoteType()
+    {
+        NoteField frontField = new() { Name="Front" };
+        NoteField backField = new() { Name="Back" };
+
+        return new()
+            {
+                Name = "New note type",
+                Fields =
+                [
+                    frontField,
+                    backField
+                ],
+                CardTypes =
+                [
+                    new()
+                    {
+                        Name="Card type 1",
+                        FrontTemplate = new()
+                        {
+                            Elements =
+                            [
+                                new() { NoteField=frontField, OrdinalPosition=0 }
+                            ]
+                        },
+                        BackTemplate = new()
+                        {
+                            Elements =
+                            [
+                                new() { NoteField=frontField, OrdinalPosition=0 },
+                                new() { NoteField=backField, OrdinalPosition=1 }
+                            ]
+                        }
+                    },
+
+                    new()
+                    {
+                        Name="Card type 2",
+                        FrontTemplate = new()
+                        {
+                            Elements =
+                            [
+                                new() { NoteField=frontField, OrdinalPosition=0 },
+                                new() { Text="Hello world" }
+                            ]
+                        },
+                        BackTemplate = new()
+                        {
+                            Elements =
+                            [
+                                new() { NoteField=frontField, OrdinalPosition=0 },
+                                new() { NoteField=backField, OrdinalPosition=1 }
+                            ]
+                        }
+                    }
+                ]
+            };
+        }
+}
